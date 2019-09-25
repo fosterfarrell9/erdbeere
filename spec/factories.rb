@@ -1,13 +1,13 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :axiom do
     structure nil
     atom nil
   end
   factory :structure do
-    name { Faker::RickAndMorty.character }
-    definition { Faker::RickAndMorty.quote }
+    name { Faker::TvShows::RickAndMorty.character }
+    definition { Faker::TvShows::RickAndMorty.quote }
   end
 
   factory :building_block do
@@ -32,7 +32,7 @@ FactoryGirl.define do
     end
 
     before(:create) do |a|
-      a.satisfies = FactoryGirl.create(:property, structure: a.stuff_w_props.structure)
+      a.satisfies = FactoryBot.create(:property, structure: a.stuff_w_props.structure)
     end
   end
 
@@ -45,7 +45,7 @@ FactoryGirl.define do
     satisfied { Faker::Boolean.boolean }
     example
     before(:create) do |et|
-      et.property = FactoryGirl.create(:property, structure: et.example.structure)
+      et.property = FactoryBot.create(:property, structure: et.example.structure)
     end
   end
 end

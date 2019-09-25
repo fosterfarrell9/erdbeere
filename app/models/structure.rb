@@ -6,7 +6,10 @@ class Structure < ApplicationRecord
              inverse_of: :explained_structure, class_name: 'BuildingBlock'
 
   has_many :atoms, as: :stuff_w_props
-  belongs_to :derives_from, class_name: 'Structure', foreign_key: 'derives_from_id'
+  belongs_to :derives_from,
+             class_name: 'Structure',
+             foreign_key: 'derives_from_id',
+             optional: true
 
   has_many :children, class_name: 'Structure', foreign_key: 'derives_from_id',
            inverse_of: :derives_from
