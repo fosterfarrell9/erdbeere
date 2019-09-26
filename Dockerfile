@@ -1,4 +1,4 @@
-FROM ruby:2.4.0
+FROM ruby:2.6.4
 
 MAINTAINER oqpvq <o+docker@qp.vc>
 RUN mkdir -p /usr/src/app

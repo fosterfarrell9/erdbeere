@@ -11,12 +11,12 @@ gem 'coveralls', require: false
 gem 'font-awesome-rails'
 gem 'globalize', git: 'https://github.com/globalize/globalize'
 gem 'globalize-accessors'
-gem 'i18n-tasks', '~> 0.9.13'
-gem 'rails-i18n'
+gem 'i18n-tasks', '~> 0.9.29'
+gem 'rails-i18n', '~> 6.0.0'
 gem 'sqlite3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.0'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Use SCSS for stylesheets
@@ -31,9 +31,9 @@ gem 'coffee-rails'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
