@@ -24,7 +24,8 @@ class Atom < ApplicationRecord
 
   validates :stuff_w_props, presence: true
   validates :satisfies, presence: true
-  validates :satisfies_id, uniqueness: { scope: [:stuff_w_props, :satisfies_type] }
+  validates :satisfies_id,
+            uniqueness: { scope: [:stuff_w_props, :satisfies_type] }
   validates_with AtomValidator
 
   after_commit :touch_potentially_relevant_examples
@@ -35,7 +36,8 @@ class Atom < ApplicationRecord
   end
 
   def touch_potentially_relevant_examples
-    Example.where(structure: satisfies.structure).map(&:touch)
+    Example.where(structure: satisfies.structure)
+           .update_all(updated_at: Time.now)
   end
 
   def to_s

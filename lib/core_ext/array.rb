@@ -98,8 +98,8 @@ class Hash
         a.satisfies = p.property
       end
     end
-    Implication.all.to_a.each do |im| 
-      if hash.has_value?(im.implies) 
+    Implication.all.to_a.each do |im|
+      if hash.has_value?(im.implies)
         Implication.create(atoms: self.select{|k,v| im.atoms.include?(hash[k])}.values, implies: self.select{|k,v| im.implies==hash[k]}.values.first)
       end
     end

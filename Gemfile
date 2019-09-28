@@ -14,6 +14,7 @@ gem 'globalize-accessors'
 gem 'i18n-tasks', '~> 0.9.29'
 gem 'rails-i18n', '~> 6.0.0'
 gem 'sqlite3'
+gem 'bootstrap'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.0'
@@ -57,6 +58,7 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+  gem 'bullet'
   gem 'listen', '~> 3.0.5'
   gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring

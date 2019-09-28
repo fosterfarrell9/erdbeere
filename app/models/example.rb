@@ -13,7 +13,7 @@ class Example < ApplicationRecord
   globalize_accessors
 
   def touch_appearances_as_building_block_realizations
-    appearances_as_building_block_realizations.each(&:touch)
+    appearances_as_building_block_realizations.update_all(updated_at: Time.now)
   end
 
   def hardcoded_flat_truths

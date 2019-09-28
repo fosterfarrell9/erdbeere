@@ -55,6 +55,7 @@ class Structure < ApplicationRecord
   end
 
   def touch_examples
-    (examples + original_examples).uniq.map(&:touch)
+    Example.where(id: (examples + original_examples).uniq.map(&:id))
+           .update_all(updated_at: Time.now)
   end
 end

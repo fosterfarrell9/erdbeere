@@ -3,6 +3,8 @@
 cruring = Structure.create do |r|
   r.name_en = 'Commutative unitary ring '
   r.name_de = 'Kommutativer Ring mit Eins'
+  r.definition_de = 'Ein kommutativer Ring mit $1$ A ring $R$ is an abelian group together with a ' \
+                    'map $R\times R …'
 end
 
 crurp ={}
@@ -34,7 +36,7 @@ crurp['finite'].implies! crurp['Noetherian']
 cruzee = Example.create do |e|
   e.structure = cruring
   e.description_en = 'Integers'
-  e.description_de = '$\mathbb Z$'
+  e.description_de = '$\mathbb{Z}$'
 end
 cruzee.satisfies! crurp['Euclidean domain']
 cruzee.violates! [crurp['finite'], crurp['finite']]
@@ -186,7 +188,7 @@ cru_Zee_mod_5.satisfies! [crurp['finite'], crurp['field']]
 #end
 
 #srep = {}
-#[ 
+#[
 #  ['unit', 'Einheit'],
 #  ['irreducible', 'irreduzibel'],
 #  ['prime', 'Primelement']
