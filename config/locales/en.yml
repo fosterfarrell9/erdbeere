@@ -57,3 +57,5 @@ en:
       search_button: Search!
       title: Search for an object
       violates: Violates
+  controllers:
+    no_structure: 'There is no structure with this id.'      

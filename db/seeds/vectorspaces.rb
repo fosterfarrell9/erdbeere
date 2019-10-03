@@ -67,9 +67,15 @@ reals.violates! vsp['finite dimensional'].property
 vsp_endo = Structure.create do |s|
   s.name_en = 'Vector space endomorphism'
   s.name_en = 'Vektorraum-Endomorphismus'
+  s.definition_de = 'Ein Vektorraum-Endomorphismus von $V$ ist eine lineare Abbildung $V\toV$.'
 end
 
-underlying_vsp = BuildingBlock.create(explained_structure: vsp_endo, structure: vector_space, name: 'vector space')
+underlying_vsp = BuildingBlock.create do |b|
+  b.explained_structure = vsp_endo
+  b.structure = vector_space
+  b.name_de = 'Vektorraum'
+  b.definition_de = '$V$'
+end
 
 endop = {}
 [

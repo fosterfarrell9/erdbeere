@@ -57,3 +57,5 @@ de:
       search_button: Suchen!
       title: Nach einem Objekt suchen
       violates: Verletzt
+  controllers:
+    no_structure: 'Eine Struktur mit dieser id gibt es nicht.'

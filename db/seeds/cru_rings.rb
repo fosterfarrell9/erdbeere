@@ -3,7 +3,12 @@
 cruring = Structure.create do |r|
   r.name_en = 'Commutative unitary ring '
   r.name_de = 'Kommutativer Ring mit Eins'
-  r.definition_de = 'Ein kommutativer Ring mit $1$ A ring $R$ is an abelian group together with a ' \
+  r.definition_de = 'Ein kommutativer Ring mit $1$ ist eine Menge $A$ zusammen mit Verknüpfungen' \
+                    '$+,\cdot\colon A\times A\to A$, so dass gilt: <br>' \
+                    '(KR1) $(A,+)$ ist eine abelsche Gruppe. <br>' \
+                    '(KR2) $(A,\cdot)$ ist ein abelsches Monoid. <br>' \
+                    '(KR3) Es gilt das Distributivgesetz: $a\cdot(b+c)=a\cdot b+a\cdot c$.'
+  r.definition_en = 'A ring $R$ is an abelian group together with a ' \
                     'map $R\times R …'
 end
 

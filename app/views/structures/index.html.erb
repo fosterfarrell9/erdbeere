@@ -1,5 +1,6 @@
 <% @structures.each do |s| %>
   <li>
-    <%= s.name %>
+    <%= link_to s.name,
+    		    structure_path(s) %>
   </li>
 <% end %>

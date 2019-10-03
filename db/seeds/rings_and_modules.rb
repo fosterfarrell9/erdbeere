@@ -3,8 +3,11 @@
 ring = Structure.create do |r|
   r.name_en = 'Ring'
   r.name_de = 'Ring'
-  r.definition_en = 'A ring $R$ is an abelian group together with a ' \
-                    'map $R\times R …'
+  r.definition_en = 'Ein Ring ist eine Menge $R$ zusammen mit Verknüpfungen' \
+                    '$+,\cdot\colon R\times R\to R$, so dass gilt: <br>' \
+                    '(KR1) $(R,+)$ ist eine abelsche Gruppe. <br>' \
+                    '(KR2) $(R,\cdot)$ ist eine Halbgruppe. <br>' \
+                    '(KR3) Es gelten die Distributivgesetze: $a\cdot(b+c)=a\cdot b+a\cdot c$, $(a+b)\cdot c =a\cdot c+b\cdot c$.'
 end
 
 rp = {}
@@ -101,12 +104,21 @@ comm_not_noeth.violates! [rp['left Noetherian'], rp['absolutely flat']]
 rmod = Structure.create do |s|
   s.name_en = '$R$-(left-)module'
   s.name_de = '$R$-(links-)Modul'
+  s.definition_de = 'Ein $R$-(Links-)Modul $M$ ist eine abelsche Gruppe $(M,+)$, zusammen mit einer' \
+                    'Verknüfung $\cdot\colon R\times M\to M$ (skalare Multiplikation) so dass für alle
+                     $a,b\in R, x,y\in M$ gilt: <br>' \
+                    '(LM1) $a(x+y)=ax+ay$ <br>' \
+                    '(LM2) $(a+b)x=ax+bx$ <br>' \
+                    '(LM3) $a(bx)=(ab)x$ <br>' \
+                    '(LM4) $1x=x$'  
 end
 
 base_ring = BuildingBlock.create do |b|
   b.name_en = 'base ring'
+  b.name_de = 'Basisring'
   b.explained_structure = rmod
   b.structure = ring
+  b.definition_de = '$R$'
   b.definition_en = 'A ring homomorphism $R\longrightarrow ' \
                     '\mathrm{End}(M)$ …'
 end
