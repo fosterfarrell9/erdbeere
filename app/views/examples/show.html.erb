@@ -1,6 +1,8 @@
-<% provide(:title, I18n.t('example.show.title') + ' ' + @example.description[0..100]) %>
+<h4>
+  <%= I18n.t('example.show.title') + ' ' + @example.description[0..100] %>
+</h4>
 <% cache @example do %>
-  <div class="tile is-ancestor">
+  <div class="row">
     <% if @example.building_block_realizations.count == 0 %>
       <% width = 4 %>
     <% elsif @example.building_block_realizations.count == 1 %>
@@ -8,74 +10,113 @@
     <% else %>
       <% width = 8 %>
     <% end %>
-    <div class="tile is-vertical is-parent is-<%= width %>">
-      <article class="tile is-child notification is-info">
-        <div class="content">
-          <h3 class="title"><%= I18n.t("examples.show.description", :default => "Description") %></h3>
-          <p><%= @example.description %></p>
+    <div class="col-<%= width %>">
+      <div class="card bg-info">
+        <div class="card-header">
+          <h3>
+            <%= I18n.t("examples.show.description",
+                       default: "Description") %>
+          </h3>
         </div>
-      </article>
-      <article class="tile is-child notification is-success">
-        <div class="content">
-          <h3 class="title"><%= I18n.t("examples.show.hardcoded_truths", :default => "Hardcoded Truths") %></h3>
+        <div class="card-body">
+          <%= @example.description %>
+        </div>
+      </div>
+      <div class="card bg-success">
+        <div class="card-header">
+          <h3>
+            <%= I18n.t("examples.show.hardcoded_truths",
+                       default: "Hardcoded Truths") %>
+          </h3>
+        </div>
+        <div class="card-body">
           <ul>
             <% @example.hardcoded_flat_truths.each do |atom| %>
-              <%= render 'atoms/show', :atom => atom, :modifier => t('logic.is') %>
+              <%= render partial: 'atoms/show',
+                         locals: { atom: atom,
+                                   modifier: t('logic.is') } %>
             <% end %>
           </ul>
         </div>
-      </article>
+      </div>
       <% unless @example.hardcoded_flat_falsehoods.empty? %>
-        <article class="tile is-child notification is-danger">
-          <div class="content">
-            <h3 class="title"><%= I18n.t("examples.show.hardcoded_falsehoods", :default => "Hardcoded Falsehoods") %></h3>
+        <div class="card bg-danger">
+          <div class="card-header">
+            <h3>
+              <%= I18n.t("examples.show.hardcoded_falsehoods",
+                         default: "Hardcoded Falsehoods") %>
+            </h3>
+          </div>
+          <div class="card-body">
             <ul id="falsehoods">
               <% @example.hardcoded_flat_falsehoods.each do |atom| %>
-                <%= render 'atoms/show', :atom => atom, :modifier => t('logic.is_not') %>
+                <%= render partial: 'atoms/show',
+                           locals: { atom: atom,
+                                     modifier: t('logic.is_not') } %>
               <% end %>
             </ul>
           </div>
-        </article>
+        </div>
       <% end %>
       <% unless @example.building_block_realizations.empty? %>
-        <div class="tile is-child">
-          <div class="content box">
-            <h3 class="title"><%= I18n.t("examples.show.building_blocks", :default => "Building Blocks") %></h3>
-            <div class="tile is-ancestor">
-              <div class="tile is-parent">
-                <% @example.building_block_realizations.each do |bbr| %>
-                  <%= render 'building_block_realizations/show', bbr: bbr %>
-                <% end %>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="title">
+              <%= I18n.t("examples.show.building_blocks",
+                         default: "Building Blocks") %>
+            </h3>
+          </div>
+          <div class="card-body">
+            <% @example.building_block_realizations.each do |bbr| %>
+              <div class="border p-2">
+                <%= render partial: 'building_block_realizations/show',
+                           locals: { bbr: bbr } %>
               </div>
-            </div>
+            <% end %>
           </div>
         </div>
       <% end %>
     </div>
-    <div class="tile is-parent is-vertical">
+    <div class="col-<%= 12 - width %>">
       <% unless (@example.satisfied_atoms_with_implications.first - @example.hardcoded_truths).empty? %>
-        <article class="tile is-child notification is-success">
-          <div class="content">
-            <h3 class="title"><%= I18n.t("examples.show.derived_truths", :default => "Derived truths") %></h3>
+        <div class="card bg-success">
+          <div class="card-header">
+            <h3 class="title">
+              <%= I18n.t("examples.show.derived_truths",
+                         default: "Derived truths") %>
+            </h3>
+          </div>
+          <div class="card-body">
             <% @example.satisfied_atoms_with_implications.second.each_pair do |implication, atom| %>
               <% unless @example.hardcoded_truths.include?(atom) || atom.stuff_w_props.is_a?(BuildingBlock) %>
-                <%= render 'atoms/show', atom: atom, modifier: t('logic.is'), implication: implication %>
+                <%= render partial: 'atoms/show',
+                           locals: { atom: atom,
+                                     modifier: t('logic.is'),
+                                     implication: implication } %>
               <% end %>
             <% end %>
           </div>
-        </article>
+        </div>
       <% end %>
       <% unless (@example.computable_violations_with_implications.first - @example.hardcoded_falsehoods).empty? %>
-        <article class="tile is-child notification is-danger">
-          <div class="content">
-            <h3 class="title"><%= I18n.t("examples.show.derived_falsehoods") %></h3>
+        <div class="card bg-danger">
+          <div class="card-header">
+            <h3 class="title">
+              <%= I18n.t("examples.show.derived_falsehoods") %>
+            </h3>
+          </div>
+          <div class="card-body">
             <%  @example.computable_violations_with_implications.second.each_pair do |atom, implication| %>
               <% unless @example.hardcoded_falsehoods.include?(atom) %>
-                <%= render 'atoms/show', atom: atom, modifier: t('logic.is_not'), implication: implication, success: 'danger' %>
+                <%= render partial: 'atoms/show',
+                           locals: { atom: atom,
+                                     modifier: t('logic.is_not'),
+                                     implication: implication,
+                                     success: 'danger' } %>
               <% end %>
             <% end %>
           </div>
-        </article>
+        </div>
       <% end %>
     </div>
   </div>

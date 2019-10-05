@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'activemodel-serializers-xml'
-gem 'bulma-rails', '~> 0.4.0'
+# gem 'bulma-rails', '~> 0.4.0'
 gem 'coveralls', require: false
 gem 'font-awesome-rails'
 gem 'globalize', git: 'https://github.com/globalize/globalize'

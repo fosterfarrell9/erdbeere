@@ -1,0 +1,61 @@
+
+
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+
+/* set the overriding variables */
+$grid-breakpoints: (
+  xxxs: 0,
+  xxs: 320px,
+  xs: 568px,
+  sm: 667px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px,
+  xxxl: 1600px,
+  xxxxl: 1920px,
+  xxxxxl: 2160px
+);
+
+$container-max-widths: (
+  xxxs: 0,
+  xxs: 320px,
+  xs: 568px,
+  sm: 667px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440px,
+  xxxl: 1600px,
+  xxxxl: 1920px,
+  xxxxxl: 2160px
+);
+
+
+/* override the !default vars with the values we set above */
+@import "bootstrap";
+
+select[multiple].multi-select {
+    all: initial;
+    font: inherit;
+    overflow-y: auto;
+    border-radius: 3px;
+    padding-bottom: 0.5em;
+    padding-left: 0.625em;
+    padding-top: 0.5em;
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    color: #363636;
+    cursor: pointer;
+    display: block;
+    outline: none;
+    padding-right: 2.5em;
+    height: 13em;
+}
+
+select[multiple].multi-select:active, select[multiple].multi-select:focus {
+    border-color: #00d1b2;
+}
+
+@import "font-awesome";

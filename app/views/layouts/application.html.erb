@@ -11,53 +11,23 @@
     <%= favicon_link_tag '/favicon.ico' %>
   </head>
   <body>
-    <div class="container">
-      <nav class="nav">
-        <div class="nav-left">
-          <a href="/" class="nav-item">
-            <img src="/erdbeere.png">
-            <h1>ErDBeere</h1>
-          </a>
+    <div>
+      <main>
+        <div class="alert alert-danger" id="js-messages" role="alert"
+             style="display: none;">
         </div>
-        <div class="nav-center">
-          <div class="nav-item">
-            <a href="<%= main_search_path %>" class="button is-info is-outlined">
-              <span class="icon">
-                <i class="fa fa-search"></i>
-              </span>
-              <span><%= t('layouts.application.search') %></span>
-            </a>
+        <% if alert.present? %>
+          <div class="alert alert-danger" role="alert">
+            <%= alert %>
           </div>
-        </div>
-      </nav>
-    </div>
-    <% if flash.any? %>
-      <% if not flash[:error].blank? %>
-        <%= render("main/hero", class_modifier: "is-danger", subtitle: I18n.t("layouts.application.error"), title: flash[:error])%>
-      <% elsif not flash[:warning].blank? %>
-        <%= render("main/hero", class_modifier: "is-warning", subtitle: I18n.t("layouts.application.warning"), title: flash[:warning])%>
-      <% else %>
-        <%= render("main/hero", class_modifier: "is-notice", subtitle: I18n.t("layouts.application.notice"), title: flash.join("\n"))%>
-      <% end %>
-    <% else %>
-      <% unless yield(:title).empty? %>
-        <%= render("main/hero", class_modifier: "is-primary", title: yield(:title))%>
-      <% end %>
-    <% end %>
-    <section class="section">
-      <div class="container">
+        <% end %>
+        <% if notice.present? %>
+          <div class="alert alert-secondary" role="alert">
+            <%= notice %>
+          </div>
+        <% end %>
         <%= yield %>
-      </div>
-    </section>
-    <footer class="footer">
-      <div class="container">
-        <div class="content has-text-centered">
-          <p>
-            <strong>ErDBeere</strong> <%= I18n.t("footer.is_on") %> <a href="https://github.com/oqpvc/erdbeere">GitHub</a>!
-          </p>
-          <p><small>Powered by <a href="http://rubyonrails.org">Rails</a>, <a href="http://bulma.io">Bulma</a>, <a href="http://mathjax.org">MathJax</a> and <a href="http://spacemacs.org">Spacemacs</a>.</small></p>
-        </div>
-      </div>
-    </footer>
+      </main>
+    </div>
   </body>
 </html>

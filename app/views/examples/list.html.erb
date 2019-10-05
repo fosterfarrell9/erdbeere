@@ -2,20 +2,29 @@
 <div class="tile is-ancestor">
   <div class="tile is-vertical">
     <% Structure.all.each_slice(3) do |slice| %>
-      <div class="tile is-parent">
+      <div class="row mb-2 p-2">
         <% slice.each do |s| %>
-          <article class="tile is-child content">
-            <h2 class="title"><%= s.name %></h2>
-            <ul>
-              <% s.examples.each do |e| %>
-                <li>
-                  <%= link_to e.description[0..100],
-                              example_path(:id => e.id) %>
-
-                </li>
-              <% end %>
-            </ul>
-          </article>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="title">
+                  <%= link_to s.name,
+                              structure_path(s),
+                              class: 'text-dark' %>
+                </h4>
+              </div>
+              <div class="card-body">
+                <ul>
+                  <% s.examples.each do |e| %>
+                    <li>
+                      <%= link_to e.description[0..100],
+                                  example_path(:id => e.id) %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
         <% end %>
       </div>
     <% end %>
