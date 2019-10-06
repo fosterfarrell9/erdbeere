@@ -59,3 +59,11 @@ select[multiple].multi-select:active, select[multiple].multi-select:focus {
 }
 
 @import "font-awesome";
+
+.bg-truth {
+  background-color: #b3ffb3;
+}
+
+.bg-falsehood {
+  background-color: #ffb3b3;
+}

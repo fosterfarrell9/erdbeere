@@ -1,6 +1,6 @@
 <% provide(:title, 'Logic error') %>
 <div class="row">
-  <article class="col-3 bg-success">
+  <article class="col-3 bg-truth">
     <h3>
       <%= I18n.t("examples.violates_logic.you_were_looking_for_an_object_with_the_following_truths", 
                  default: "You were looking for an object with the following truths:") %>
@@ -13,7 +13,7 @@
       <% end %>
     </ul>
   </article>
-  <article class="col-3 bg-success">
+  <article class="col-3 bg-truth">
     <div class="content">
       <h3>
         <%= I18n.t("examples.violates_logic.the_following_additional_truths_were_derived",
@@ -43,7 +43,7 @@
         <% end %>
       </ul>
     </article>
-    <article class="col-3 bg-danger">
+    <article class="col-3 bg-falsehood">
       <h3>
         <%= I18n.t("examples.violates_logic.i_found_the_following_contradiction",
                    default: "I found the following contradiction:") %>

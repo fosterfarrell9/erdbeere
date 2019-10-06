@@ -9,7 +9,7 @@
       <%= link_to bbr.realization.description,
                   example_path(id: bbr.realization.id) %>
     </p>
-    <div class="card bg-success">
+    <div class="card bg-truth">
       <div class="card-header">
         <h5>
           <%= I18n.t("building_block_realizations.show.hardcoded_truths",
@@ -26,7 +26,7 @@
       </div>
     </div>
     <% unless bbr.realization.hardcoded_falsehoods.empty? %>
-      <div class="card bg-danger">
+      <div class="card bg-falsehood">
         <div class="card-header">
           <h5>
             <%= I18n.t("building_block_realizations.show.hardcoded_falsehoods",

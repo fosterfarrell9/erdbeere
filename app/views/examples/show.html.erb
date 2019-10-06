@@ -11,23 +11,23 @@
       <% width = 8 %>
     <% end %>
     <div class="col-<%= width %>">
-      <div class="card bg-info">
+      <div class="card mb-3">
         <div class="card-header">
-          <h3>
+          <h4>
             <%= I18n.t("examples.show.description",
                        default: "Description") %>
-          </h3>
+          </h4>
         </div>
         <div class="card-body">
           <%= @example.description %>
         </div>
       </div>
-      <div class="card bg-success">
+      <div class="card bg-truth mb-3">
         <div class="card-header">
-          <h3>
+          <h4>
             <%= I18n.t("examples.show.hardcoded_truths",
                        default: "Hardcoded Truths") %>
-          </h3>
+          </h4>
         </div>
         <div class="card-body">
           <ul>
@@ -40,12 +40,12 @@
         </div>
       </div>
       <% unless @example.hardcoded_flat_falsehoods.empty? %>
-        <div class="card bg-danger">
+        <div class="card bg-falsehood mb-3">
           <div class="card-header">
-            <h3>
+            <h4>
               <%= I18n.t("examples.show.hardcoded_falsehoods",
                          default: "Hardcoded Falsehoods") %>
-            </h3>
+            </h4>
           </div>
           <div class="card-body">
             <ul id="falsehoods">
@@ -61,10 +61,10 @@
       <% unless @example.building_block_realizations.empty? %>
         <div class="card">
           <div class="card-header">
-            <h3 class="title">
+            <h4>
               <%= I18n.t("examples.show.building_blocks",
                          default: "Building Blocks") %>
-            </h3>
+            </h4>
           </div>
           <div class="card-body">
             <% @example.building_block_realizations.each do |bbr| %>
@@ -79,12 +79,12 @@
     </div>
     <div class="col-<%= 12 - width %>">
       <% unless (@example.satisfied_atoms_with_implications.first - @example.hardcoded_truths).empty? %>
-        <div class="card bg-success">
+        <div class="card bg-truth">
           <div class="card-header">
-            <h3 class="title">
+            <h4>
               <%= I18n.t("examples.show.derived_truths",
                          default: "Derived truths") %>
-            </h3>
+            </h4>
           </div>
           <div class="card-body">
             <% @example.satisfied_atoms_with_implications.second.each_pair do |implication, atom| %>
@@ -99,11 +99,11 @@
         </div>
       <% end %>
       <% unless (@example.computable_violations_with_implications.first - @example.hardcoded_falsehoods).empty? %>
-        <div class="card bg-danger">
+        <div class="card bg-falsehood">
           <div class="card-header">
-            <h3 class="title">
+            <h4>
               <%= I18n.t("examples.show.derived_falsehoods") %>
-            </h3>
+            </h4>
           </div>
           <div class="card-body">
             <%  @example.computable_violations_with_implications.second.each_pair do |atom, implication| %>
@@ -112,7 +112,7 @@
                            locals: { atom: atom,
                                      modifier: t('logic.is_not'),
                                      implication: implication,
-                                     success: 'danger' } %>
+                                     success: 'falsehood' } %>
               <% end %>
             <% end %>
           </div>

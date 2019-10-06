@@ -4,7 +4,7 @@
           <%= bb.name %>
         </h3>
       </div>
-      <div class="col-12 bg-success p-2">
+      <div class="col-12 bg-truth p-2">
         <%= label_tag(:satisfies,
                       I18n.t("main.search.satisfies",
                              default: 'Satisfies:'),
@@ -14,7 +14,7 @@
                        multiple: true,
                        class: 'multi-select') %>
       </div>
-      <div class="col-12 bg-danger p-2">
+      <div class="col-12 bg-falsehood p-2">
         <%= label_tag(:violates,
                       I18n.t("main.search.violates",
                              default: 'Violates:'),

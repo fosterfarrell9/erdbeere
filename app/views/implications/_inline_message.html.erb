@@ -1,5 +1,5 @@
 <% success ||= 'success' %>
-<article class="alert alert-<%= success %> derivation"
+<article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %> derivation"
          id="usage-of-implication-<%= implication.id %>">
   <p>
     <%= content_tag(:strong, t('implications.if')) %>

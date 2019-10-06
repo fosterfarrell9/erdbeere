@@ -1,13 +1,12 @@
 <% modifier ||= t('logic.is') %>
-<% success ||= 'success' %>
+<% success ||= 'truth' %>
 <% implication ||= nil %>
 <% unless atom.property.nil? %>
   <% if implication.nil? %>
     <li>
       <%= render partial: "atoms/inline_atom",
                  locals: { atom: atom, 
-                           modifier: modifier,
-                           success: success } %>
+                           modifier: modifier } %>
     </li>
   <% else %>
     <p>
@@ -20,8 +19,7 @@
         <span>
           <%= render partial: "atoms/inline_atom",
                      locals: { atom: atom,
-                               modifier: modifier,
-                               success: success } %>
+                               modifier: modifier } %>
         </span>
       </a>
       <%= render partial: "implications/inline_message",
