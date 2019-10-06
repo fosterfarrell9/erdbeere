@@ -1,8 +1,10 @@
-<div class="tile is-parent">
-  <% slice.each do |hit| %>
-    <div class="tile content is-child">
-      <h4><%= I18n.t("examples.find.description", :default => 'Description') %></h4>
-      <p class="subtitle"><%= link_to hit.description, example_path(id: hit.id) %></p>
-    </div>
-  <% end %>
-</div>
+<% slice.each do |hit| %>
+  <h4>
+  	<%= I18n.t("examples.find.description",
+  						 default: 'Description') %>
+	</h4>
+  <p>
+  	<%= link_to hit.description,
+  							example_path(id: hit.id) %>
+	</p>
+<% end %>

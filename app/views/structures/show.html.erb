@@ -7,7 +7,7 @@
 	<div class="card-body">
 		<% if @structure.original_building_blocks.any? %>
 			<h5>
-  			Gegeben:
+  			<%= t('examples.show.building_blocks') %>
 			</h5>
 			<ul>
 				<% @structure.original_building_blocks.each do |bb| %>
@@ -20,26 +20,25 @@
 			</ul>
 		<% end %>
 		<% if @structure.derives_from %>
-			Ein(e) <%= @structure.name %> ist ein
-			<%= link_to @structure.derives_from.name,
-									structure_path(@structure.derives_from) %>,
-			für den(die) gilt:
+			<%= t('structures.show.definition_details_html',
+						name: @structure.name,
+						derives_from: link_to(@structure.derives_from.name,
+																	structure_path(@structure.derives_from))) %>
 			<ul>
 				<% @structure.defining_atoms.each do |a| %>
-					<li>
-						<%= a.to_s %>
-					</li>
+            <%= render partial: 'atoms/show',
+                       locals: { atom: a } %>
 				<% end %>
 			</ul>
 		<% end %>
 		<% unless @structure.definition.blank? %>
-			<h5 class="mt-2">
-				Definition:
+			<h5>
+				<%= t('structures.show.definition') %>
 			</h5>
 			<%= @structure.definition.html_safe %>
 		<% end %>
-		<h5 class="mt-2">
-			Mögliche Eigenschaften:
+		<h5>
+			<%= t('structures.show.properties') %>
 		</h5>
 		<ul>
 			<% @structure.original_properties.each do |p| %>
@@ -50,7 +49,7 @@
 		</ul>
 		<% if @structure.related_structures != [@structure] %>
 			<h5 class="mt-2">
-  			Verwandte Strukturen:
+  			<%= t('structures.show.related_structures') %>
 			</h5>
 			<ul>
 				<% (@structure.related_structures - [@structure]).each do |s| %>

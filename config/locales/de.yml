@@ -34,6 +34,12 @@ de:
         Objekt gesucht, welches folgendes verletzt
       you_were_looking_for_an_object_with_the_following_truths: Du hast nach einem
         Objekt gesucht, welches folgendes erfüllt
+  structures:
+    show:
+      definition: 'Definition'
+      properties: 'Mögliche Eigenschaften'
+      related_structures: 'Verwandte Strukturen'
+      definition_details_html: 'Ein(e) %{name} ist ein(e) %{derives_from}, für den(die) gilt:'
   footer:
     is_on: ist auf
   implications:

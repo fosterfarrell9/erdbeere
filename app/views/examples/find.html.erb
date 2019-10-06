@@ -1,17 +1,29 @@
 <% provide(:title, I18n.t('examples.find.title')) %>
 <% unless @hits.blank? %>
-  <h2 class="title"><%= I18n.t("examples.find.direct_hits", :default => "Direct hits") %></h2>
-  <div class="tile is-ancestor is-vertical">
+  <h2>
+    <%= I18n.t("examples.find.direct_hits",
+               default: "Direct hits") %>
+  </h2>
+  <div class="row">
     <% @hits.each_slice(3).each do |slice| %>
-      <%= render('row_of_search_results', slice: slice) %>
+      <div class="col-4">
+        <%= render partial: 'examples/row_of_search_results',
+                   locals: { slice: slice } %>
+      </div>
     <% end %>
   </div>
 <% end %>
-<% unless (@almost_hits-@hits.to_a).blank? %>
-  <h2 class="title"><%= I18n.t("examples.find.still_consistent", :default => "Still consistent") %></h2>
-  <div class="tile is-ancestor">
+<% unless (@almost_hits - @hits.to_a).blank? %>
+  <h2>
+    <%= I18n.t("examples.find.still_consistent",
+               default: "Still consistent") %>
+  </h2>
+  <div class="row">
     <% (@almost_hits - @hits.to_a).each_slice(3).each do |slice| %>
-      <%= render('row_of_search_results', slice: slice) %>
+      <div class="col-4">
+        <%= render partial: 'row_of_search_results',
+                   locals: { slice: slice } %>
+      </div>
     <% end %>
   </div>
 <% end %>

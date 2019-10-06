@@ -1,7 +1,7 @@
 <% success ||= 'success' %>
-<article class="message bg-<%= success %> derivation"
+<article class="alert alert-<%= success %> derivation"
          id="usage-of-implication-<%= implication.id %>">
-  <p class="message-body">
+  <p>
     <%= content_tag(:strong, t('implications.if')) %>
     <% (implication.atoms - [implication.atoms.last]).each do |a| %>
       <%= render partial: "atoms/inline_atom",
