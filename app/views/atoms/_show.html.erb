@@ -5,15 +5,17 @@
   <% if implication.nil? %>
     <li>
       <%= render partial: "atoms/inline_atom",
-                 locals: { atom: atom, 
+                 locals: { atom: atom,
                            modifier: modifier } %>
     </li>
   <% else %>
     <p>
-      <a class="button bg-<%= success %> toggle-derivation"
+      <a class="button bg-<%= success %>"
          id="implication-<%= implication.id %>">
         <span class="icon is-small">
-          <i class="fa fa-plus-square">
+          <i class="fa fa-plus-square toggle-derivation"
+             data-toggle="collapse"
+             href="#atomDerivation-<%= atom.id %>">
           </i>
         </span>
         <span>
@@ -22,9 +24,12 @@
                                modifier: modifier } %>
         </span>
       </a>
-      <%= render partial: "implications/inline_message",
-                 locals: { implication: implication,
-                           success: success } %>
+      <div class="collapse"
+           id="atomDerivation-<%= atom.id %>">
+          <%= render partial: "implications/inline_message",
+                     locals: { implication: implication,
+                               success: success } %>
+      </div>
     </p>
   <% end %>
 <% end %>

@@ -211,6 +211,7 @@ GEM
     regexp_parser (1.6.0)
     request_store (1.4.1)
       rack (>= 1.4)
+    ricosat (1.0.3)
     rspec-core (3.8.2)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.4)
@@ -318,6 +319,7 @@ DEPENDENCIES
   rails (~> 6.0.0)
   rails-i18n (~> 6.0.0)
   rake
+  ricosat
   rspec-rails
   sass-rails (~> 5.0)
   spring
