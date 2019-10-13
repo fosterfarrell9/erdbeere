@@ -1,3 +1,5 @@
+require 'open3'
+
 class Example < ApplicationRecord
   include CacheIt
   has_many :example_facts
@@ -71,6 +73,36 @@ class Example < ApplicationRecord
     facts(test: true).all_that_follows
   end
   cache_it :satisfied_atoms
+
+  def satisfied_atoms_by_sat
+    # still needs some work ;-)
+    result = []
+    satisfied = hardcoded_truths
+    unsatisfied = hardcoded_falsehoods
+    atom_count = Atom.count
+    impl_count = Implication.count
+    props = structure.properties.map(&:to_atom) - (satisfied + unsatisfied)
+    props.each do |prop|
+      temp_file = Tempfile.new
+      File.open(temp_file, 'w') do |f|
+        f.write "p cnf #{atom_count} #{impl_count + satisfied.size + unsatisfied.size + 1} \n"
+        f.write Implication.to_dimacs_cached
+        satisfied.each do |a|
+          f.write "#{a.id} 0 \n"
+        end
+        unsatisfied.each do |a|
+          f.write "-#{a.id} 0 \n"
+        end
+        f.write "-#{prop.id} 0 \n"
+      end
+      cmd = "picosat -n #{temp_file.path}"
+      out, err, st = Open3.capture3(cmd)
+      if out == "s UNSATISFIABLE\n"
+        result.push prop
+      end
+    end
+    result + satisfied
+  end
 
   def satisfied_atoms_with_implications
     facts(test: true).all_that_follows_with_implications
