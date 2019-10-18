@@ -74,26 +74,27 @@ class Example < ApplicationRecord
   end
   cache_it :satisfied_atoms
 
+  def to_dimacs
+    dimacs = "p cnf #{Atom.count} "
+    dimacs.concat("#{Implication.count + hardcoded_truths.size + hardcoded_falsehoods.size + 1} \n")
+    dimacs.concat(Implication.to_dimacs_cached)
+    hardcoded_truths.each { |a| dimacs.concat("#{a.id} 0 \n") }
+    hardcoded_falsehoods.each { |a| dimacs.concat("-#{a.id} 0 \n") }
+    dimacs
+  end
+  cache_it :to_dimacs
+
+
   def satisfied_atoms_by_sat
     # still needs some work ;-)
     result = []
-    satisfied = hardcoded_truths
-    unsatisfied = hardcoded_falsehoods
-    atom_count = Atom.count
-    impl_count = Implication.count
-    props = structure.properties.map(&:to_atom) - (satisfied + unsatisfied)
+    props = structure.properties.map(&:to_atom) - (hardcoded_truths + hardcoded_falsehoods)
     props.each do |prop|
+      dimacs = to_dimacs
+      dimacs.concat("-#{prop.id} 0 \n")
       temp_file = Tempfile.new
       File.open(temp_file, 'w') do |f|
-        f.write "p cnf #{atom_count} #{impl_count + satisfied.size + unsatisfied.size + 1} \n"
-        f.write Implication.to_dimacs_cached
-        satisfied.each do |a|
-          f.write "#{a.id} 0 \n"
-        end
-        unsatisfied.each do |a|
-          f.write "-#{a.id} 0 \n"
-        end
-        f.write "-#{prop.id} 0 \n"
+        f.write dimacs
       end
       cmd = "picosat -n #{temp_file.path}"
       out, err, st = Open3.capture3(cmd)
@@ -101,8 +102,50 @@ class Example < ApplicationRecord
         result.push prop
       end
     end
-    result + satisfied
+    result + hardcoded_truths
   end
+
+  # this alternative method does not work: the ricosat ruby gem
+  # causes a segfault...
+  # def satisfied_atoms_by_sat_wrapper
+  #   # still needs some work ;-)
+  #   result = []
+  #   satisfied = hardcoded_truths
+  #   unsatisfied = hardcoded_falsehoods
+  #   atom_count = Atom.count
+  #   impl_count = Implication.count
+  #   props = structure.properties.map(&:to_atom) - (satisfied + unsatisfied)
+  #   props.each do |prop|
+  #     sat = RicoSAT.new
+  #     sat.enable_trace_generation
+  #     Implication.to_cnf_array_cached.each { |x| sat.add(x) }
+  #     satisfied.each do |a|
+  #       sat.add(a.id)
+  #       sat.add(0)
+  #     end
+  #     unsatisfied.each do |a|
+  #       sat.add(-a.id)
+  #       sat.add(0)
+  #     end
+  #     sat.add(-prop.id)
+  #     sat.add(0)
+  #     case sat.solve(-1)
+  #     when RicoSAT::SATISFIABLE
+  #       pp 'satisfiable'
+  #     when RicoSAT::UNSATISFIABLE
+  #       pp 'unsatisfiable'
+  #       original_stdout = $stdout
+  #       $stdout = StringIO.new
+  #       # next line results in a segfault
+  #       sat.write_extended_trace $stdout
+  #       x = $stdout.string
+  #       $stdout = original_stdout
+  #       result.push prop
+  #     else
+  #     end
+  #   end
+  #   result + satisfied
+  # end
 
   def satisfied_atoms_with_implications
     facts(test: true).all_that_follows_with_implications
