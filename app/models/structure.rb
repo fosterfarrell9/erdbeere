@@ -1,4 +1,5 @@
 class Structure < ApplicationRecord
+  include CacheIt
   has_many :original_properties, class_name: 'Property'
   has_many :original_examples, class_name: 'Example'
 
@@ -30,6 +31,11 @@ class Structure < ApplicationRecord
     return original_properties if derives_from.nil?
     original_properties + derives_from.properties
   end
+
+  def properties_as_atoms
+    properties.map(&:to_atom)
+  end
+  cache_it :properties_as_atoms
 
   def building_blocks
     return original_building_blocks if derives_from.nil?

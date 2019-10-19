@@ -84,22 +84,38 @@ class Example < ApplicationRecord
   end
   cache_it :to_dimacs
 
+  # this was an attempt to trick-implement direct proofs by adding "(p => q) AND (not q)" to lure sat into
+  # proving p to get a contradiction to (not q) - but it did not take the bait... 
+  # def to_dimacs_for_proof
+  #   dimacs = "p cnf #{Atom.count + 1} "
+  #   dimacs.concat("#{Implication.count + hardcoded_truths.size + hardcoded_falsehoods.size + 2} \n")
+  #   dimacs.concat(Implication.to_dimacs_cached)
+  #   hardcoded_truths.each { |a| dimacs.concat("#{a.id} 0 \n") }
+  #   hardcoded_falsehoods.each { |a| dimacs.concat("-#{a.id} 0 \n") }
+  #   dimacs.concat("-#{Atom.count + 1} 0 \n")
+  #   dimacs    
+  # end
+  # cache_it :to_dimacs_for_proof
 
   def satisfied_atoms_by_sat
     # still needs some work ;-)
     result = []
-    props = structure.properties.map(&:to_atom) - (hardcoded_truths + hardcoded_falsehoods)
+    props = structure.properties_as_atoms - (hardcoded_truths + hardcoded_falsehoods)
     props.each do |prop|
       dimacs = to_dimacs
       dimacs.concat("-#{prop.id} 0 \n")
-      temp_file = Tempfile.new
-      File.open(temp_file, 'w') do |f|
+      dimacs_file = Tempfile.new('dimacs')
+      File.open(dimacs_file, 'w') do |f|
         f.write dimacs
       end
-      cmd = "picosat -n #{temp_file.path}"
+      cmd = "picosat -n #{dimacs_file.path}"
       out, err, st = Open3.capture3(cmd)
       if out == "s UNSATISFIABLE\n"
-        result.push prop
+        trace_file = Tempfile.new('trace')
+        cmd = "picosat.trace -T #{trace_file.path} #{dimacs_file.path}"
+        system(cmd)
+        trace = File.read(trace_file.path)
+        result.push [prop, trace]
       end
     end
     result + hardcoded_truths
