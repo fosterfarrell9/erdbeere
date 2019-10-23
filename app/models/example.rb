@@ -69,6 +69,11 @@ class Example < ApplicationRecord
   end
   cache_it :hardcoded_truths
 
+  def hardcoded_falsehoods
+    facts(test: false)
+  end
+  cache_it :hardcoded_falsehoods  
+
   def satisfied_atoms
     facts(test: true).all_that_follows
   end
@@ -84,94 +89,62 @@ class Example < ApplicationRecord
   end
   cache_it :to_dimacs
 
-  # this was an attempt to trick-implement direct proofs by adding "(p => q) AND (not q)" to lure sat into
-  # proving p to get a contradiction to (not q) - but it did not take the bait... 
-  # def to_dimacs_for_proof
-  #   dimacs = "p cnf #{Atom.count + 1} "
-  #   dimacs.concat("#{Implication.count + hardcoded_truths.size + hardcoded_falsehoods.size + 2} \n")
-  #   dimacs.concat(Implication.to_dimacs_cached)
-  #   hardcoded_truths.each { |a| dimacs.concat("#{a.id} 0 \n") }
-  #   hardcoded_falsehoods.each { |a| dimacs.concat("-#{a.id} 0 \n") }
-  #   dimacs.concat("-#{Atom.count + 1} 0 \n")
-  #   dimacs    
-  # end
-  # cache_it :to_dimacs_for_proof
-
-  def satisfied_atoms_by_sat
-    # still needs some work ;-)
+  def derived_atoms_by_sat(satisfied: true, with_proof: false)
     result = []
+    proofs = {}
     props = structure.properties_as_atoms - (hardcoded_truths + hardcoded_falsehoods)
     props.each do |prop|
       dimacs = to_dimacs
-      dimacs.concat("-#{prop.id} 0 \n")
+      assumption = satisfied ? -prop.id : prop.id
+      dimacs.concat("#{assumption} 0 \n")
       dimacs_file = Tempfile.new('dimacs')
       File.open(dimacs_file, 'w') do |f|
         f.write dimacs
       end
-      cmd = "picosat -n #{dimacs_file.path}"
-      out, err, st = Open3.capture3(cmd)
+      out, err, st = Open3.capture3("picosat -n #{dimacs_file.path}")
       if out == "s UNSATISFIABLE\n"
-        trace_file = Tempfile.new('trace')
-        cmd = "picosat.trace -T #{trace_file.path} #{dimacs_file.path}"
-        system(cmd)
-        trace = File.read(trace_file.path)
-        result.push [prop, trace]
+        if with_implications
+          trace_file = Tempfile.new('trace')
+          Open3.capture3("picosat.trace -T #{trace_file.path} #{dimacs_file.path}")
+          trace = File.read(trace_file.path)
+          result.push(prop)
+          proofs[prop] = trace
+        else
+          result.push(prop)
+        end
       end
     end
+    return [result + hardcoded_falsehoods, proofs] if !satisfied && with_proof
+    return result + hardcoded_falsehoods if !satisfied
+    return [result + hardcoded_truths, proofs] if with_proof
     result + hardcoded_truths
   end
 
-  # this alternative method does not work: the ricosat ruby gem
-  # causes a segfault...
-  # def satisfied_atoms_by_sat_wrapper
-  #   # still needs some work ;-)
-  #   result = []
-  #   satisfied = hardcoded_truths
-  #   unsatisfied = hardcoded_falsehoods
-  #   atom_count = Atom.count
-  #   impl_count = Implication.count
-  #   props = structure.properties.map(&:to_atom) - (satisfied + unsatisfied)
-  #   props.each do |prop|
-  #     sat = RicoSAT.new
-  #     sat.enable_trace_generation
-  #     Implication.to_cnf_array_cached.each { |x| sat.add(x) }
-  #     satisfied.each do |a|
-  #       sat.add(a.id)
-  #       sat.add(0)
-  #     end
-  #     unsatisfied.each do |a|
-  #       sat.add(-a.id)
-  #       sat.add(0)
-  #     end
-  #     sat.add(-prop.id)
-  #     sat.add(0)
-  #     case sat.solve(-1)
-  #     when RicoSAT::SATISFIABLE
-  #       pp 'satisfiable'
-  #     when RicoSAT::UNSATISFIABLE
-  #       pp 'unsatisfiable'
-  #       original_stdout = $stdout
-  #       $stdout = StringIO.new
-  #       # next line results in a segfault
-  #       sat.write_extended_trace $stdout
-  #       x = $stdout.string
-  #       $stdout = original_stdout
-  #       result.push prop
-  #     else
-  #     end
-  #   end
-  #   result + satisfied
-  # end
+  def satisfied_atoms_by_sat
+    derived_atoms_by_sat
+  end
+
+  def satisfied_atoms_by_sat_with_proof
+    derived_atoms_by_sat(with_proof: true)
+  end
+
+  def violated_atoms_by_sat
+    derived_atoms_by_sat(satisfied: false)
+  end
+
+  def violated_atoms_by_sat_with_proof
+    derived_atoms_by_sat(satisfied: false, with_proof: true)
+  end
+
+  def satisfied_atoms
+    facts(test: true).all_that_follows
+  end
+  cache_it :satisfied_atoms
 
   def satisfied_atoms_with_implications
     facts(test: true).all_that_follows_with_implications
   end
   cache_it :satisfied_atoms_with_implications
-
-  def hardcoded_falsehoods
-    facts(test: false)
-  end
-  cache_it :hardcoded_falsehoods
 
   # this is really expensive! use with care!
   def violated_properties(with_implications: false)
