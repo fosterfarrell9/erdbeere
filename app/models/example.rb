@@ -103,12 +103,12 @@ class Example < ApplicationRecord
       end
       out, err, st = Open3.capture3("picosat -n #{dimacs_file.path}")
       if out == "s UNSATISFIABLE\n"
-        if with_implications
+        if with_proof
           trace_file = Tempfile.new('trace')
           Open3.capture3("picosat.trace -T #{trace_file.path} #{dimacs_file.path}")
           trace = File.read(trace_file.path)
           result.push(prop)
-          proofs[prop] = trace
+          proofs[prop] = Proof.new(trace)
         else
           result.push(prop)
         end

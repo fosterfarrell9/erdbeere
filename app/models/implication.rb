@@ -35,7 +35,7 @@ class Implication < ApplicationRecord
 
   def self.to_dimacs
     dimacs = ''
-    Implication.includes(:atoms, :implies).all.each do |i|
+    Implication.includes(:atoms, :implies).order(:id).all.each do |i|
       i.atoms.each do |a|
         dimacs += "-#{a.id} "
       end
@@ -57,22 +57,5 @@ class Implication < ApplicationRecord
       f.write self.to_dimacs
     end
     temp_file
-  end
-
-  def self.to_cnf_array
-    result = []
-    Implication.includes(:atoms, :implies).all.each do |i|
-      i.atoms.each do |a|
-        result.push(-a.id)
-      end
-      result += [i.implies.id, 0]
-    end
-    result
-  end
-
-  def self.to_cnf_array_cached
-    Rails.cache.fetch('implication_cnf_array') do
-      self.to_cnf_array
-    end
   end
 end
