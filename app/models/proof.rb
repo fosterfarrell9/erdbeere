@@ -1,17 +1,18 @@
 # Proof class
 # plain old ruby class to store proofs
 class Proof
-	attr_reader :used_implications, :premises, :assumption, :steps
+	attr_reader :used_implications, :premises, :assumption, :steps, :example
 
-	def initialize(text)
+	def initialize(text, example_id)
 		parse_proof(text)
+		@example = example_id
 	end
 
 	def parse_proof(text)
 		implication_ids = Implication.order(:id).pluck(:id)
 		implication_map = (1..implication_ids.length).zip(implication_ids).to_h
 		@lines = text.split("\n").map { |l| l.split(' ').map(&:to_i) }
-		@used_implications_lines = @lines.select do |l| 
+		@used_implications_lines = @lines.select do |l|
 																 l.first.in?(implication_ids)
 															 end
 		@premises_lines = (@lines - @used_implications_lines).select do |l|
@@ -75,6 +76,50 @@ class Proof
 		@used_implications.except!(:lines)
 		@premises.except!(:lines)
 		@assumption.except!(:line)
-		@steps.except!(:lines)	
-	end		
+		@steps.except!(:lines)
+	end
+
+	def to_s
+		aim = "Wir möchten zeigen: \n #{Example.find(@example).description} ist "
+		aim += 'nicht ' if true.in?(@assumption.values)
+		aim += "#{Atom.find(@assumption.keys.first).property.name}.\n"
+		used = "Wir verwenden: \n"
+		@used_implications.each do |k,v|
+			used += "(I#{k}) #{Implication.find(v).to_s} \n"
+		end
+		know = "Wir wissen:\n"
+		@premises.each do |k,v|
+			know += "V(#{k}) #{Example.find(@example).description} ist "
+			know += 'nicht ' if false.in?(v.values)
+			know += "#{Atom.find(v.keys.first).property.name}.\n"
+		end
+		assumption = "Annahme: \n #{Example.find(@example).description} ist "
+		assumption += 'nicht ' if false.in?(@assumption.values)
+		assumption += "#{Atom.find(@assumption.keys.first).property.name}.\n"
+		proof = "Beweis: \n"
+		@steps.each do |i,s|
+			proof += "Schritt (#{i}): \n"
+			if s[:conclusion] != :contradiction
+				proof += "#{Example.find(@example).description} ist "
+				proof += 'nicht ' if false.in?(s[:conclusion].values)
+				proof += "#{Atom.find(s[:conclusion].keys.first).property.name}.\n"
+			else
+				proof += "Widerspruch.\n"
+			end
+			proof += "Das folgt aus:"
+			s[:used].each do |u|
+				if u.first == :implication
+					proof += "I(#{u.second}), "
+				elsif u.first == :premise
+					proof += "V(#{u.second}), "
+				elsif u.first == :step
+					proof += "Schritt (#{u.second}), "
+				elsif u.first == :assumption
+					proof += "Annahme"
+				end
+			end
+			proof += ".\n"
+		end
+		aim + used + know + assumption + proof
+	end
 end

@@ -72,7 +72,7 @@ class Example < ApplicationRecord
   def hardcoded_falsehoods
     facts(test: false)
   end
-  cache_it :hardcoded_falsehoods  
+  cache_it :hardcoded_falsehoods
 
   def satisfied_atoms
     facts(test: true).all_that_follows
@@ -97,18 +97,12 @@ class Example < ApplicationRecord
       dimacs = to_dimacs
       assumption = satisfied ? -prop.id : prop.id
       dimacs.concat("#{assumption} 0 \n")
-      dimacs_file = Tempfile.new('dimacs')
-      File.open(dimacs_file, 'w') do |f|
-        f.write dimacs
-      end
-      out, err, st = Open3.capture3("picosat -n #{dimacs_file.path}")
+      out, err, st = Open3.capture3("echo '#{dimacs}' | picosat -n")
       if out == "s UNSATISFIABLE\n"
         if with_proof
-          trace_file = Tempfile.new('trace')
-          Open3.capture3("picosat.trace -T #{trace_file.path} #{dimacs_file.path}")
-          trace = File.read(trace_file.path)
+          out, trace, st = Open3.capture3("echo '#{dimacs}' | picosat.trace -T /dev/stderr")
           result.push(prop)
-          proofs[prop] = Proof.new(trace)
+          proofs[prop] = Proof.new(trace, id)
         else
           result.push(prop)
         end
