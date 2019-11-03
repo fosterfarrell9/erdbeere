@@ -87,18 +87,19 @@
             </h4>
           </div>
           <div class="card-body">
-            <% @example.satisfied_atoms_with_implications.second.each_pair do |implication, atom| %>
+            <% @example.satisfied_atoms_by_sat_with_proof.second.each_pair do |atom, proof| %>
               <% unless @example.hardcoded_truths.include?(atom) || atom.stuff_w_props.is_a?(BuildingBlock) %>
                 <%= render partial: 'atoms/show',
                            locals: { atom: atom,
                                      modifier: t('logic.is'),
-                                     implication: implication } %>
+                                     implication: nil,
+                                     proof: proof } %>
               <% end %>
             <% end %>
           </div>
         </div>
       <% end %>
-      <% unless (@example.computable_violations_with_implications.first - @example.hardcoded_falsehoods).empty? %>
+      <% unless (@example.violated_atoms_by_sat_with_proof.first - @example.hardcoded_falsehoods).empty? %>
         <div class="card bg-falsehood">
           <div class="card-header">
             <h4>
@@ -106,12 +107,13 @@
             </h4>
           </div>
           <div class="card-body">
-            <%  @example.computable_violations_with_implications.second.each_pair do |atom, implication| %>
+            <%  @example.violated_atoms_by_sat_with_proof.second.each_pair do |atom, proof| %>
               <% unless @example.hardcoded_falsehoods.include?(atom) %>
                 <%= render partial: 'atoms/show',
                            locals: { atom: atom,
                                      modifier: t('logic.is_not'),
-                                     implication: implication,
+                                     implication: nil,
+                                     proof: proof,
                                      success: 'falsehood' } %>
               <% end %>
             <% end %>

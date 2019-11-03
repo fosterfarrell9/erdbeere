@@ -9,37 +9,10 @@ class Proof
 	end
 
 	def parse_proof(text)
-		implication_ids = Implication.order(:id).pluck(:id)
-		implication_map = (1..implication_ids.length).zip(implication_ids).to_h
-		@lines = text.split("\n").map { |l| l.split(' ').map(&:to_i) }
-		@used_implications_lines = @lines.select do |l|
-																 l.first.in?(implication_ids)
-															 end
-		@premises_lines = (@lines - @used_implications_lines).select do |l|
-												l.drop(2) == [0,0]
-											end
-		@assumption_line = @premises_lines.pop
-		@steps_lines = @lines -
-										(@used_implications_lines + @premises_lines +
-											[@assumption_line])
-		@used_implications = (1..@used_implications_lines.count)
-													 .zip(@used_implications_lines
-													 				.map { |l| implication_map[l.first] })
-													 .to_h
-		@used_implications[:lines] = (1..@used_implications.count)
-																		.zip(@used_implications_lines
-																					 .map(&:first)).to_h
-		@premises = (1..@premises_lines.count)
-									.zip(@premises_lines
-												 .map { |l| [[l.second.abs, l.second.positive?]].to_h })
-									.to_h
-		@premises[:lines] = (1..@premises.count)
-													.zip(@premises_lines.map(&:first)).to_h
-		@assumption = [[@assumption_line.second.abs,
-										@assumption_line.second.positive?]].to_h
-		@assumption[:line] = @assumption_line.first
-		@steps = {}
-		@steps[:lines] = {}
+		extract_lines!(text)
+		extract_implications!
+		extract_premises_and_assumption!
+		extract_steps!
 		@steps_lines.each_with_index do |l, i|
 			j = i + 1
 			@steps[j] = {}
@@ -67,7 +40,7 @@ class Proof
 		clean_up!
 	end
 
-	def clean_up!
+	def clean_up!	
 		remove_instance_variable(:@lines)
 		remove_instance_variable(:@used_implications_lines)
 		remove_instance_variable(:@premises_lines)
@@ -89,7 +62,7 @@ class Proof
 		end
 		know = "Wir wissen:\n"
 		@premises.each do |k,v|
-			know += "V(#{k}) #{Example.find(@example).description} ist "
+			know += "(V#{k}) #{Example.find(@example).description} ist "
 			know += 'nicht ' if false.in?(v.values)
 			know += "#{Atom.find(v.keys.first).property.name}.\n"
 		end
@@ -121,5 +94,48 @@ class Proof
 			proof += ".\n"
 		end
 		aim + used + know + assumption + proof
+	end
+
+	def extract_lines!(text)
+		@lines = text.split("\n").map { |l| l.split(' ').map(&:to_i) }
+	end
+
+	def extract_implications!
+		implication_ids = Implication.order(:id).pluck(:id)
+		implication_map = (1..implication_ids.length).zip(implication_ids).to_h
+		@used_implications_lines = @lines.select do |l|
+																 l.first.in?(implication_ids)
+															 end
+		@used_implications = (1..@used_implications_lines.count)
+													 .zip(@used_implications_lines
+													 				.map { |l| implication_map[l.first] })
+													 .to_h
+		@used_implications[:lines] = (1..@used_implications.count)
+																		.zip(@used_implications_lines
+																					 .map(&:first)).to_h															 
+	end
+
+	def extract_premises_and_assumption!
+		@premises_lines = (@lines - @used_implications_lines).select do |l|
+												l.drop(2) == [0,0]
+											end
+		@assumption_line = @premises_lines.pop
+		@premises = (1..@premises_lines.count)
+									.zip(@premises_lines
+												 .map { |l| [[l.second.abs, l.second.positive?]].to_h })
+									.to_h
+		@premises[:lines] = (1..@premises.count)
+													.zip(@premises_lines.map(&:first)).to_h
+		@assumption = [[@assumption_line.second.abs,
+										@assumption_line.second.positive?]].to_h
+		@assumption[:line] = @assumption_line.first
+	end
+
+	def extract_steps!
+		@steps_lines = @lines -
+										(@used_implications_lines + @premises_lines +
+											[@assumption_line])
+		@steps = {}
+		@steps[:lines] = {}
 	end
 end

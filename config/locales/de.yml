@@ -56,6 +56,17 @@ de:
     is: ist
     is_and_is_not: ist und ist nicht
     is_not: ist nicht
+  proof:
+    want_to_show: Wir möchten zeigen
+    we_use: Wir verwenden
+    is: ist
+    isnt: ist nicht
+    we_know: Wir wissen
+    assumption: Annahme
+    proof: Beweis
+    step: Schritt
+    contradiction: Widerspruch
+    follows_from: Das folgt aus
   main:
     search:
       satisfies: Erfüllt

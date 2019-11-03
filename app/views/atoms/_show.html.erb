@@ -1,8 +1,9 @@
 <% modifier ||= t('logic.is') %>
 <% success ||= 'truth' %>
 <% implication ||= nil %>
+<% proof ||= nil %>
 <% unless atom.property.nil? %>
-  <% if implication.nil? %>
+  <% if implication.nil? && proof.nil? %>
     <li>
       <%= render partial: "atoms/inline_atom",
                  locals: { atom: atom,
@@ -10,8 +11,7 @@
     </li>
   <% else %>
     <p>
-      <a class="button bg-<%= success %>"
-         id="implication-<%= implication.id %>">
+      <a class="button bg-<%= success %>">
         <span class="icon is-small">
           <i class="fa fa-plus-square toggle-derivation"
              data-toggle="collapse"
@@ -26,9 +26,15 @@
       </a>
       <div class="collapse"
            id="atomDerivation-<%= atom.id %>">
-          <%= render partial: "implications/inline_message",
+        <% if implication %>
+          <%= render partial: 'implications/inline_message',
                      locals: { implication: implication,
                                success: success } %>
+        <% elsif proof %>
+          <%= render partial: 'proofs/show',
+                     locals: { proof: proof,
+                               success: success } %>
+        <% end %>
       </div>
     </p>
   <% end %>
