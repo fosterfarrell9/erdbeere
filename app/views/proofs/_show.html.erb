@@ -11,7 +11,9 @@
 </strong>
 <br>
 <% proof.used_implications.each do |k,v| %>
-	<%= "(I#{k}) #{Implication.find(v).to_s}" %>
+	<%= "(I#{k})" %>
+	<%= render partial: 'implications/show',
+						 locals: { implication: Implication.find(v) } %>
 	<br>
 <% end %>
 <strong>

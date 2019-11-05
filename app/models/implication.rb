@@ -25,7 +25,7 @@ class Implication < ApplicationRecord
     base_struct = implies.stuff_w_props.structure
     s = '*IF* '
     s << atoms.map { |a| '(' + a.to_s + ')' }.join(' *AND* ')
-    s << " *THEN* #{base_struct.name} *IS* #{implies.property.name}"
+    s << " *THEN* #{implies.to_s}"
     s
   end
 

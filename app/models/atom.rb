@@ -41,7 +41,7 @@ class Atom < ApplicationRecord
   end
 
   def to_s
-    "#{stuff_w_props.name} *IS* #{property.name}"
+    "#{deep_stuff_w_props_name} *IS* #{property.name}"
   end
 
   # call follows_from?(atom1, atom2, …) or follows_from?([atom1, atom2, …])
