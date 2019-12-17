@@ -1,19 +1,22 @@
-FROM ruby:2.6.4
 
-MAINTAINER oqpvq <o+docker@qp.vc>
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+FROM ruby:2.6.5
+
 ENV RAILS_ENV=production
 
 EXPOSE 3000
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
 
-RUN apt-get update && apt-get install -y nodejs sqlite3 --no-install-recommends && rm -rf /var/lib/apt/lists/*
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 
-RUN git clone https://github.com/oqpvc/erdbeere.git .
+# https://github.com/nodesource/distributions#installation-instructions
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+
+
+RUN apt-get update && apt-get install -y nodejs sqlite3 picosat --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -g 501 app && useradd -g 501 -u 501 -m -d /usr/src/app app
+WORKDIR /usr/src/app
+USER app
+COPY --chown=app:app ./Gemfile /usr/src/app
+COPY --chown=app:app ./Gemfile.lock /usr/src/app
 RUN bundle install
-RUN bundle exec rake assets:precompile
-RUN bundle exec rake db:schema:load
-RUN bundle exec rake db:seed
-
-
+COPY --chown=app:app ./ /usr/src/app
