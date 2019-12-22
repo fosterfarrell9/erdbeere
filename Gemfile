@@ -9,21 +9,20 @@ gem 'activemodel-serializers-xml'
 # gem 'bulma-rails', '~> 0.4.0'
 gem 'coveralls', require: false
 gem 'font-awesome-rails'
-gem 'globalize', git: 'https://github.com/globalize/globalize'
+gem 'globalize'
 gem 'globalize-accessors'
-gem 'i18n-tasks', '~> 0.9.29'
-gem 'rails-i18n', '~> 6.0.0'
+gem 'rails-i18n'
 gem 'sqlite3'
 gem 'bootstrap'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.0'
+gem 'rails', '~> 6.0.2'
 # Use Puma as the app server
-gem 'puma', '~> 3.0'
+gem 'puma'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails'
 # See https://github.com/rails/execjs#readme for more supported runtimes
