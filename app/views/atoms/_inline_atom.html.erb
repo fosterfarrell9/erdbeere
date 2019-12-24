@@ -1,13 +1,17 @@
-<% delim_close ||= nil %> 
+<% delim_close ||= nil %>
 <% modifier ||= t('logic.is') %>
 <% delim_open ||= '' %>
 <% fullstop = '.' if delim_close.nil? %>
 <% delim_close = '' if delim_close.nil? %>
+<% example ||= nil %>
 <%= delim_open %>
 	<%= atom.deep_stuff_w_props_name %>
-	<strong>
+	<% if example %>
+		<%= example.realization(atom).description %>
+	<% end %>
+	<i>
 		<%= modifier %>
-	</strong>
+	</i>
 	<%= atom.property.name %>
 	<%= fullstop %>
 <%= delim_close %>

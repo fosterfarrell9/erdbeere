@@ -50,6 +50,31 @@ en:
     is: is
     is_and_is_not: is and is not
     is_not: is not
+  proof:
+    want_to_show: We want to show
+    we_use: We use
+    is: is
+    isnt: is not
+    we_know: We know
+    assumption: assumption
+    proof: Proof
+    step: Step
+    contradiction: Contradiction
+    follows_from: This follows from
+    there_is_no_structure: >
+      There is no %{structure} which has all of the following
+      properties:
+    suppose_the_contrary: Suppose there exists %{structure} with
+      the above properties.
+  structure:
+    index:
+      title: 'Structures and their possible properties'
+    show:
+      definition: 'Definition'
+      properties: 'Possible Eigenschaften'
+      related_structures: 'Related structures'
+      definition_details_html: 'A %{name} is a %{derives_from}, for which holds:'
+      examples: 'Examples'
   main:
     search:
       satisfies: Satisfies
@@ -58,4 +83,4 @@ en:
       title: Search for an object
       violates: Violates
   controllers:
-    no_structure: 'There is no structure with this id.'      
+    no_structure: 'There is no structure with this id.'

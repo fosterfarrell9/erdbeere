@@ -34,12 +34,15 @@ de:
         Objekt gesucht, welches folgendes verletzt
       you_were_looking_for_an_object_with_the_following_truths: Du hast nach einem
         Objekt gesucht, welches folgendes erfüllt
-  structures:
+  structure:
+    index:
+      title: 'Strukturen und ihre möglichen Eigenschaften'
     show:
       definition: 'Definition'
       properties: 'Mögliche Eigenschaften'
       related_structures: 'Verwandte Strukturen'
       definition_details_html: 'Ein(e) %{name} ist ein(e) %{derives_from}, für den(die) gilt:'
+      examples: 'Beispiele'
   footer:
     is_on: ist auf
   implications:
@@ -67,6 +70,12 @@ de:
     step: Schritt
     contradiction: Widerspruch
     follows_from: Das folgt aus
+    there_is_no_structure: >
+      Es gibt kein(e)(n) %{structure} mit sämtlichen der
+      Eigenschaften:
+    suppose_the_contrary:
+      Wir nehmen an, dass es ein(e)(n) %{structure} gibt, der sämtliche
+      der obigen Eigenschaften hat.
   main:
     search:
       satisfies: Erfüllt

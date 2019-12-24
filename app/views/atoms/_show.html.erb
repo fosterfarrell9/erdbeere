@@ -2,12 +2,14 @@
 <% success ||= 'truth' %>
 <% implication ||= nil %>
 <% proof ||= nil %>
+<% example ||= nil %>
 <% unless atom.property.nil? %>
   <% if implication.nil? && proof.nil? %>
     <li>
       <%= render partial: "atoms/inline_atom",
                  locals: { atom: atom,
-                           modifier: modifier } %>
+                           modifier: modifier,
+                           example: example } %>
     </li>
   <% else %>
     <p>
@@ -21,7 +23,8 @@
         <span>
           <%= render partial: "atoms/inline_atom",
                      locals: { atom: atom,
-                               modifier: modifier } %>
+                               modifier: modifier,
+                               example: @example } %>
         </span>
       </a>
       <div class="collapse"
@@ -33,7 +36,8 @@
         <% elsif proof %>
           <%= render partial: 'proofs/show',
                      locals: { proof: proof,
-                               success: success } %>
+                               success: success,
+                               example: @example } %>
         <% end %>
       </div>
     </p>

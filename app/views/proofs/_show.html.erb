@@ -1,51 +1,87 @@
-<article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %> derivation">
-<strong>
-	<%= t('proof.want_to_show') %>:
-</strong>
-<%= Example.find(proof.example).description %>
-<%= true.in?(proof.assumption.values) ? t('proof.isnt') : t('proof.is') %>
-<%= Atom.find(proof.assumption.keys.first).property.name %>
-<br>
-<strong>
-	<%= t('proof.we_use') %>:
-</strong>
-<br>
-<% proof.used_implications.each do |k,v| %>
-	<%= "(I#{k})" %>
-	<%= render partial: 'implications/show',
-						 locals: { implication: Implication.find(v) } %>
+<article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %>">
+<% if proof.sort == 'example' %>
+	<strong>
+		<%= t('proof.want_to_show') %>:
+	</strong>
+	<%= render partial: 'atoms/inline_atom',
+						 locals: { atom: Atom.find(proof.assumption.keys.first),
+						 					 modifier: true.in?(proof.assumption.values) ? t('proof.isnt') : t('proof.is'),
+						 					 example: example } %>
 	<br>
-<% end %>
-<strong>
-	<%= t('proof.we_know') %>:
-</strong>
-<br>
-<% proof.premises.each do |k,v| %>
-	<%= "(V#{k}) #{Example.find(proof.example).description}" %>
-	<%= false.in?(v.values) ? t('proof.isnt') : t('proof.is') %>
-	<%= Atom.find(v.keys.first).property.name %>
+	<strong>
+		<%= t('proof.we_use') %>:
+	</strong>
 	<br>
+	<% proof.used_implications.each do |k,v| %>
+		<%= "(I#{k})" %>
+		<%= render partial: 'implications/show',
+							 locals: { implication: Implication.find(v) } %>
+		<br>
+	<% end %>
+	<strong>
+		<%= t('proof.we_know') %>:
+	</strong>
+	<br>
+	<% proof.premises.each do |k,v| %>
+		<%= "(V#{k})" %>
+		<%= render partial: 'atoms/inline_atom',
+							 locals: { atom: Atom.find(v.keys.first),
+							 					 modifier: false.in?(v.values) ? t('proof.isnt') : t('proof.is'),
+							 					 example: example } %>
+		<br>
+	<% end %>
+<% else %>
+	<%= t('proof.there_is_no_structure',
+				structure: proof.structure.name) %>
+	<br>
+	<% proof.premises.each do |k,v| %>
+		<%= "(V#{k})" %>
+		<%= render partial: 'atoms/inline_atom',
+							 locals: { atom: Atom.find(v.keys.first),
+							 					 modifier: false.in?(v.values) ? t('proof.isnt') : t('proof.is') } %>
+		<br>
+	<% end %>
+	<% if proof.used_implications.any? %>
+		<strong>
+			<%= t('proof.we_use') %>:
+		</strong>
+		<br>
+		<% proof.used_implications.each do |k,v| %>
+			<%= "(I#{k})" %>
+			<%= render partial: 'implications/show',
+								 locals: { implication: Implication.find(v) } %>
+			<br>
+		<% end %>
+	<% end %>
 <% end %>
-<strong>
-	<%= t('proof.assumption') %>:
-</strong>
-<%= Example.find(proof.example).description %>
-<%= true.in?(proof.assumption.values) ? t('proof.is') : t('proof.isnt') %>
-<%= Atom.find(proof.assumption.keys.first).property.name %>
-<br>
 <strong>
 	<%= t('proof.proof') %>:
 </strong>
 <br>
+<span class="assumption">
+	<%= t('proof.assumption') %>:
+</span>
+<% if proof.sort == 'find' %>
+	<%= t('proof.suppose_the_contrary',
+				structure: proof.structure.name) %>
+<% else %>
+	<%= render partial: 'atoms/inline_atom',
+						 locals: { atom: Atom.find(proof.assumption.keys.first),
+						 					 modifier: true.in?(proof.assumption.values) ? t('proof.is') : t('proof.isnt'),
+						 					 example: example } %>
+<% end %>
+<br>
 <% proof.steps.each do |i,s| %>
-	<%= t('proof.step') %>
-	<%= "(#{i})" %>:
+	<span class="badge badge-secondary">
+		<%= i %>
+	</span>
 	<% if s[:conclusion] != :contradiction %>
-		<%= Example.find(proof.example).description %>
-		<%= true.in?(s[:conclusion].values) ? t('proof.is') : t('proof.isnt') %>
-		<%= Atom.find(s[:conclusion].keys.first).property.name %>
+		<%= render partial: 'atoms/inline_atom',
+							 locals: { atom: Atom.find(s[:conclusion].keys.first),
+							 					 modifier: true.in?(s[:conclusion].values) ? t('proof.is') : t('proof.isnt'),
+							 					 example: example } %>
 	<% else %>
-		<%= t('proof.contradiction') %>
+		<%= t('proof.contradiction') %> &#8623;
 	<% end %>
 	<br>
 	<i>
@@ -57,7 +93,9 @@
 		<% elsif u.first == :premise %>
 			<%= "V(#{u.second}), " %>
 		<% elsif u.first == :step %>
-			<%= "#{t('proof.step')} (#{u.second}), " %>
+			<span class="badge badge-secondary">
+				<%= u.second %>
+			</span>,
 		<% elsif u.first == :assumption %>
 			<%= t('proof.assumption') %>
 		<% end %>

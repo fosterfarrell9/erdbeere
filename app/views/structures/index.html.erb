@@ -1,6 +1,45 @@
-<% @structures.each do |s| %>
-  <li>
-    <%= link_to s.name,
-    		    structure_path(s) %>
-  </li>
+<div class="row p-2">
+  <div class="col-6">
+    <h3>
+      <%= I18n.t('structure.index.title') %>
+    </h3>
+  </div>
+  <div class="col-6 text-right">
+    <a href="<%= main_search_path %>"
+       class="btn btn-outline-secondary">
+      <span>
+        <i class="fa fa-search">
+        </i>
+      </span>
+      <span>
+        <%= t('layouts.application.search') %>
+      </span>
+    </a>
+  </div>
+</div>
+<% Structure.all.each_slice(3) do |slice| %>
+  <div class="row mb-2 p-2">
+    <% slice.each do |s| %>
+      <div class="col-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="title">
+              <%= link_to s.name,
+                          structure_path(s),
+                          class: 'text-dark' %>
+            </h4>
+          </div>
+          <div class="card-body">
+            <ul>
+              <% s.original_properties.each do |p| %>
+                <li>
+                  <%= p.name %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 <% end %>

@@ -34,7 +34,8 @@
             <% @example.hardcoded_flat_truths.each do |atom| %>
               <%= render partial: 'atoms/show',
                          locals: { atom: atom,
-                                   modifier: t('logic.is') } %>
+                                   modifier: t('logic.is'),
+                                   example: @example } %>
             <% end %>
           </ul>
         </div>
@@ -52,7 +53,8 @@
               <% @example.hardcoded_flat_falsehoods.each do |atom| %>
                 <%= render partial: 'atoms/show',
                            locals: { atom: atom,
-                                     modifier: t('logic.is_not') } %>
+                                     modifier: t('logic.is_not'),
+                                     example: @example } %>
               <% end %>
             </ul>
           </div>
@@ -78,7 +80,7 @@
       <% end %>
     </div>
     <div class="col-<%= 12 - width %>">
-      <% unless (@example.satisfied_atoms_with_implications.first - @example.hardcoded_truths).empty? %>
+      <% unless (@example.satisfied_atoms_by_sat_with_proof.first - @example.hardcoded_truths).empty? %>
         <div class="card bg-truth">
           <div class="card-header">
             <h4>
@@ -93,7 +95,8 @@
                            locals: { atom: atom,
                                      modifier: t('logic.is'),
                                      implication: nil,
-                                     proof: proof } %>
+                                     proof: proof,
+                                     example: @example } %>
               <% end %>
             <% end %>
           </div>
@@ -114,7 +117,8 @@
                                      modifier: t('logic.is_not'),
                                      implication: nil,
                                      proof: proof,
-                                     success: 'falsehood' } %>
+                                     success: 'falsehood',
+                                     example: @example } %>
               <% end %>
             <% end %>
           </div>

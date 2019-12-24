@@ -56,7 +56,7 @@ class Structure < ApplicationRecord
 
   def examples
     related_structures.map(&:original_examples).flatten.find_all do |e|
-      (defining_atoms - e.satisfied_atoms).empty?
+      (defining_atoms - e.satisfied_atoms_by_sat).empty?
     end
   end
 

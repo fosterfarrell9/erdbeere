@@ -1,13 +1,14 @@
-<% (implication.atoms - [implication.atoms.last]).each do |a| %>
+<% last_atom = implication.atoms.last %>
+<% (implication.atoms - [last_atom]).each do |a| %>
   <%= render partial: "atoms/inline_atom",
              locals: { atom: a,
                        delim_open: '(',
                        delim_close: ')',
-                       fullstop:'' } %>
-  <%= content_tag(:strong, t('implications.and')) %>
+                       fullstop: '' } %>
+  <%= content_tag(:i, t('implications.and')) %>
 <% end %>
 <%= render partial: "atoms/inline_atom",
-           locals: { atom: implication.atoms.last,
+           locals: { atom: last_atom,
                      delim_open: '(',
                      delim_close: ')',
                      fullstop: '' } %>

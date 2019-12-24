@@ -1,3 +1,5 @@
+<div class="row p-2">
+<div class="col-6">
 <div class="card">
 	<div class="card-header">
 		<h4>
@@ -20,7 +22,7 @@
 			</ul>
 		<% end %>
 		<% if @structure.derives_from %>
-			<%= t('structures.show.definition_details_html',
+			<%= t('structure.show.definition_details_html',
 						name: @structure.name,
 						derives_from: link_to(@structure.derives_from.name,
 																	structure_path(@structure.derives_from))) %>
@@ -33,12 +35,12 @@
 		<% end %>
 		<% unless @structure.definition.blank? %>
 			<h5>
-				<%= t('structures.show.definition') %>
+				<%= t('structure.show.definition') %>
 			</h5>
 			<%= @structure.definition.html_safe %>
 		<% end %>
 		<h5>
-			<%= t('structures.show.properties') %>
+			<%= t('structure.show.properties') %>
 		</h5>
 		<ul>
 			<% @structure.original_properties.each do |p| %>
@@ -49,16 +51,37 @@
 		</ul>
 		<% if @structure.related_structures != [@structure] %>
 			<h5 class="mt-2">
-  			<%= t('structures.show.related_structures') %>
+  			<%= t('structure.show.related_structures') %>
 			</h5>
 			<ul>
 				<% (@structure.related_structures - [@structure]).each do |s| %>
 					<li>
 						<%= link_to s.name,
-												structure_path(s) %> 
+												structure_path(s) %>
 					</li>
 				<% end %>
 			</ul>
 		<% end %>
 	</div>
+</div>
+</div>
+<div class="col-6">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="title">
+      	<%= t('structure.show.examples') %>
+      </h4>
+    </div>
+    <div class="card-body">
+      <ul>
+        <% @structure.examples.each do |e| %>
+          <li>
+            <%= link_to e.description[0..100],
+                        example_path(:id => e.id) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
 </div>

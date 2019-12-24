@@ -7,6 +7,6 @@ Rails.application.routes.draw do
     match 'search', as: 'main_search', via: :get, to: 'main#search'
 
     resources :structures
-    get '/' => 'examples#list'
+    get '/' => 'structures#index'
   end
 end

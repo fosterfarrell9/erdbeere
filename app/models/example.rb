@@ -14,6 +14,44 @@ class Example < ApplicationRecord
   translates :description, fallbacks_for_empty_translations: true
   globalize_accessors
 
+  def self.find_restricted(structure, satisfies, violates)
+    dimacs = "p cnf #{Atom.count} "
+    dimacs.concat("#{Implication.count + satisfies.size + violates.size} \n")
+    dimacs.concat(Implication.to_dimacs_cached)
+    satisfies.each { |s| dimacs.concat("#{s.id} 0 \n") }
+    violates.each { |v| dimacs.concat("#{-v.id} 0 \n") }
+    out, err, st = Open3.capture3("echo '#{dimacs}' | picosat -n")
+    if out == "s UNSATISFIABLE\n"
+      out, trace, st = Open3.capture3("echo '#{dimacs}' | picosat.trace -T /dev/stderr")
+      proof = Proof.new('find', trace, nil, structure)
+    end
+    proof
+  end
+
+  def realization(atom)
+    if atom.satisfies.is_a?(Property)
+      if atom.stuff_w_props_type == 'Structure'
+        return self
+      elsif atom.stuff_w_props_type == 'BuildingBlock'
+        return building_block_realizations_flattened.find do |bbr|
+          bbr.building_block_id == atom.stuff_w_props_id
+        end  .realization
+      end
+    else
+      realization(atom.satisfies)
+    end
+  end
+
+  def building_block_realizations_flattened
+    return [] unless building_block_realizations.any?
+    bbrs = building_block_realizations
+    bbrs += building_block_realizations.map do |bbr|
+      bbr.realization.building_block_realizations_flattened
+    end
+    bbrs.flatten
+  end
+  cache_it :building_block_realizations_flattened
+
   def touch_appearances_as_building_block_realizations
     appearances_as_building_block_realizations.update_all(updated_at: Time.now)
   end
@@ -65,12 +103,12 @@ class Example < ApplicationRecord
   end
 
   def hardcoded_truths
-    facts(test: true)
+    facts(test: true).uniq
   end
   cache_it :hardcoded_truths
 
   def hardcoded_falsehoods
-    facts(test: false)
+    facts(test: false).uniq
   end
   cache_it :hardcoded_falsehoods
 
@@ -102,7 +140,7 @@ class Example < ApplicationRecord
         if with_proof
           out, trace, st = Open3.capture3("echo '#{dimacs}' | picosat.trace -T /dev/stderr")
           result.push(prop)
-          proofs[prop] = Proof.new(trace, id)
+          proofs[prop] = Proof.new('example', trace, id, nil)
         else
           result.push(prop)
         end

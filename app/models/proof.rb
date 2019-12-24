@@ -1,11 +1,14 @@
 # Proof class
 # plain old ruby class to store proofs
 class Proof
-	attr_reader :used_implications, :premises, :assumption, :steps, :example
+	attr_reader :sort, :used_implications, :premises, :assumption, :steps,
+						  :example, :structure
 
-	def initialize(text, example_id)
+	def initialize(sort, text, example_id, structure)
+		@sort = sort
 		parse_proof(text)
-		@example = example_id
+		@example = example_id if @sort == 'example'
+		@structure = structure if @sort == 'find'
 	end
 
 	def parse_proof(text)
@@ -40,7 +43,7 @@ class Proof
 		clean_up!
 	end
 
-	def clean_up!	
+	def clean_up!
 		remove_instance_variable(:@lines)
 		remove_instance_variable(:@used_implications_lines)
 		remove_instance_variable(:@premises_lines)
@@ -112,29 +115,34 @@ class Proof
 													 .to_h
 		@used_implications[:lines] = (1..@used_implications.count)
 																		.zip(@used_implications_lines
-																					 .map(&:first)).to_h															 
+																					 .map(&:first)).to_h
 	end
 
 	def extract_premises_and_assumption!
 		@premises_lines = (@lines - @used_implications_lines).select do |l|
 												l.drop(2) == [0,0]
 											end
-		@assumption_line = @premises_lines.pop
+		@assumption_line = @premises_lines.pop unless @sort == 'find'
 		@premises = (1..@premises_lines.count)
 									.zip(@premises_lines
 												 .map { |l| [[l.second.abs, l.second.positive?]].to_h })
 									.to_h
 		@premises[:lines] = (1..@premises.count)
 													.zip(@premises_lines.map(&:first)).to_h
-		@assumption = [[@assumption_line.second.abs,
-										@assumption_line.second.positive?]].to_h
-		@assumption[:line] = @assumption_line.first
+		if @sort == 'example'
+			@assumption = [[@assumption_line.second.abs,
+											@assumption_line.second.positive?]].to_h
+			@assumption[:line] = @assumption_line.first
+		else
+			@assumption = {}
+			@assumption_line = nil
+		end
 	end
 
 	def extract_steps!
-		@steps_lines = @lines -
-										(@used_implications_lines + @premises_lines +
-											[@assumption_line])
+		previous_lines = @used_implications_lines + @premises_lines
+		previous_lines += [@assumption_line] if @sort == 'example'
+		@steps_lines = @lines - previous_lines
 		@steps = {}
 		@steps[:lines] = {}
 	end

@@ -20,7 +20,8 @@
         <ul>
           <% bbr.realization.hardcoded_truths.each do |atom| %>
             <%= render partial: 'atoms/show',
-                       locals: { atom: atom } %>
+                       locals: { atom: atom,
+                                 example: bbr.realization } %>
           <% end %>
         </ul>
       </div>
@@ -38,7 +39,8 @@
             <% bbr.realization.hardcoded_falsehoods.each do |atom| %>
               <%= render partial: 'atoms/show',
                          locals: { atom: atom,
-                                   modifier: t('logic.is_not') } %>
+                                   modifier: t('logic.is_not'),
+                                   example: bbr.realization } %>
             <% end %>
           </ul>
         </div>
