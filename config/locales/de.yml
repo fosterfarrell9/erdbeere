@@ -6,7 +6,8 @@ de:
       hardcoded_truths: Hinterlegte Wahrheiten
   example:
     show:
-      title: 'Beispiel:'
+      title: >
+        Beispiel %{example} für
   examples:
     find:
       description: Beschreibung
@@ -39,10 +40,16 @@ de:
       title: 'Strukturen und ihre möglichen Eigenschaften'
     show:
       definition: 'Definition'
+      no_definition_yet: 'Es wurde noch keine Definition eingetragen.'
       properties: 'Mögliche Eigenschaften'
       related_structures: 'Verwandte Strukturen'
       definition_details_html: 'Ein(e) %{name} ist ein(e) %{derives_from}, für den(die) gilt:'
       examples: 'Beispiele'
+  property:
+    show:
+      title: 'Eigenschaft "%{property}" von'
+      satisfied: 'Eigenschaft erfüllt'
+      violated: 'Eigenschaft verletzt'
   footer:
     is_on: ist auf
   implications:
@@ -53,8 +60,9 @@ de:
     application:
       error: Fehler
       notice: Nachricht
-      search: Suche
+      search: Suche nach Beispielen
       warning: Warnung
+      back_to_structures: zur Strukturen-Übersicht
   logic:
     is: ist
     is_and_is_not: ist und ist nicht
@@ -85,3 +93,4 @@ de:
       violates: Verletzt
   controllers:
     no_structure: 'Eine Struktur mit dieser id gibt es nicht.'
+    no_property: 'Eine Eigenschaft mit dieser id gibt es nicht.'

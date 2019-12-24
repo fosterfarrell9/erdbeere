@@ -12,6 +12,8 @@
 	<i>
 		<%= modifier %>
 	</i>
-	<%= atom.property.name %>
+	<%= link_to atom.property.name,
+							property_path(atom.property),
+							class: 'text-dark' %>
 	<%= fullstop %>
 <%= delim_close %>

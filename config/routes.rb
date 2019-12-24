@@ -1,12 +1,14 @@
 Rails.application.routes.draw do
   root to: redirect('/de')
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
-    resources :examples
     post '/examples/find'
+    get '/examples/find', to: 'main#search'
+    resources :examples
 
     match 'search', as: 'main_search', via: :get, to: 'main#search'
 
     resources :structures
+    resources :properties
     get '/' => 'structures#index'
   end
 end

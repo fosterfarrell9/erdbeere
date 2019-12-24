@@ -5,12 +5,16 @@
                default: "Direct hits") %>
   </h2>
   <div class="row">
-    <% @hits.each_slice(3).each do |slice| %>
-      <div class="col-4">
-        <%= render partial: 'examples/row_of_search_results',
-                   locals: { slice: slice } %>
-      </div>
-    <% end %>
+    <div class="col-12">
+      <ul>
+        <% @hits.each do |hit| %>
+          <li>
+            <%= link_to hit.description,
+                        example_path(hit) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 <% end %>
 <% unless (@almost_hits - @hits.to_a).blank? %>

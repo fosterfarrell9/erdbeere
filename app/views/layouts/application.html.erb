@@ -26,6 +26,27 @@
             <%= notice %>
           </div>
         <% end %>
+        <div class="row p-2">
+          <div class="col-6">
+            <% unless controller_name == 'structures' && action_name == 'index' %>
+              <%= link_to t('layouts.application.back_to_structures'),
+                          structures_path,
+                          class: 'btn btn-lg btn-outline-secondary' %>
+            <% end %>
+          </div>
+          <div class="col-6 text-right">
+            <a href="<%= main_search_path %>"
+               class="btn btn-lg btn-outline-secondary">
+              <span>
+                <i class="fa fa-search">
+                </i>
+              </span>
+              <span>
+                <%= t('layouts.application.search') %>
+              </span>
+            </a>
+          </div>
+        </div>
         <%= yield %>
       </main>
     </div>

@@ -1,5 +1,9 @@
 <h4>
-  <%= I18n.t('example.show.title') + ' ' + @example.description[0..100] %>
+  <%= I18n.t('example.show.title',
+             example: @example.description) %>
+  <%= link_to @example.structure.name,
+              structure_path(@example.structure),
+              class: 'text-dark' %>
 </h4>
 <% cache @example do %>
   <div class="row">

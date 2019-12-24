@@ -45,7 +45,8 @@
 		<ul>
 			<% @structure.original_properties.each do |p| %>
 				<li>
-					<%= p.name %>
+					<%= link_to p.name,
+											property_path(p) %>
 				</li>
 			<% end %>
 		</ul>

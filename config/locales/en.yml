@@ -6,7 +6,8 @@ en:
       hardcoded_truths: Hardcoded truths
   example:
     show:
-      title: 'Example:'
+      title: >
+        Example %{example} for
   examples:
     find:
       description: Description
@@ -44,8 +45,9 @@ en:
     application:
       error: Error
       notice: Notice
-      search: Search
+      search: Search for Examples
       warning: Warning
+      back_to_structures: BAck to Structures Index
   logic:
     is: is
     is_and_is_not: is and is not
@@ -71,10 +73,16 @@ en:
       title: 'Structures and their possible properties'
     show:
       definition: 'Definition'
+      no_definition_yet: 'Es wurde noch keine Definition eingetragen.'
       properties: 'Possible Eigenschaften'
       related_structures: 'Related structures'
       definition_details_html: 'A %{name} is a %{derives_from}, for which holds:'
       examples: 'Examples'
+  property:
+    show:
+      title: 'Property "%{property}" of '
+      satisfied: 'Property satisfied'
+      violated: 'Property violated'
   main:
     search:
       satisfies: Satisfies
@@ -84,3 +92,4 @@ en:
       violates: Violates
   controllers:
     no_structure: 'There is no structure with this id.'
+    no_property: 'There is no property with this id.'

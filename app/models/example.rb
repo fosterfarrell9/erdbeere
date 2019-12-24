@@ -112,11 +112,6 @@ class Example < ApplicationRecord
   end
   cache_it :hardcoded_falsehoods
 
-  def satisfied_atoms
-    facts(test: true).all_that_follows
-  end
-  cache_it :satisfied_atoms
-
   def to_dimacs
     dimacs = "p cnf #{Atom.count} "
     dimacs.concat("#{Implication.count + hardcoded_truths.size + hardcoded_falsehoods.size + 1} \n")
@@ -155,93 +150,34 @@ class Example < ApplicationRecord
   def satisfied_atoms_by_sat
     derived_atoms_by_sat
   end
+  cache_it :satisfied_atoms_by_sat
 
   def satisfied_atoms_by_sat_with_proof
     derived_atoms_by_sat(with_proof: true)
   end
+  cache_it :satisfied_atoms_by_sat_with_proof
 
   def violated_atoms_by_sat
     derived_atoms_by_sat(satisfied: false)
   end
+  cache_it :violated_atoms_by_sat
 
   def violated_atoms_by_sat_with_proof
     derived_atoms_by_sat(satisfied: false, with_proof: true)
   end
-
-  def satisfied_atoms
-    facts(test: true).all_that_follows
-  end
-  cache_it :satisfied_atoms
-
-  def satisfied_atoms_with_implications
-    facts(test: true).all_that_follows_with_implications
-  end
-  cache_it :satisfied_atoms_with_implications
-
-  # this is really expensive! use with care!
-  def violated_properties(with_implications: false)
-    sat = satisfied_atoms
-
-    # TODO deep atoms
-    exclusions = sat.to_a.find_all do |a|
-      a.stuff_w_props == structure
-    end.map(&:satisfies_id)
-
-    exclusions += hardcoded_falsehoods_as_properties.map(&:id)
-
-
-    props = Property.where('structure_id = ?', structure.id)
-    props = props.where.not(id: exclusions)
-
-    return [[], {}] if (props.count.zero? && with_implications)
-    return [] if props.count.zero?
-
-    if with_implications == true
-      bad_props = []
-      used_implications = {}
-      props.to_a.each do |p|
-        nsat_w_i = (sat + [p.to_atom]).all_that_follows_with_implications
-        next if (nsat_w_i.first & hardcoded_falsehoods).empty?
-        violated_atom = (nsat_w_i.first & hardcoded_falsehoods).first
-        used_implications[p.to_atom] = nsat_w_i.second.key(violated_atom)
-        bad_props.push(p)
-
-      end
-      return [bad_props, used_implications]
-    else
-      props.to_a.find_all do |p|
-        nsat = (sat + [p.to_atom]).all_that_follows
-        !(nsat & hardcoded_falsehoods).empty?
-      end
-    end
-  end
-
-  def computable_violations
-    vp = violated_properties(with_implications: false)
-    return hardcoded_falsehoods if vp.empty?
-
-    vp.map(&:to_atom) + hardcoded_falsehoods
-  end
-  cache_it :computable_violations
-
-  def computable_violations_with_implications
-    r = violated_properties(with_implications: true)
-    r.first.map!(&:to_atom)
-    [(r.first + hardcoded_falsehoods).uniq, r.second]
-  end
-  cache_it :computable_violations_with_implications
+  cache_it :violated_atoms_by_sat_with_proof
 
   def satisfies?(atom)
     # atom might be a property
     atom = atom.is_a?(Property) ? atom.to_atom : atom
 
-    satisfied_atoms.include?(atom)
+    satisfied_atoms_by_sat.include?(atom)
   end
 
   def violates?(atom)
     # might be a property
     atom = atom.is_a?(Property) ? atom.to_atom : atom
-    computable_violations.include?(atom)
+    violated_atoms_by_sat.include?(atom)
   end
 
   def satisfies!(atom)

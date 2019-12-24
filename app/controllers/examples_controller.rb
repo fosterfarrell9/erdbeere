@@ -12,14 +12,15 @@ class ExamplesController < ApplicationController
     if (@satisfies + @violates).empty?
       flash[:alert] = I18n.t('examples.find.flash.no_search_params')
       redirect_to main_search_path
+      return
     end
 
     @proof = Example.find_restricted(Structure.find(params[:structure_id]),
                                      @satisfies,
                                      @violates)
     if @proof
-      flash.now[:alert] = I18n.t('examples.find.flash.violates_logic')
       render 'violates_logic'
+      return
     end
 
     @almost_hits = Example.where('structure_id = ?', params[:structure_id].to_i).all.to_a.find_all do |e|
@@ -30,7 +31,7 @@ class ExamplesController < ApplicationController
       flash.now[:warning] = I18n.t('examples.find.flash.nothing_found')
     else
       @hits = @almost_hits.find_all do |e|
-        (@violates - e.computable_violations).empty?
+        (@violates - e.violated_atoms_by_sat).empty?
       end
     end
   end
