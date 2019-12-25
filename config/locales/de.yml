@@ -45,6 +45,15 @@ de:
       related_structures: 'Verwandte Strukturen'
       definition_details_html: 'Ein(e) %{name} ist ein(e) %{derives_from}, für den(die) gilt:'
       examples: 'Beispiele'
+    edit:
+      name: 'Bezeichnung'
+  building_block:
+    edit:
+      title: 'Baustein'
+      name: 'Bezeichnung'
+      definition: 'Notation'
+      structure: 'Struktur'
+      new: 'Neuer Baustein'
   property:
     show:
       title: 'Eigenschaft "%{property}" von'
@@ -94,3 +103,17 @@ de:
   controllers:
     no_structure: 'Eine Struktur mit dieser id gibt es nicht.'
     no_property: 'Eine Eigenschaft mit dieser id gibt es nicht.'
+    no_building_block: 'Einen Baustein mit dieser id gibt es nicht.'
+  buttons:
+    show: 'Anzeigen'
+    edit: 'Bearbeiten'
+    save: 'Speichern'
+    discard: 'Verwerfen'
+    cancel: 'Abbrechen'
+    create: 'Anlegen'
+  basics:
+    preview: 'Vorschau'
+  warnings:
+    unsaved_changes: 'Ungespeicherte Änderungen'
+  confirmation:
+    generic: 'Bist du sicher?'

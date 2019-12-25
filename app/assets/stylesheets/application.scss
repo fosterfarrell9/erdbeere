@@ -58,7 +58,7 @@ select[multiple].multi-select:active, select[multiple].multi-select:focus {
     border-color: #00d1b2;
 }
 
-@import "font-awesome";
+@import "trix";
 
 .bg-truth {
   background-color: #e6ffe9;
@@ -70,4 +70,13 @@ select[multiple].multi-select:active, select[multiple].multi-select:focus {
 
 .assumption {
   text-decoration: underline;
+}
+
+#structure-basics-warning {
+  color: red;
+  display: none;
+}
+
+.newBuildingBlock {
+  display: none;
 }

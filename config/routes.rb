@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
     resources :structures
     resources :properties
+    resources :building_blocks
     get '/' => 'structures#index'
   end
 end

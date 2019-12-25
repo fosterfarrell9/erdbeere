@@ -8,7 +8,6 @@ end
 gem 'activemodel-serializers-xml'
 # gem 'bulma-rails', '~> 0.4.0'
 gem 'coveralls', require: false
-gem 'font-awesome-rails'
 gem 'globalize'
 gem 'globalize-accessors'
 gem 'rails-i18n'
@@ -45,6 +44,7 @@ gem 'ricosat'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
+gem 'trix-rails', require: 'trix'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

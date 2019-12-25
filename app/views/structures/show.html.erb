@@ -3,8 +3,15 @@
 <div class="card">
 	<div class="card-header">
 		<h4>
- 			<%= @structure.name %>
-		</h4>
+			<%= @structure.name %>
+      <%= link_to '',
+                  edit_structure_path(@structure),
+                  class: 'far fa-edit fa-lg text-secondary',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.edit'),
+                  style: 'text-decoration: none;' %>
+    </h4>
 	</div>
 	<div class="card-body">
 		<% if @structure.original_building_blocks.any? %>
@@ -39,17 +46,6 @@
 			</h5>
 			<%= @structure.definition.html_safe %>
 		<% end %>
-		<h5>
-			<%= t('structure.show.properties') %>
-		</h5>
-		<ul>
-			<% @structure.original_properties.each do |p| %>
-				<li>
-					<%= link_to p.name,
-											property_path(p) %>
-				</li>
-			<% end %>
-		</ul>
 		<% if @structure.related_structures != [@structure] %>
 			<h5 class="mt-2">
   			<%= t('structure.show.related_structures') %>
@@ -66,7 +62,26 @@
 	</div>
 </div>
 </div>
-<div class="col-6">
+<div class="col-3">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="title">
+      	<%= t('structure.show.properties') %>
+      </h4>
+    </div>
+    <div class="card-body">
+			<ul>
+				<% @structure.original_properties.each do |p| %>
+					<li>
+						<%= link_to p.name,
+												property_path(p) %>
+					</li>
+				<% end %>
+			</ul>
+    </div>
+  </div>
+</div>
+<div class="col-3">
   <div class="card">
     <div class="card-header">
       <h4 class="title">

@@ -78,6 +78,8 @@ en:
       related_structures: 'Related structures'
       definition_details_html: 'A %{name} is a %{derives_from}, for which holds:'
       examples: 'Examples'
+    edit:
+      name: 'Name'
   property:
     show:
       title: 'Property "%{property}" of '
@@ -93,3 +95,9 @@ en:
   controllers:
     no_structure: 'There is no structure with this id.'
     no_property: 'There is no property with this id.'
+  buttons:
+    edit: 'Edit'
+  basics:
+    preview: 'Preview'
+  warnings:
+    unsaved_changes: 'Ungespeicherte Änderungen'

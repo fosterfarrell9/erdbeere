@@ -1,5 +1,3 @@
-# coding: utf-8
-
 class ExamplesController < ApplicationController
   def show
     @example = Example.find(params[:id])

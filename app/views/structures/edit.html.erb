@@ -1,0 +1,172 @@
+<div class="row p-2">
+<div class="col-6">
+<%= form_with model: @structure,
+							html: { id: 'structure-form' } do |f| %>
+<div class="card">
+	<div class="card-header">
+		<div class="row">
+			<div class="col-6">
+				<h4>
+ 					<%= @structure.name %>
+    	  	<%= link_to '',
+      	  	          structure_path(@structure),
+        	  	        class: 'fas fa-eye text-dark mt-3',
+          	  	      data: { toggle: 'tooltip',
+            	  	            placement: 'bottom' },
+              	  	  title: t('buttons.show'),
+                	  	style: 'text-decoration: none;' %>
+				</h4>
+			</div>
+			<div class="col-6 text-right">
+				<div id="structure-basics-warning">
+  	      <%= t('warnings.unsaved_changes') %>
+    	    <%= f.submit t('buttons.save'),
+      	               class: 'btn btn-sm btn-primary' %>
+        	<button type="button"
+          	      class="btn btn-sm btn-secondary 	cancel-structure-edit ml-2">
+          	<%= t('buttons.discard') %>
+        	</button>
+        </div>
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+    <div class="form-group">
+      <%= f.label :name, t('structure.edit.name') %>
+      <%= f.text_field :name,
+                       class: 'form-control' %>
+      <div class="invalid-feedback"
+           id="structure-name-error">
+      </div>
+    </div>
+		<% if @structure.original_building_blocks.any? %>
+	    <div class="row my-2">
+  	    <div class="col-12">
+    	    <%= t('examples.show.building_blocks') %>
+     			<%= link_to '',
+           			      new_building_block_path(params: { structure_id: @structure.id }),
+                  		class: 'fas fa-plus-circle text-dark',
+                 			data: { toggle: 'tooltip',
+  		                        placement: 'bottom' },
+                 			title: t('buttons.create'),
+                 			style: 'text-decoration: none;',
+                 			remote: true %>
+      	</div>
+    	</div>
+    	<ul>
+				<% @structure.original_building_blocks.each do |bb| %>
+					<% if bb.persisted? %>
+					<li>
+						<%= bb.name %>: <%= bb.definition %>
+						(<%= link_to bb.structure.name,
+												 structure_path(bb.structure) %>)
+      			<%= link_to '',
+            			      edit_building_block_path(bb),
+                  			class: 'far fa-edit text-dark',
+                  			data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  			title: t('buttons.edit'),
+                  			style: 'text-decoration: none;',
+                  			remote: true %>
+      			<%= link_to '',
+            			      building_block_path(bb),
+                  			class: 'fas fa-trash-alt text-dark ml-2',
+                  			data: { toggle: 'tooltip',
+                          			placement: 'bottom',
+                          			confirm: t('confirmation.generic') },
+                  			title: t('buttons.delete'),
+                  			style: 'text-decoration: none;',
+                  			remote: true,
+                  			method: :delete %>
+					</li>
+					<% end %>
+				<% end %>
+			</ul>
+		<% end %>
+		<% if @structure.derives_from %>
+			<%= t('structure.show.definition_details_html',
+						name: @structure.name,
+						derives_from: link_to(@structure.derives_from.name,
+																	structure_path(@structure.derives_from))) %>
+			<ul>
+				<% @structure.defining_atoms.each do |a| %>
+            <%= render partial: 'atoms/show',
+                       locals: { atom: a } %>
+				<% end %>
+			</ul>
+		<% end %>
+    <div class="row my-2">
+      <div class="col-12">
+        <%= t('structure.show.definition') %>
+      </div>
+    </div>
+    <%= f.trix_editor :definition,
+                      class: 'bg-light',
+                      id: 'structure-definition-trix',
+                      data: { content: @structure.definition } %>
+    <div class="row my-2">
+      <div class="col-12">
+        <%= t('basics.preview') %>
+      </div>
+    </div>
+    <div class="alert alert-dark mt-2"
+         id="structure-definition-preview">
+        <%= raw(@structure.definition) %>
+    </div>
+		<% if @structure.related_structures != [@structure] %>
+			<h5 class="mt-2">
+  			<%= t('structure.show.related_structures') %>
+			</h5>
+			<ul>
+				<% (@structure.related_structures - [@structure]).each do |s| %>
+					<li>
+						<%= link_to s.name,
+												structure_path(s) %>
+					</li>
+				<% end %>
+			</ul>
+		<% end %>
+	</div>
+</div>
+<% end %>
+</div>
+<div class="col-3">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="title">
+      	<%= t('structure.show.properties') %>
+      </h4>
+    </div>
+    <div class="card-body">
+			<ul>
+				<% @structure.original_properties.each do |p| %>
+					<li>
+						<%= link_to p.name,
+												property_path(p) %>
+					</li>
+				<% end %>
+			</ul>
+    </div>
+  </div>
+</div>
+<div class="col-3">
+  <div class="card">
+    <div class="card-header">
+      <h4 class="title">
+      	<%= t('structure.show.examples') %>
+      </h4>
+    </div>
+    <div class="card-body">
+      <ul>
+        <% @structure.examples.each do |e| %>
+          <li>
+            <%= link_to e.description[0..100],
+                        example_path(e) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+<%= render partial: 'building_blocks/modal' %>
