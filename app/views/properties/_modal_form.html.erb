@@ -1,0 +1,21 @@
+<%= form_with model: property do |f| %>
+	<div class="form-group">
+		<%= f.label :name,
+								t('property.edit.name') %>
+   	<%= f.text_field :name,
+  									 class: 'form-control' %>
+  </div>
+  <%= f.hidden_field :structure_id,
+  									 value: property.structure_id %>
+  <div class="row">
+    <div class="col-12 text-center">
+      <%= f.submit t('buttons.save'),
+                   class: "btn btn-primary" %>
+      <button type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal">
+        <%= t('buttons.cancel') %>
+ 	   </button>
+    </div>
+  </div>
+<% end %>

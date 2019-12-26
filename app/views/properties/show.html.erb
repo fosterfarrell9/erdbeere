@@ -7,6 +7,13 @@
 								property: @property.name) %>
 					<%= link_to @property.structure.name,
 											structure_path(@property.structure) %>
+          <%= link_to '',
+                      edit_property_path(@property),
+                      class: 'far fa-edit text-dark mt-3',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.show'),
+                      style: 'text-decoration: none;' %>
 				</h5>
 			</div>
 			<div class="card-body">
@@ -18,6 +25,14 @@
 				<% else %>
 					<%= t('structure.show.no_definition_yet') %>
 				<% end %>
+        <div class="row mt-2">
+          <div class="col-12">
+            <% if @property.stackstag.present? %>
+              <%= t('property.edit.stacks_tag') %>:
+              <%= @property.stackstag %>
+            <% end %>
+          </div>
+        </div>
 			</div>
 		</div>
 	</div>

@@ -47,6 +47,7 @@ de:
       examples: 'Beispiele'
     edit:
       name: 'Bezeichnung'
+      implications: 'Implikationen'
   building_block:
     edit:
       title: 'Baustein'
@@ -54,11 +55,18 @@ de:
       definition: 'Notation'
       structure: 'Struktur'
       new: 'Neuer Baustein'
+      none: 'Es sind keine Bausteine vorhanden.'
   property:
     show:
       title: 'Eigenschaft "%{property}" von'
       satisfied: 'Eigenschaft erfüllt'
       violated: 'Eigenschaft verletzt'
+    edit:
+      name: 'Bezeichnung'
+      definition: 'Definition'
+      stacks_tag: 'Tag im Stacks Project'
+    create:
+      title: 'Eigenschaft anlegen'
   footer:
     is_on: ist auf
   implications:

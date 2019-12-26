@@ -64,4 +64,10 @@ class Structure < ApplicationRecord
     Example.where(id: (examples + original_examples).uniq.map(&:id))
            .update_all(updated_at: Time.now)
   end
+
+  def implications
+    ids_from_premises = Premise.where(atom_id: atom_ids).pluck(:implication_id)
+    ids_from_implies = Implication.where(implies_id: atom_ids).pluck(:id)
+    Implication.where(id: (ids_from_premises + ids_from_implies).uniq)
+  end
 end

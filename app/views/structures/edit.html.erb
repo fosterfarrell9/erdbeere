@@ -39,7 +39,6 @@
            id="structure-name-error">
       </div>
     </div>
-		<% if @structure.original_building_blocks.any? %>
 	    <div class="row my-2">
   	    <div class="col-12">
     	    <%= t('examples.show.building_blocks') %>
@@ -53,6 +52,7 @@
                  			remote: true %>
       	</div>
     	</div>
+      <% if @structure.original_building_blocks.any? %>
     	<ul>
 				<% @structure.original_building_blocks.each do |bb| %>
 					<% if bb.persisted? %>
@@ -82,6 +82,8 @@
 					<% end %>
 				<% end %>
 			</ul>
+    <% else %>
+      <%= t('building_block.edit.none') %>
 		<% end %>
 		<% if @structure.derives_from %>
 			<%= t('structure.show.definition_details_html',
@@ -130,33 +132,45 @@
 </div>
 <% end %>
 </div>
-<div class="col-3">
-  <div class="card">
+<div class="col-6">
+<div class="row">
+<div class="col-6">
+  <div class="card" style="height: 40vh;">
     <div class="card-header">
       <h4 class="title">
       	<%= t('structure.show.properties') %>
+          <%= link_to '',
+                      new_property_path(params: { structure_id: @structure.id }),
+                      class: 'fas fa-plus-circle fa-sm text-dark',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.create'),
+                      style: 'text-decoration: none;',
+                      remote: true %>
       </h4>
     </div>
-    <div class="card-body">
+    <div class="card-body"
+         style="overflow-y: scroll;">
 			<ul>
 				<% @structure.original_properties.each do |p| %>
 					<li>
 						<%= link_to p.name,
-												property_path(p) %>
+												edit_property_path(p) %>
 					</li>
 				<% end %>
 			</ul>
     </div>
   </div>
 </div>
-<div class="col-3">
-  <div class="card">
+<div class="col-6">
+  <div class="card" style="height: 40vh;">
     <div class="card-header">
       <h4 class="title">
       	<%= t('structure.show.examples') %>
       </h4>
     </div>
-    <div class="card-body">
+    <div class="card-body"
+         style="overflow-y: scroll;">
       <ul>
         <% @structure.examples.each do |e| %>
           <li>
@@ -168,5 +182,28 @@
     </div>
   </div>
 </div>
+<div class="col-12 mt-2">
+  <div class="card" style="height: 40vh;">
+    <div class="card-header">
+      <h4 class="title">
+        <%= t('structure.edit.implications') %>
+      </h4>
+    </div>
+    <div class="card-body"
+         style="overflow-y: scroll;">
+      <ul>
+        <% @structure.implications.each do |i| %>
+          <li>
+            <%= render partial: 'implications/show',
+                       locals: { implication: i } %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+</div>
+</div>
 </div>
 <%= render partial: 'building_blocks/modal' %>
+<%= render partial: 'properties/modal' %>

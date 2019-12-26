@@ -1,0 +1,109 @@
+<div class="row p-2">
+	<div class="col-6">
+    <%= form_with model: @property,
+                  html: { id: 'property-form' } do |f| %>
+		<div class="card">
+			<div class="card-header">
+				<h5>
+					<%= t('property.show.title',
+								property: @property.name) %>
+					<%= link_to @property.structure.name,
+											edit_structure_path(@property.structure) %>
+          <%= link_to '',
+                      property_path(@property),
+                      class: 'fas fa-eye text-dark mt-3',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.show'),
+                      style: 'text-decoration: none;' %>
+				</h5>
+        <div class="row">
+          <div class="col-12 text-right">
+            <div id="property-basics-warning">
+              <%= t('warnings.unsaved_changes') %>
+              <%= f.submit t('buttons.save'),
+                           class: 'btn btn-sm btn-primary' %>
+              <button type="button"
+                      class="btn btn-sm btn-secondary   cancel-property-edit ml-2">
+                <%= t('buttons.discard') %>
+              </button>
+            </div>
+          </div>
+        </div>
+			</div>
+			<div class="card-body">
+        <div class="form-group">
+          <%= f.label :name,
+                      t('property.edit.name') %>
+          <%= f.text_field :name,
+                           class: 'form-control' %>
+        </div>
+        <div class="row my-2">
+          <div class="col-12">
+            <%= t('property.show.definition') %>
+          </div>
+        </div>
+        <%= f.trix_editor :definition,
+                          class: 'bg-light',
+                          id: 'property-definition-trix',
+                          data: { content: @property.definition } %>
+        <div class="row my-2">
+          <div class="col-12">
+            <%= t('basics.preview') %>
+          </div>
+        </div>
+        <div class="alert alert-dark mt-2"
+             id="property-definition-preview">
+            <%= raw(@property.definition) %>
+        </div>
+        <div class="form-group">
+          <%= f.label :stackstag,
+                      t('property.edit.stacks_tag') %>
+          <%= f.text_field :stackstag,
+                           class: 'form-control' %>
+        </div>
+			</div>
+		</div>
+    <% end %>
+	</div>
+	<div class="col-3">
+		<div class="card bg-truth">
+    <div class="card-header">
+      <h5 class="title">
+      	<%= t('structure.show.examples') %>
+      	(<%= t('property.show.satisfied') %>)
+      </h5>
+    </div>
+    <div class="card-body">
+      <ul>
+        <% @property.positive_examples.each do |e| %>
+          <li>
+            <%= link_to e.description[0..100],
+                        example_path(e) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+	</div>
+	<div class="col-3">
+		<div class="card bg-falsehood">
+    <div class="card-header">
+      <h5 class="title">
+      	<%= t('structure.show.examples') %>
+				(<%= t('property.show.violated') %>)
+      </h5>
+    </div>
+    <div class="card-body">
+      <ul>
+        <% @property.negative_examples.each do |e| %>
+          <li>
+            <%= link_to e.description[0..100],
+                        example_path(e) %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+	</div>
+</div>
