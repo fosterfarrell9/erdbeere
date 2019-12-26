@@ -17,7 +17,7 @@ class Example < ApplicationRecord
   def self.find_restricted(structure, satisfies, violates)
     dimacs = "p cnf #{Atom.count} "
     dimacs.concat("#{Implication.count + satisfies.size + violates.size} \n")
-    dimacs.concat(Implication.to_dimacs_cached)
+    dimacs.concat(Implication.to_dimacs)
     satisfies.each { |s| dimacs.concat("#{s.id} 0 \n") }
     violates.each { |v| dimacs.concat("#{-v.id} 0 \n") }
     out, err, st = Open3.capture3("echo '#{dimacs}' | picosat -n")
@@ -115,7 +115,7 @@ class Example < ApplicationRecord
   def to_dimacs
     dimacs = "p cnf #{Atom.count} "
     dimacs.concat("#{Implication.count + hardcoded_truths.size + hardcoded_falsehoods.size + 1} \n")
-    dimacs.concat(Implication.to_dimacs_cached)
+    dimacs.concat(Implication.to_dimacs)
     hardcoded_truths.each { |a| dimacs.concat("#{a.id} 0 \n") }
     hardcoded_falsehoods.each { |a| dimacs.concat("-#{a.id} 0 \n") }
     dimacs
