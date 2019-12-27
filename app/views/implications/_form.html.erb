@@ -1,0 +1,76 @@
+<%= form_with model: implication,
+							html: { id: 'implicationForm',
+											data:
+												{ properties: structure.deep_building_blocks_properties_select.to_json } } do |f| %>
+	<div class="row mb-2">
+		<div class="col-12">
+			<%= t('implication.edit.premises') %>
+		</div>
+	</div>
+	<% 1.upto(5) do |i| %>
+	<div class="form-row mb-2">
+		<div class="col-5">
+			<%= f.select "premises#{[i]}[stuff_w_props]",
+									 options_for_select(structure.eligible_for_premise_select, nil),
+								   { prompt: t('basics.select') },
+	    						 { class: 'form-control atomStuffWProps',
+	    						 	 data: { id: "p-#{i}"} } %>
+		</div>
+		<div class="col-2">
+			<%= f.select "premises#{[i]}[logic]",
+									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 1]]),
+								   {},
+	    						 { class: 'form-control',
+	    						 	 disabled: true } %>
+		</div>
+		<div class="col-5">
+			<%= f.select "premises#{[i]}[satisfies]",
+									 [[]],
+								   { prompt: t('basics.select') },
+	    						 { class: 'form-control atomSatisfies',
+	    						 	 data: { id: "p-#{i}"} } %>
+		</div>
+	</div>
+	<% end %>
+	<div class="row my-2">
+		<div class="col-12">
+			<%= t('implication.edit.implies') %>
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="col-5">
+			<%= f.select 'implies[stuff_w_props]',
+									 options_for_select(structure.eligible_for_premise_select, nil),
+								   { prompt: t('basics.select') },
+	    						 { class: 'form-control atomStuffWProps',
+	    						 	 data: { id: 'i'} } %>
+		</div>
+		<div class="col-2">
+			<%= f.select 'implies[logic]',
+									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 1]]),
+								   {},
+	    						 { class: 'form-control',
+	    						 	 disabled: true } %>
+		</div>
+		<div class="col-5">
+			<%= f.select 'implies[satisfies]',
+									 options_for_select(structure.properties.map { |p| [p.name, p.id] }, nil),
+								   { prompt: t('basics.select') },
+	    						 { class: 'form-control atomSatisfies',
+	    						 	 data: { id: 'i'} } %>
+		</div>
+	</div>
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <%= f.submit t('buttons.save'),
+                   class: "btn btn-primary" %>
+      <button type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal">
+        <%= t('buttons.cancel') %>
+ 	   </button>
+    </div>
+  </div>
+  <%= f.hidden_field :structure_id,
+  									 value: structure.id %>
+<% end %>

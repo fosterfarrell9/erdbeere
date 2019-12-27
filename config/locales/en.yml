@@ -85,6 +85,12 @@ en:
       title: 'Property "%{property}" of '
       satisfied: 'Property satisfied'
       violated: 'Property violated'
+  implication:
+    create:
+      title: 'Create Implication'
+    edit:
+      premises: 'Premises'
+      implies: 'Conclusion'
   main:
     search:
       satisfies: Satisfies
@@ -99,5 +105,6 @@ en:
     edit: 'Edit'
   basics:
     preview: 'Preview'
+    select: 'auswählen'
   warnings:
     unsaved_changes: 'Ungespeicherte Änderungen'

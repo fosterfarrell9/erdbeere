@@ -67,6 +67,12 @@ de:
       stacks_tag: 'Tag im Stacks Project'
     create:
       title: 'Eigenschaft anlegen'
+  implication:
+    create:
+      title: 'Implikation anlegen'
+    edit:
+      premises: 'Voraussetzungen'
+      implies: 'Konsequenz'
   footer:
     is_on: ist auf
   implications:
@@ -112,6 +118,7 @@ de:
     no_structure: 'Eine Struktur mit dieser id gibt es nicht.'
     no_property: 'Eine Eigenschaft mit dieser id gibt es nicht.'
     no_building_block: 'Einen Baustein mit dieser id gibt es nicht.'
+    no_implication: 'Eine Implikation mit dieser id gibt es nicht.'
   buttons:
     show: 'Anzeigen'
     edit: 'Bearbeiten'

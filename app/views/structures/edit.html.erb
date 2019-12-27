@@ -187,6 +187,14 @@
     <div class="card-header">
       <h4 class="title">
         <%= t('structure.edit.implications') %>
+        <%= link_to '',
+                    new_implication_path(params: { structure_id: @structure.id }),
+                    class: 'fas fa-plus-circle fa-sm text-dark',
+                    data: { toggle: 'tooltip',
+                            placement: 'bottom' },
+                    title: t('buttons.create'),
+                    style: 'text-decoration: none;',
+                    remote: true %>
       </h4>
     </div>
     <div class="card-body"
@@ -207,3 +215,4 @@
 </div>
 <%= render partial: 'building_blocks/modal' %>
 <%= render partial: 'properties/modal' %>
+<%= render partial: 'implications/modal' %>

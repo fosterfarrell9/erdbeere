@@ -5,7 +5,7 @@
     </h3>
   </div>
 </div>
-<% Structure.all.each_slice(3) do |slice| %>
+<% Structure.includes(:translations).all.each_slice(3) do |slice| %>
   <div class="row mb-2 p-2">
     <% slice.each do |s| %>
       <div class="col-4">
@@ -18,7 +18,7 @@
           </div>
           <div class="card-body">
             <ul>
-              <% s.original_properties.each do |p| %>
+              <% s.original_properties.includes(:translations).each do |p| %>
                 <li>
                   <%= link_to p.name,
                   						property_path(p) %>

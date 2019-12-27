@@ -3,7 +3,6 @@ class BuildingBlocksController < ApplicationController
 
 	def new
 		@building_block = BuildingBlock.new(explained_structure_id: params[:structure_id])
-		pp @building_block
 		render 'edit'
 	end
 
@@ -12,7 +11,6 @@ class BuildingBlocksController < ApplicationController
 
 	def create
 		@building_block = BuildingBlock.create(building_block_params)
-		pp @building_block.errors
 		if @building_block.valid?
 			redirect_to edit_structure_path(@building_block.explained_structure)
 		end

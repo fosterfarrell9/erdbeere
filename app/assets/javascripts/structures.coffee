@@ -3,6 +3,20 @@ $(document).on 'turbolinks:load', ->
     $('#structure-basics-warning').show()
     return
 
+  $(document).on 'change', '.atomStuffWProps', ->
+    id = $(this).data('id')
+    value = $(this).val()
+    props = $('#implicationForm').data('properties')
+    console.log props[value]
+    select = $('.atomSatisfies[data-id="'+id+'"]').get(0)
+    select.options.length = 1
+    for option in props[value]
+      new_option = document.createElement('option')
+      new_option.value = option[1]
+      new_option.text = option[0]
+      select.add(new_option, null)
+    return
+
   $(document).on 'click', '.cancel-structure-edit', ->
     location.reload(true)
     return

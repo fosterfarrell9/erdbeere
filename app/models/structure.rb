@@ -27,6 +27,10 @@ class Structure < ApplicationRecord
     self
   end
 
+  def stuff_id
+    "s-#{id}"
+  end
+
   def properties
     return original_properties if derives_from.nil?
     original_properties + derives_from.properties
@@ -52,6 +56,25 @@ class Structure < ApplicationRecord
       tmp = tmp.flatten.compact.uniq
     end
     result
+  end
+
+  def building_blocks_flattened
+    return [] unless building_blocks.any?
+    result = building_blocks
+    result += building_blocks.map do |bb|
+      bb.structure.building_blocks_flattened
+    end
+    result.flatten
+  end
+
+  def deep_building_blocks_properties_select
+    ([self] + building_blocks_flattened).map do |x|
+      [x.stuff_id, x.structure.properties.map { |p| [p.name, p.id] }]
+    end .to_h
+  end
+
+  def eligible_for_premise_select
+    ([self] + building_blocks_flattened).map { |x| [x.name, x.stuff_id] }
   end
 
   def examples
