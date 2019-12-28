@@ -1,5 +1,5 @@
 <% provide(:title, I18n.t('examples.find.title')) %>
-<% unless @hits.blank? %>
+<% if @hits.present? %>
   <h2>
     <%= I18n.t("examples.find.direct_hits",
                default: "Direct hits") %>
@@ -17,7 +17,7 @@
     </div>
   </div>
 <% end %>
-<% unless (@almost_hits - @hits.to_a).blank? %>
+<% if (@almost_hits - @hits.to_a).any? %>
   <h2>
     <%= I18n.t("examples.find.still_consistent",
                default: "Still consistent") %>
@@ -29,5 +29,14 @@
                    locals: { slice: slice } %>
       </div>
     <% end %>
+  </div>
+<% end %>
+<% if @almost_hits.empty? %>
+  <div class="row p-2">
+    <div class="col-12">
+      <div class="alert alert-warning my-2 p-2">
+        <%= I18n.t('examples.find.nothing_found') %>
+      </div>
+    </div>
   </div>
 <% end %>

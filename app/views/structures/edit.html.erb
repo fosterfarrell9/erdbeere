@@ -202,6 +202,16 @@
       <ul>
         <% @structure.implications.each do |i| %>
           <li>
+            <%= link_to '',
+                        implication_path(i, params: { structure_id: @structure.id }),
+                        class: 'fas fa-trash-alt fa-sm text-dark ml-2',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom',
+                                confirm: t('confirmation.generic') },
+                        title: t('buttons.delete'),
+                        style: 'text-decoration: none;',
+                        remote: true,
+                        method: :delete %>
             <%= render partial: 'implications/show',
                        locals: { implication: i } %>
           </li>

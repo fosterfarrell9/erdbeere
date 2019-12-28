@@ -107,7 +107,7 @@ class Proof
 		implication_ids = Implication.order(:id).pluck(:id)
 		implication_map = (1..implication_ids.length).zip(implication_ids).to_h
 		@used_implications_lines = @lines.select do |l|
-																 l.first.in?(implication_ids)
+																 l.first.in?(implication_map.keys)
 															 end
 		@used_implications = (1..@used_implications_lines.count)
 													 .zip(@used_implications_lines

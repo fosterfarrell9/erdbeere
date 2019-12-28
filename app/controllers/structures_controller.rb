@@ -1,5 +1,6 @@
 class StructuresController < ApplicationController
-  before_action :set_structure, except: [:index]
+  before_action :set_structure, except: [:index, :create, :new]
+
   def index
     @structures = Structure.all.to_a
   end
@@ -13,6 +14,18 @@ class StructuresController < ApplicationController
   def update
     @structure.update(structure_params)
     redirect_to edit_structure_path(@structure)
+  end
+
+  def new
+    @structure = Structure.new
+  end
+
+  def create
+    @structure = Structure.create(structure_params)
+    if @structure.valid?
+      redirect_to structures_path
+      return
+    end
   end
 
   private

@@ -21,6 +21,10 @@ class Implication < ApplicationRecord
   validates :implies, presence: true
   validates_with ImplicationUniqueness
 
+  # TODO
+  # after_create :apply_to_building_blocks
+  # after_destroy :remove_from_building_blocks
+
   def to_s
     base_struct = implies.stuff_w_props.structure
     s = '*IF* '
@@ -58,4 +62,14 @@ class Implication < ApplicationRecord
     end
     temp_file
   end
+
+  # TODO
+  # def apply_to_building_blocks
+  # finde passende building blocks und speichere sie dort auch ab
+  # z.B.: Eigenschaft für Ringe wird angelegt -> diese sollte dann
+  # auch für Basisringe von Moduln gelten
+  # def remove_from_building_blocks
+  # selbes, nur in die andere Richtung. Evtl. ist es dafür geschickt,
+  # zu protokollieren, von welcher Implikation eine gegebene Implikation
+  # hochinduziert wurde.
 end

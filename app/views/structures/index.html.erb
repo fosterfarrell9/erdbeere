@@ -2,6 +2,14 @@
   <div class="col-12">
     <h3>
       <%= I18n.t('structure.index.title') %>
+      <%= link_to '',
+                  new_structure_path,
+                  class: 'fas fa-plus-circle fa-sm text-secondary',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.create'),
+                  style: 'text-decoration: none;',
+                  remote: true %>
     </h3>
   </div>
 </div>
@@ -14,6 +22,13 @@
             <h4 class="title">
               <%= link_to s.name,
                           structure_path(s) %>
+              <%= link_to '',
+                  edit_structure_path(s),
+                  class: 'far fa-edit fa text-secondary',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.edit'),
+                  style: 'text-decoration: none;' %>
             </h4>
           </div>
           <div class="card-body">
@@ -31,3 +46,4 @@
     <% end %>
   </div>
 <% end %>
+<%= render partial: 'structures/modal' %>

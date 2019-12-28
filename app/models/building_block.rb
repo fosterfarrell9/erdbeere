@@ -20,7 +20,10 @@ class BuildingBlock < ApplicationRecord
   private
 
 
-# TODO: cf. copy_implications in core_ext/array.rb , seeds/rings_and_modules.rb
+  # fülle BuildingBlock mit passenden Implikationen von seiner
+  # Struktur, z.B. Basisring von R-Mod mit den Implikationen für
+  # Ringe
+	# TODO: cf. copy_implications in core_ext/array.rb , seeds/rings_and_modules.rb
   # def inherit_implications_from_structure
   # 	hash = {}
   # 	structure.properties.each do |p|

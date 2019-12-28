@@ -18,6 +18,9 @@ de:
         violates_logic: So etwas kann es nicht geben!
       still_consistent: Konsistente weitere Treffer
       title: Suchergebnisse
+      nothing_found: >
+        In der Datenbank wurde kein solches Objekt gefunden,
+        es wurden aber auch keine Widersprüche gefunden.
     list:
       title: Alle Beispiele, die ich kenne
     show:
@@ -48,6 +51,8 @@ de:
     edit:
       name: 'Bezeichnung'
       implications: 'Implikationen'
+    create:
+      title: 'Struktur anlegen'
   building_block:
     edit:
       title: 'Baustein'
@@ -126,6 +131,7 @@ de:
     discard: 'Verwerfen'
     cancel: 'Abbrechen'
     create: 'Anlegen'
+    delete: 'Löschen'
   basics:
     preview: 'Vorschau'
   warnings:
