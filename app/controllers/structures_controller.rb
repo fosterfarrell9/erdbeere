@@ -37,6 +37,6 @@ class StructuresController < ApplicationController
   end
 
   def structure_params
-    params.require(:structure).permit(:definition, :name)
+    params.require(:structure).permit(:definition, :name, :derives_from_id)
   end
 end

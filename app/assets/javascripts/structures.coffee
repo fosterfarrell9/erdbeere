@@ -6,8 +6,7 @@ $(document).on 'turbolinks:load', ->
   $(document).on 'change', '.atomStuffWProps', ->
     id = $(this).data('id')
     value = $(this).val()
-    props = $('#implicationForm').data('properties')
-    console.log props[value]
+    props = $(this).closest('form').data('properties')
     select = $('.atomSatisfies[data-id="'+id+'"]').get(0)
     select.options.length = 1
     for option in props[value]

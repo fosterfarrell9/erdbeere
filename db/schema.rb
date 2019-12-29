@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_26_161052) do
+ActiveRecord::Schema.define(version: 2019_12_29_160709) do
 
   create_table "atoms", force: :cascade do |t|
     t.string "stuff_w_props_type"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 2019_12_26_161052) do
     t.integer "atom_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "value", default: true
     t.index ["atom_id"], name: "index_axioms_on_atom_id"
     t.index ["structure_id"], name: "index_axioms_on_structure_id"
   end
@@ -105,12 +106,14 @@ ActiveRecord::Schema.define(version: 2019_12_26_161052) do
     t.integer "implies_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "implies_value", default: true
     t.index ["implies_id"], name: "index_implications_on_implies_id"
   end
 
   create_table "premises", force: :cascade do |t|
     t.integer "atom_id"
     t.integer "implication_id"
+    t.boolean "value", default: true
     t.index ["atom_id"], name: "index_premises_on_atom_id"
     t.index ["implication_id"], name: "index_premises_on_implication_id"
   end

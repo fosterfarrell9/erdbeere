@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :properties
     resources :building_blocks
     resources :implications
+    resources :axioms
     get '/' => 'structures#index'
   end
 end

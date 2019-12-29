@@ -31,6 +31,14 @@ class Structure < ApplicationRecord
     "s-#{id}"
   end
 
+  def positive_defining_atoms
+    axioms.where(value: true).map(&:atom)
+  end
+
+  def negative_defining_atoms
+    axioms.where(value: false).map(&:atom)
+  end
+
   def properties
     return original_properties if derives_from.nil?
     original_properties + derives_from.properties
@@ -75,6 +83,10 @@ class Structure < ApplicationRecord
 
   def eligible_for_premise_select
     ([self] + building_blocks_flattened).map { |x| [x.name, x.stuff_id] }
+  end
+
+  def eligible_for_axiom_select
+    building_blocks_flattened.map { |x| [x.name, x.stuff_id] }
   end
 
   def examples

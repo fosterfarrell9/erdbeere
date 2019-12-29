@@ -1,17 +1,21 @@
-<% last_atom = implication.atoms.last %>
-<% (implication.atoms - [last_atom]).each do |a| %>
+<% last_premise = implication.premises.last %>
+<% (implication.premises - [last_premise]).each do |p| %>
   <%= render partial: "atoms/inline_atom",
-             locals: { atom: a,
+             locals: { atom: p.atom,
                        delim_open: '(',
                        delim_close: ')',
-                       fullstop: '' } %>
+                       fullstop: '',
+                       modifier: p.value ? t('logic.is') : t('logic.is_not'),
+                        } %>
   <%= content_tag(:i, t('implications.and')) %>
 <% end %>
 <%= render partial: "atoms/inline_atom",
-           locals: { atom: last_atom,
+           locals: { atom: last_premise.atom,
                      delim_open: '(',
                      delim_close: ')',
-                     fullstop: '' } %>
+                     fullstop: '',
+                     modifier:  last_premise.value ? t('logic.is') : t('logic.is_not') } %>
 $\Rightarrow$
 <%= render partial: "atoms/inline_atom",
-           locals: { atom: implication.implies } %>
+           locals: { atom: implication.implies,
+                     modifier: implication.implies_value ? t('logic.is') : t('logic.is_not') } %>

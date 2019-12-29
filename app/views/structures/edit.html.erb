@@ -86,17 +86,56 @@
       <%= t('building_block.edit.none') %>
 		<% end %>
 		<% if @structure.derives_from %>
-			<%= t('structure.show.definition_details_html',
-						name: @structure.name,
-						derives_from: link_to(@structure.derives_from.name,
-																	structure_path(@structure.derives_from))) %>
-			<ul>
-				<% @structure.defining_atoms.each do |a| %>
-            <%= render partial: 'atoms/show',
-                       locals: { atom: a } %>
-				<% end %>
-			</ul>
-		<% end %>
+      <div class="row my-2">
+        <div class="col-12">
+          <%= t('structure.create.derives_from') %>:
+          <%= link_to @structure.derives_from.name,
+                      edit_structure_path(@structure.derives_from) %>
+          <% if @structure.derives_from.building_blocks %>
+            <%= t('structure.edit.parent_building_blocks') %>:
+            <%= @structure.derives_from.building_blocks.map(&:name).join(', ') %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+      <% if @structure.original_building_blocks.any? || @structure.derives_from&.building_blocks.any? %>
+        <div class="row my-2">
+          <div class="col-12">
+            <%= t('structure.edit.axioms') %>
+            <%= link_to '',
+                        new_axiom_path(params: { structure_id: @structure.id }),
+                        class: 'fas fa-plus-circle text-dark',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom' },
+                        title: t('buttons.create'),
+                        style: 'text-decoration: none;',
+                        remote: true %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+    			  <ul>
+		    	 	  <% @structure.axioms.each do |a| %>
+                <li>
+                  <%= render partial: "atoms/inline_atom",
+                             locals: { atom: a.atom,
+                                       modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
+                  <%= link_to '',
+                              axiom_path(a),
+                              class: 'fas fa-trash-alt text-dark ml-2',
+                              data: { toggle: 'tooltip',
+                                      placement: 'bottom',
+                                      confirm: t('confirmation.generic') },
+                              title: t('buttons.delete'),
+                              style: 'text-decoration: none;',
+                              remote: true,
+                              method: :delete %>
+                </li>
+				      <% end %>
+			      </ul>
+          </div>
+        </div>
+      <% end %>
     <div class="row my-2">
       <div class="col-12">
         <%= t('structure.show.definition') %>
@@ -226,3 +265,4 @@
 <%= render partial: 'building_blocks/modal' %>
 <%= render partial: 'properties/modal' %>
 <%= render partial: 'implications/modal' %>
+<%= render partial: 'axioms/modal' %>

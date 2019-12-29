@@ -1,0 +1,40 @@
+<%= form_with model: axiom,
+							html: { id: 'axiomForm',
+											data:
+												{ properties: structure.deep_building_blocks_properties_select.to_json } } do |f| %>
+	<div class="form-row">
+		<div class="col-5">
+			<%= f.select :stuff_w_props,
+									 options_for_select(structure.eligible_for_axiom_select, nil),
+								   { prompt: t('basics.select') },
+	    						 { class: 'form-control atomStuffWProps',
+	    						 	 data: { id: 'a'} } %>
+		</div>
+		<div class="col-2">
+			<%= f.select :value,
+									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 0]]),
+								   {},
+	    						 { class: 'form-control' } %>
+		</div>
+		<div class="col-5">
+			<%= f.select :satisfies_id,
+									 options_for_select([[]]),
+								   { prompt: t('basics.select') },
+	    						 { class: 'form-control atomSatisfies',
+	    						 	 data: { id: 'a'} } %>
+		</div>
+	</div>
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <%= f.submit t('buttons.save'),
+                   class: "btn btn-primary" %>
+      <button type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal">
+        <%= t('buttons.cancel') %>
+ 	   </button>
+    </div>
+  </div>
+  <%= f.hidden_field :structure_id,
+  									 value: structure.id %>
+<% end %>

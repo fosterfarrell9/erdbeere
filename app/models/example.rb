@@ -57,11 +57,11 @@ class Example < ApplicationRecord
   end
 
   def hardcoded_flat_truths
-    example_facts.find_all { |t| t.satisfied == true }.map { |t| t.property.to_atom } + structure.defining_atoms
+    example_facts.find_all { |t| t.satisfied == true }.map { |t| t.property.to_atom } + structure.positive_defining_atoms
   end
 
   def hardcoded_flat_falsehoods
-    example_facts.find_all { |t| t.satisfied == false }.map { |t| t.property.to_atom }
+    example_facts.find_all { |t| t.satisfied == false }.map { |t| t.property.to_atom } + structure.negative_defining_atoms
   end
 
   def hardcoded_flat_truths_as_properties
@@ -95,8 +95,12 @@ class Example < ApplicationRecord
       Atom.find_or_create_by(stuff_w_props: structure, satisfies: et.property)
     end.to_a
 
-    if (test.is_a?(Array) && test.include?(true)) || test === true
+    if test == [true, false]
       a += structure.defining_atoms
+    elsif test == [true] || test === true
+      a += structure.positive_defining_atoms
+    elsif test == [false] || test === false
+      a += structure.negative_defining_atoms
     end
 
     a.flatten

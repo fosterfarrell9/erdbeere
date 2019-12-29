@@ -98,7 +98,6 @@
                 <%= render partial: 'atoms/show',
                            locals: { atom: atom,
                                      modifier: t('logic.is'),
-                                     implication: nil,
                                      proof: proof,
                                      example: @example } %>
               <% end %>
@@ -119,7 +118,6 @@
                 <%= render partial: 'atoms/show',
                            locals: { atom: atom,
                                      modifier: t('logic.is_not'),
-                                     implication: nil,
                                      proof: proof,
                                      success: 'falsehood',
                                      example: @example } %>

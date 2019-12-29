@@ -51,8 +51,12 @@ de:
     edit:
       name: 'Bezeichnung'
       implications: 'Implikationen'
+      parent_building_blocks: 'mit Baustein(en)'
+      axioms: 'Axiome'
     create:
       title: 'Struktur anlegen'
+      derives_from: 'Elternstruktur'
+      no_parents: 'keine'
   building_block:
     edit:
       title: 'Baustein'
@@ -78,6 +82,9 @@ de:
     edit:
       premises: 'Voraussetzungen'
       implies: 'Konsequenz'
+  axiom:
+    create:
+      title: 'Axiom anlegen'
   footer:
     is_on: ist auf
   implications:

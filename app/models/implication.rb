@@ -39,11 +39,11 @@ class Implication < ApplicationRecord
 
   def self.to_dimacs
     dimacs = ''
-    Implication.includes(:atoms, :implies).order(:id).all.each do |i|
-      i.atoms.each do |a|
-        dimacs += "-#{a.id} "
+    Implication.includes(:premises, :implies).order(:id).all.each do |i|
+      i.premises.each do |p|
+        dimacs += "#{p.value ? '-' : ''}#{p.atom_id} "
       end
-      dimacs += "#{i.implies.id} 0 \n"
+      dimacs += "#{i.implies_value ? '' : '-'}#{i.implies.id} 0 \n"
     end
     dimacs
   end
@@ -52,15 +52,6 @@ class Implication < ApplicationRecord
     Rails.cache.fetch('implication_dimacs') do
       self.to_dimacs
     end
-  end
-
-  def self.to_dimacs_file
-    temp_file = Tempfile.new
-    File.open(temp_file, 'w') do |f|
-      f.write dimacs = "p cnf #{Atom.count} #{Implication.count} \n"
-      f.write self.to_dimacs
-    end
-    temp_file
   end
 
   # TODO

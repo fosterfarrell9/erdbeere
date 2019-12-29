@@ -1,10 +1,9 @@
 <% modifier ||= t('logic.is') %>
 <% success ||= 'truth' %>
-<% implication ||= nil %>
 <% proof ||= nil %>
 <% example ||= nil %>
 <% unless atom.property.nil? %>
-  <% if implication.nil? && proof.nil? %>
+  <% if proof.nil? %>
     <li>
       <%= render partial: "atoms/inline_atom",
                  locals: { atom: atom,
@@ -29,16 +28,10 @@
       </a>
       <div class="collapse"
            id="atomDerivation-<%= atom.id %>">
-        <% if implication %>
-          <%= render partial: 'implications/inline_message',
-                     locals: { implication: implication,
-                               success: success } %>
-        <% elsif proof %>
-          <%= render partial: 'proofs/show',
-                     locals: { proof: proof,
-                               success: success,
-                               example: @example } %>
-        <% end %>
+        <%= render partial: 'proofs/show',
+                   locals: { proof: proof,
+                             success: success,
+                             example: @example } %>
       </div>
     </p>
   <% end %>

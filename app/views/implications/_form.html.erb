@@ -17,11 +17,10 @@
 	    						 	 data: { id: "p-#{i}"} } %>
 		</div>
 		<div class="col-2">
-			<%= f.select "premises#{[i]}[logic]",
-									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 1]]),
+			<%= f.select "premises#{[i]}[value]",
+									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 0]]),
 								   {},
-	    						 { class: 'form-control',
-	    						 	 disabled: true } %>
+	    						 { class: 'form-control' } %>
 		</div>
 		<div class="col-5">
 			<%= f.select "premises#{[i]}[satisfies]",
@@ -46,11 +45,10 @@
 	    						 	 data: { id: 'i'} } %>
 		</div>
 		<div class="col-2">
-			<%= f.select 'implies[logic]',
-									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 1]]),
+			<%= f.select 'implies[value]',
+									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 0]]),
 								   {},
-	    						 { class: 'form-control',
-	    						 	 disabled: true } %>
+	    						 { class: 'form-control' } %>
 		</div>
 		<div class="col-5">
 			<%= f.select 'implies[satisfies]',

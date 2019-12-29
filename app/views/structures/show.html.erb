@@ -34,9 +34,10 @@
 						derives_from: link_to(@structure.derives_from.name,
 																	structure_path(@structure.derives_from))) %>
 			<ul>
-				<% @structure.defining_atoms.each do |a| %>
+				<% @structure.axioms.each do |a| %>
             <%= render partial: 'atoms/show',
-                       locals: { atom: a } %>
+                       locals: { atom: a.atom,
+                       					 modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
 				<% end %>
 			</ul>
 		<% end %>

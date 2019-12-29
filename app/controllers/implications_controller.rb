@@ -7,10 +7,10 @@ class ImplicationsController < ApplicationController
   end
 
   def create
+    @implication = Implication.new
     extract_premises!
     extract_conclusion!
-    @implication = Implication.find_or_create_by(atoms: @extracted_premises,
-                                                 implies: @extracted_conclusion)
+    @implication.save
     if @implication.valid?
       redirect_to edit_structure_path(params[:implication][:structure_id])
       return
@@ -33,15 +33,17 @@ class ImplicationsController < ApplicationController
   def extract_premises!
     @extracted_premises = []
     implication_params[:premises].each do |k,v|
-      next if v['stuff_w_props'].blank? || v['satisfies'].blank?
+      next if v['stuff_w_props'].blank? || v['satisfies'].blank? || v['value'].blank?
       stuff = v['stuff_w_props'].split('-')
       stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
       stuff_id = stuff.second.to_i
       satisfies_id = v['satisfies'].to_i
-      @extracted_premises.push(Atom.find_or_create_by(stuff_w_props_type: stuff_type,
-                                                      stuff_w_props_id: stuff_id,
-                                                      satisfies_type: 'Property',
-                                                      satisfies_id: satisfies_id))
+      value = v['value'].to_i.zero? ? false : true
+      atom = Atom.find_or_create_by(stuff_w_props_type: stuff_type,
+                                    stuff_w_props_id: stuff_id,
+                                    satisfies_type: 'Property',
+                                    satisfies_id: satisfies_id)
+      @implication.premises.build(atom: atom, value: value)
     end
   end
 
@@ -52,10 +54,13 @@ class ImplicationsController < ApplicationController
     stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
     stuff_id = stuff.second.to_i
     satisfies_id = implies['satisfies'].to_i
-    @extracted_conclusion = Atom.find_or_create_by(stuff_w_props_type: stuff_type,
-                                                   stuff_w_props_id: stuff_id,
-                                                   satisfies_type: 'Property',
-                                                   satisfies_id: satisfies_id)
+    extracted_conclusion = Atom.find_or_create_by(stuff_w_props_type: stuff_type,
+                                                  stuff_w_props_id: stuff_id,
+                                                  satisfies_type: 'Property',
+                                                  satisfies_id: satisfies_id)
+    @implication.implies = extracted_conclusion
+    implies_value = implies['value'].to_i.zero? ? false : true
+    @implication.implies_value = implies_value
   end
 
 
