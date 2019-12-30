@@ -13,37 +13,33 @@
     </h3>
   </div>
 </div>
-<% Structure.includes(:translations).all.each_slice(3) do |slice| %>
-  <div class="row mb-2 p-2">
-    <% slice.each do |s| %>
-      <div class="col-4">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="title">
-              <%= link_to s.name,
-                          structure_path(s) %>
-              <%= link_to '',
-                  edit_structure_path(s),
-                  class: 'far fa-edit fa text-secondary',
-                  data: { toggle: 'tooltip',
-                          placement: 'bottom' },
-                  title: t('buttons.edit'),
-                  style: 'text-decoration: none;' %>
-            </h4>
-          </div>
-          <div class="card-body">
-            <ul>
-              <% s.original_properties.includes(:translations).each do |p| %>
-                <li>
-                  <%= link_to p.name,
-                  						property_path(p) %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
+<div class="card-columns">
+  <% Structure.includes(:translations).all.each do |s| %>
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">
+          <%= link_to s.name,
+                      structure_path(s) %>
+          <%= link_to '',
+                      edit_structure_path(s),
+                      class: 'far fa-edit fa text-secondary',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.edit'),
+                      style: 'text-decoration: none;' %>
+        </h4>
       </div>
-    <% end %>
-  </div>
-<% end %>
+      <div class="card-body">
+        <ul>
+          <% s.original_properties.includes(:translations).each do |p| %>
+            <li>
+              <%= link_to p.name,
+               						property_path(p) %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+</div>
 <%= render partial: 'structures/modal' %>

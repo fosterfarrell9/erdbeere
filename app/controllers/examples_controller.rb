@@ -3,6 +3,20 @@ class ExamplesController < ApplicationController
     @example = Example.find(params[:id])
   end
 
+  def new
+    @example = Example.new(structure_id: params[:structure_id].to_i)
+  end
+
+  def create
+    @example = Example.new(structure_id: example_params[:structure_id],
+                           description: example_params[:description])
+    extract_building_block_realizations!
+    @example.save
+    if @example.valid?
+      redirect_to edit_structure_path(@example.structure)
+    end
+  end
+
   def find
     @satisfies = params[:satisfies].to_a.map { |i| Atom.find(i.to_i) }.to_a
     @violates = params[:violates].to_a.map { |i| Atom.find(i.to_i) }.to_a
@@ -31,6 +45,20 @@ class ExamplesController < ApplicationController
       @hits = @almost_hits.find_all do |e|
         (@violates - e.violated_atoms_by_sat).empty?
       end
+    end
+  end
+
+  private
+
+  def example_params
+    params.require(:example).permit(:description, :structure_id,
+                                    building_block_realizations: {})
+  end
+
+  def extract_building_block_realizations!
+    example_params[:building_block_realizations].each do |k,v|
+      @example.building_block_realizations.build(building_block_id: k.to_i,
+                                                 realization_id: v.to_i)
     end
   end
 end

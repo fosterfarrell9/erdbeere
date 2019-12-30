@@ -1,0 +1,32 @@
+<%= form_with model: example do |f| %>
+	<div class="form-group">
+		<%= f.label :description,
+								t('example.edit.description') %>
+   	<%= f.text_field :description,
+  									 class: 'form-control' %>
+  </div>
+  <% example.structure.original_building_blocks.each do |bb| %>
+    <div class="form-group">
+    <%= f.label "building_block_realizations[#{bb.id}]",
+                t('example.create.building_block_realization',
+                  building_block: "#{bb.name}: #{bb.definition}") %>
+    <%= f.select "building_block_realizations[#{bb.id}]",
+                 options_for_select(bb.structure.examples.map { |e| [e.description, e.id]}),
+                 { prompt: t('basics.select') },
+                 { class: 'form-control' } %>
+    </div>
+  <% end %>
+  <%= f.hidden_field :structure_id,
+  									 value: example.structure_id %>
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <%= f.submit t('buttons.save'),
+                   class: "btn btn-primary" %>
+      <button type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal">
+        <%= t('buttons.cancel') %>
+ 	   </button>
+    </div>
+  </div>
+<% end %>

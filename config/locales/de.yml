@@ -8,6 +8,12 @@ de:
     show:
       title: >
         Beispiel %{example} für
+    create:
+      title: 'Beispiel anlegen'
+      building_block_realization:
+        'Realisierung des Bausteins %{building_block}'
+    edit:
+      description: 'Bezeichnung'
   examples:
     find:
       description: Beschreibung
@@ -141,6 +147,7 @@ de:
     delete: 'Löschen'
   basics:
     preview: 'Vorschau'
+    select: 'auswählen'
   warnings:
     unsaved_changes: 'Ungespeicherte Änderungen'
   confirmation:

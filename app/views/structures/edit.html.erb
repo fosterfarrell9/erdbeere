@@ -52,7 +52,7 @@
                  			remote: true %>
       	</div>
     	</div>
-      <% if @structure.original_building_blocks.any? %>
+      <% if @structure.original_building_blocks %>
     	<ul>
 				<% @structure.original_building_blocks.each do |bb| %>
 					<% if bb.persisted? %>
@@ -98,7 +98,7 @@
         </div>
       </div>
     <% end %>
-      <% if @structure.original_building_blocks.any? || @structure.derives_from&.building_blocks.any? %>
+      <% if @structure.original_building_blocks || @structure.derives_from&.building_blocks %>
         <div class="row my-2">
           <div class="col-12">
             <%= t('structure.edit.axioms') %>
@@ -206,6 +206,14 @@
     <div class="card-header">
       <h4 class="title">
       	<%= t('structure.show.examples') %>
+          <%= link_to '',
+                      new_example_path(params: { structure_id: @structure.id }),
+                      class: 'fas fa-plus-circle fa-sm text-dark',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.create'),
+                      style: 'text-decoration: none;',
+                      remote: true %>
       </h4>
     </div>
     <div class="card-body"
@@ -266,3 +274,4 @@
 <%= render partial: 'properties/modal' %>
 <%= render partial: 'implications/modal' %>
 <%= render partial: 'axioms/modal' %>
+<%= render partial: 'examples/modal' %>
