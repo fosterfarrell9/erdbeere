@@ -56,6 +56,14 @@ class Example < ApplicationRecord
     appearances_as_building_block_realizations.update_all(updated_at: Time.now)
   end
 
+  def hardcoded_true_facts
+    example_facts.where(satisfied: true)
+  end
+
+  def hardcoded_false_facts
+    example_facts.where(satisfied: false)
+  end
+
   def hardcoded_flat_truths
     example_facts.find_all { |t| t.satisfied == true }.map { |t| t.property.to_atom } + structure.positive_defining_atoms
   end

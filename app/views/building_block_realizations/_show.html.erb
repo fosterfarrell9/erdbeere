@@ -1,50 +1,22 @@
-<div class="card">
-  <div class="card-header">
-    <h4>
-      <%= bbr.building_block.name %>
-    </h4>
-  </div>
-  <div class="card-body">
-    <p>
-      <%= link_to bbr.realization.description,
-                  example_path(id: bbr.realization.id) %>
-    </p>
-    <div class="card bg-truth">
-      <div class="card-header">
-        <h5>
-          <%= I18n.t("building_block_realizations.show.hardcoded_truths",
-                     default: "Hardcoded Truths") %>
-        </h5>
-      </div>
-      <div class="card-body">
-        <ul>
-          <% bbr.realization.hardcoded_truths.each do |atom| %>
-            <%= render partial: 'atoms/show',
-                       locals: { atom: atom,
-                                 example: bbr.realization } %>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-    <% unless bbr.realization.hardcoded_falsehoods.empty? %>
-      <div class="card bg-falsehood">
-        <div class="card-header">
-          <h5>
-            <%= I18n.t("building_block_realizations.show.hardcoded_falsehoods",
-                       default: "Hardcoded Falsehoods") %>
-          </h5>
-        </div>
-        <div class="card-body">
-          <ul id="falsehoods">
-            <% bbr.realization.hardcoded_falsehoods.each do |atom| %>
-              <%= render partial: 'atoms/show',
-                         locals: { atom: atom,
-                                   modifier: t('logic.is_not'),
-                                   example: bbr.realization } %>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
+<%= bbr.building_block.name %>:
+<%= link_to bbr.realization.description,
+            example_path(id: bbr.realization.id) %>
+<br>
+<%= t('example.show.hardcoded_properties') %>:
+<ul>
+  <% bbr.realization.hardcoded_truths.each do |atom| %>
+    <li>
+      <%= render partial: 'atoms/show',
+                 locals: { atom: atom,
+                           example: bbr.realization } %>
+    </li>
+  <% end %>
+  <% bbr.realization.hardcoded_falsehoods.each do |atom| %>
+    <li>
+      <%= render partial: 'atoms/show',
+                 locals: { atom: atom,
+                           modifier: t('logic.is_not'),
+                           example: bbr.realization } %>
+    </li>
+  <% end %>
+</ul>

@@ -2,30 +2,59 @@
 <% success ||= 'truth' %>
 <% proof ||= nil %>
 <% example ||= nil %>
+<% explanations ||= nil %>
+<% with_explanations ||= false %>
 <% unless atom.property.nil? %>
   <% if proof.nil? %>
-    <li>
-      <%= render partial: "atoms/inline_atom",
-                 locals: { atom: atom,
-                           modifier: modifier,
-                           example: example } %>
-    </li>
+    <% if with_explanations %>
+    <p>
+    <a>
+      <span class="icon is-small">
+        <i class="fa fa-plus-square toggle-derivation"
+           data-toggle="collapse"
+           href="#atomExplanations-<%= atom.id %>">
+        </i>
+      </span>
+    </a>
+    <span>
+    <% end %>
+     <%= render partial: "atoms/inline_atom",
+                locals: { atom: atom,
+                          modifier: modifier,
+                          example: example } %>
+    <% if with_explanations %>
+    </span>
+    <div class="collapse"
+         id="atomExplanations-<%= atom.id %>">
+      <article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %>">
+      <% explanations.each do |e| %>
+        <p>
+           <%= raw(e) %>
+         </p>
+      <% end %>
+      <% if explanations.blank? %>
+        <%= t('atom.show.no_explanation') %>
+      <% end %>
+      </article>
+    </div>
+    </p>
+    <% end %>
   <% else %>
     <p>
-      <a class="button bg-<%= success %>">
+      <a>
         <span class="icon is-small">
           <i class="fa fa-plus-square toggle-derivation"
              data-toggle="collapse"
              href="#atomDerivation-<%= atom.id %>">
           </i>
         </span>
-        <span>
-          <%= render partial: "atoms/inline_atom",
-                     locals: { atom: atom,
-                               modifier: modifier,
-                               example: @example } %>
-        </span>
       </a>
+      <span>
+        <%= render partial: "atoms/inline_atom",
+                   locals: { atom: atom,
+                             modifier: modifier,
+                             example: @example } %>
+      </span>
       <div class="collapse"
            id="atomDerivation-<%= atom.id %>">
         <%= render partial: 'proofs/show',

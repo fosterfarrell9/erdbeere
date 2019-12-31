@@ -4,10 +4,18 @@ de:
     show:
       hardcoded_falsehoods: Hinterlegte Verletzungen
       hardcoded_truths: Hinterlegte Wahrheiten
+  atom:
+    show:
+      no_explanation: 'Es liegt keine Erklärung vor.'
   example:
     show:
       title: >
         Beispiel %{example} für
+      satisfied_properties: 'Erfüllte Eigenschaften'
+      violated_properties: 'Verletzte Eigenschaften'
+      hardcoded_properties: 'Hinterlegte Eigenschaften'
+      hardcoded: 'Hinterlegt'
+      derived: 'Abgeleitet'
     create:
       title: 'Beispiel anlegen'
       building_block_realization:
@@ -137,6 +145,7 @@ de:
     no_property: 'Eine Eigenschaft mit dieser id gibt es nicht.'
     no_building_block: 'Einen Baustein mit dieser id gibt es nicht.'
     no_implication: 'Eine Implikation mit dieser id gibt es nicht.'
+    no_structure: 'Ein Beispiel mit dieser id gibt es nicht.'
   buttons:
     show: 'Anzeigen'
     edit: 'Bearbeiten'

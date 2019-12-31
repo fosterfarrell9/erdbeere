@@ -1,6 +1,10 @@
 class ExamplesController < ApplicationController
+  before_action :set_example, only: [:show, :edit]
+
   def show
-    @example = Example.find(params[:id])
+  end
+
+  def edit
   end
 
   def new
@@ -60,5 +64,11 @@ class ExamplesController < ApplicationController
       @example.building_block_realizations.build(building_block_id: k.to_i,
                                                  realization_id: v.to_i)
     end
+  end
+
+  def set_example
+    @example = Example.find_by_id(params[:id])
+    return if @example.present?
+    redirect_to :root, alert: I18n.t('controllers.no_example')
   end
 end

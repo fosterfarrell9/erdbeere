@@ -85,20 +85,20 @@
     <% else %>
       <%= t('building_block.edit.none') %>
 		<% end %>
-		<% if @structure.derives_from %>
+		<% if @structure.derives_from.present? %>
       <div class="row my-2">
         <div class="col-12">
           <%= t('structure.create.derives_from') %>:
           <%= link_to @structure.derives_from.name,
                       edit_structure_path(@structure.derives_from) %>
-          <% if @structure.derives_from.building_blocks %>
+          <% if @structure.derives_from.building_blocks.present? %>
             <%= t('structure.edit.parent_building_blocks') %>:
             <%= @structure.derives_from.building_blocks.map(&:name).join(', ') %>
           <% end %>
         </div>
       </div>
     <% end %>
-      <% if @structure.original_building_blocks || @structure.derives_from&.building_blocks %>
+      <% if @structure.original_building_blocks.present? || @structure.derives_from.present? %>
         <div class="row my-2">
           <div class="col-12">
             <%= t('structure.edit.axioms') %>

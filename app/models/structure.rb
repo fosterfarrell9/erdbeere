@@ -76,7 +76,9 @@ class Structure < ApplicationRecord
   end
 
   def deep_building_blocks_properties_select
-    ([self] + building_blocks_flattened).map do |x|
+    start_blocks = [self]
+    start_blocks += [derives_from] if derives_from.present?
+    (start_blocks + building_blocks_flattened).uniq.map do |x|
       [x.stuff_id, x.structure.properties.map { |p| [p.name, p.id] }]
     end .to_h
   end
@@ -86,7 +88,9 @@ class Structure < ApplicationRecord
   end
 
   def eligible_for_axiom_select
-    building_blocks_flattened.map { |x| [x.name, x.stuff_id] }
+    result = building_blocks_flattened.map { |x| [x.name, x.stuff_id] }
+    return result unless derives_from.present?
+    [[derives_from.name, derives_from.stuff_id]] + result
   end
 
   def examples

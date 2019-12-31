@@ -80,3 +80,11 @@ select[multiple].multi-select:active, select[multiple].multi-select:focus {
 .newBuildingBlock {
   display: none;
 }
+
+.propertiesCard {
+  height: 80vh;
+}
+
+.propertiesCardBody {
+  overflow-y: scroll;
+}

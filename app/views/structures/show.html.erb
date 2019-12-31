@@ -28,16 +28,18 @@
 				<% end %>
 			</ul>
 		<% end %>
-		<% if @structure.derives_from %>
+		<% if @structure.derives_from.present? %>
 			<%= t('structure.show.definition_details_html',
 						name: @structure.name,
 						derives_from: link_to(@structure.derives_from.name,
 																	structure_path(@structure.derives_from))) %>
 			<ul>
 				<% @structure.axioms.each do |a| %>
+					<li>
             <%= render partial: 'atoms/show',
                        locals: { atom: a.atom,
                        					 modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
+          </li>
 				<% end %>
 			</ul>
 		<% end %>

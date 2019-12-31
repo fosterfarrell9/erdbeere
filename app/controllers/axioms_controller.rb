@@ -13,11 +13,12 @@ class AxiomsController < ApplicationController
 		@axiom = Axiom.new(structure: @structure,
 											 atom: @atom,
 											 value: value)
+		pp @atom
+		pp @atom.errors
 		@axiom.save
 		if @axiom.valid?
 			redirect_to edit_structure_path(@axiom.structure)
 		end
-		pp @axiom.errors
 	end
 
 	def destroy
@@ -42,9 +43,11 @@ class AxiomsController < ApplicationController
   def extract_atom!
   	return if axiom_params[:stuff_w_props].blank?
   	return if axiom_params[:satisfies_id].blank?
-  	stuff_w_props_id = axiom_params[:stuff_w_props].split('-').second
-		@atom = Atom.find_or_create_by(stuff_w_props_type: 'BuildingBlock',
-     	                             stuff_w_props_id: stuff_w_props_id,
+    stuff = axiom_params[:stuff_w_props].split('-')
+    stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
+    stuff_id = stuff.second.to_i
+		@atom = Atom.find_or_create_by(stuff_w_props_type: stuff_type,
+     	                             stuff_w_props_id: stuff_id,
       	                           satisfies_type: 'Property',
         	                         satisfies_id: axiom_params[:satisfies_id])
   end
