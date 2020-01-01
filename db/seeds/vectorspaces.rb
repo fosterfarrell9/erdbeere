@@ -96,10 +96,8 @@ underlying_vsp_is_fd = Atom.create(stuff_w_props: underlying_vsp, satisfies: vsp
 
 underlying_field_is_alg_closed = Atom.create do |a|
   a.stuff_w_props = underlying_vsp
-  a.satisfies = Atom.create do |b|
-    b.stuff_w_props = base_ring
-    b.satisfies = fp['algebraically closed'].property
-  end
+  a.satisfies = Atom.find_by(stuff_w_props: base_ring,
+                             satisfies: fp['algebraically closed'].property)
 end
 
 [underlying_vsp_is_fd, underlying_field_is_alg_closed].implies! endop['trigonizable']

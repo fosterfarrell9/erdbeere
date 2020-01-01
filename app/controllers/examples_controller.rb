@@ -1,5 +1,5 @@
 class ExamplesController < ApplicationController
-  before_action :set_example, only: [:show, :edit]
+  before_action :set_example, only: [:show, :edit, :update]
 
   def show
   end
@@ -19,6 +19,12 @@ class ExamplesController < ApplicationController
     if @example.valid?
       redirect_to edit_structure_path(@example.structure)
     end
+  end
+
+  def update
+    @example.update(description: example_params[:description])
+    update_building_block_realizations!
+    redirect_to edit_example_path(@example)
   end
 
   def find
@@ -60,9 +66,19 @@ class ExamplesController < ApplicationController
   end
 
   def extract_building_block_realizations!
+    return unless example_params[:building_block_realizations]
     example_params[:building_block_realizations].each do |k,v|
       @example.building_block_realizations.build(building_block_id: k.to_i,
                                                  realization_id: v.to_i)
+    end
+  end
+
+  def update_building_block_realizations!
+    return unless example_params[:building_block_realizations]
+    example_params[:building_block_realizations].each do |k,v|
+      bbr = @example.building_block_realizations.find_by(id: k)
+      next unless bbr && bbr.realization_id != v.to_i
+      bbr.update(realization_id: v)
     end
   end
 
