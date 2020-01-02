@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_29_160709) do
+ActiveRecord::Schema.define(version: 2020_01_02_104445) do
 
   create_table "atoms", force: :cascade do |t|
     t.string "stuff_w_props_type"
@@ -92,9 +92,18 @@ ActiveRecord::Schema.define(version: 2019_12_29_160709) do
     t.index ["structure_id"], name: "index_examples_on_structure_id"
   end
 
-  create_table "explanations", force: :cascade do |t|
+  create_table "explanation_translations", force: :cascade do |t|
+    t.integer "explanation_id", null: false
+    t.string "locale", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.string "title"
     t.text "text"
+    t.index ["explanation_id"], name: "index_explanation_translations_on_explanation_id"
+    t.index ["locale"], name: "index_explanation_translations_on_locale"
+  end
+
+  create_table "explanations", force: :cascade do |t|
     t.string "explainable_type"
     t.integer "explainable_id"
     t.datetime "created_at", null: false

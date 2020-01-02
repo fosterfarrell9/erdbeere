@@ -85,6 +85,15 @@
         <div class="card-header">
           <h4>
             <%= t('example.show.satisfied_properties') %>
+            <%= link_to '',
+                        add_example_facts_path(@example,
+                                               params: { sort: 'truth' }),
+                        class: 'fas fa-plus-circle text-dark',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom' },
+                        title: t('buttons.create'),
+                        style: 'text-decoration: none;',
+                        remote: true %>
           </h4>
         </div>
         <div class="card-body propertiesCardBody">
@@ -94,14 +103,34 @@
           </strong>
           <div class="row">
             <% @example.hardcoded_true_facts.each do |fact| %>
-              <div class="col-12">
+              <div class="col-10">
                 <%= render partial: 'atoms/show',
                            locals: { atom: fact.property.to_atom,
                                      modifier: t('logic.is'),
                                      example: @example,
-                                     explanations: fact.explanations,
+                                     explanations: [fact.explanation&.text] - ['', nil],
                                      with_explanations: true,
                                      success: 'truth' } %>
+              </div>
+              <div class="col-2 text-right">
+                <%= link_to '',
+                            edit_example_fact_path(fact),
+                            class: 'far fa-edit text-dark',
+                            data: { toggle: 'tooltip',
+                                    placement: 'bottom' },
+                            title: t('buttons.edit'),
+                            style: 'text-decoration: none;',
+                            remote: true %>
+                <%= link_to '',
+                            example_fact_path(fact),
+                            class: 'fas fa-trash-alt text-dark ml-2',
+                            data: { toggle: 'tooltip',
+                                    placement: 'bottom',
+                                    confirm: t('confirmation.generic') },
+                            title: t('buttons.delete'),
+                            style: 'text-decoration: none;',
+                            remote: true,
+                            method: :delete %>
               </div>
             <% end %>
           </div>
@@ -128,6 +157,15 @@
         <div class="card-header">
           <h4>
             <%= t('example.show.violated_properties') %>
+            <%= link_to '',
+                        add_example_facts_path(@example,
+                                               params: { sort: 'falsehood' }),
+                        class: 'fas fa-plus-circle text-dark',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom' },
+                        title: t('buttons.create'),
+                        style: 'text-decoration: none;',
+                        remote: true %>
           </h4>
         </div>
         <div class="card-body propertiesCardBody">
@@ -137,14 +175,34 @@
           </strong>
           <div class="row">
             <% @example.hardcoded_false_facts.each do |fact| %>
-            <div class="col-12">
+            <div class="col-10">
               <%= render partial: 'atoms/show',
                          locals: { atom: fact.property.to_atom,
                                    modifier: t('logic.is_not'),
                                    example: @example,
-                                   explanations: fact.explanations,
+                                   explanations: [fact.explanation&.text] - ['', nil],
                                    with_explanations: true,
                                    success: 'falsehood' } %>
+            </div>
+            <div class="col-2 text-right">
+              <%= link_to '',
+                          edit_example_fact_path(fact),
+                          class: 'far fa-edit text-dark',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom' },
+                          title: t('buttons.edit'),
+                          style: 'text-decoration: none;',
+                          remote: true %>
+              <%= link_to '',
+                          example_fact_path(fact),
+                          class: 'fas fa-trash-alt text-dark ml-2',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom',
+                                  confirm: t('confirmation.generic') },
+                          title: t('buttons.delete'),
+                          style: 'text-decoration: none;',
+                          remote: true,
+                          method: :delete %>
             </div>
             <% end %>
           </div>
@@ -168,3 +226,4 @@
       </div>
     </div>
   </div>
+<%= render partial: 'example_facts/modal' %>

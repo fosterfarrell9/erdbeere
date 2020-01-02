@@ -1,0 +1,39 @@
+<%= form_with model: example_fact do |f| %>
+  <div class="row mb-2 ">
+    <div class="col-12">
+      <%= render partial: 'atoms/show',
+                 locals: { atom: example_fact.property.to_atom,
+                           modifier: example_fact.satisfied ? t('logic.is') : t('logic.is_not'),
+                           example: example_fact.example,
+                           success: example_fact.satisfied ? 'truth' : 'falsehood' } %>
+    </div>
+  </div>
+  <div class="form-group">
+  <%= f.label :text,
+              t('example_fact.edit.explanation') %>
+  <%= f.trix_editor :text,
+                    value: example_fact.explanation&.text,
+                    id: 'example-fact-explanation-trix',
+                    data: { content: example_fact.explanation&.text } %>
+  </div>
+  <div class="row my-2">
+    <div class="col-12">
+      <%= t('basics.preview') %>
+    </div>
+  </div>
+  <div class="alert alert-dark mt-2"
+       id="example-fact-explanation-preview">
+      <%= raw(@example_fact.explanation&.text) %>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <%= f.submit t('buttons.save'),
+                   class: "btn btn-sm btn-primary" %>
+      <button type="button"
+              class="btn btn-sm btn-secondary"
+              data-dismiss="modal">
+        <%= t('buttons.cancel') %>
+     </button>
+    </div>
+  </div>
+<% end %>

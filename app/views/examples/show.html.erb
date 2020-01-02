@@ -64,7 +64,7 @@
                            locals: { atom: fact.property.to_atom,
                                      modifier: t('logic.is'),
                                      example: @example,
-                                     explanations: fact.explanations,
+                                     explanations: [fact.explanation&.text] - ['', nil],
                                      with_explanations: true,
                                      success: 'truth' } %>
               </div>
@@ -107,7 +107,7 @@
                          locals: { atom: fact.property.to_atom,
                                    modifier: t('logic.is_not'),
                                    example: @example,
-                                   explanations: fact.explanations,
+                                   explanations: [fact.explanation&.text] - ['', nil],
                                    with_explanations: true,
                                    success: 'falsehood' } %>
             </div>

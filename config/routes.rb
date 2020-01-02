@@ -3,6 +3,11 @@ Rails.application.routes.draw do
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
     post '/examples/find'
     get '/examples/find', to: 'main#search'
+    get '/examples/:id/add_example_facts', to: 'examples#add_example_facts',
+                                           as: 'add_example_facts'
+    post '/examples/:id/update_example_facts',
+         to: 'examples#update_example_facts',
+         as: 'update_example_facts'
     resources :examples
 
     match 'search', as: 'main_search', via: :get, to: 'main#search'
@@ -12,6 +17,7 @@ Rails.application.routes.draw do
     resources :building_blocks
     resources :implications
     resources :axioms
+    resources :example_facts
     get '/' => 'structures#index'
   end
 end

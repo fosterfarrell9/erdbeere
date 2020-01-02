@@ -1,5 +1,6 @@
 class ExamplesController < ApplicationController
-  before_action :set_example, only: [:show, :edit, :update]
+  before_action :set_example, only: [:show, :edit, :update, :add_example_facts,
+                                     :update_example_facts]
 
   def show
   end
@@ -24,6 +25,28 @@ class ExamplesController < ApplicationController
   def update
     @example.update(description: example_params[:description])
     update_building_block_realizations!
+    redirect_to edit_example_path(@example)
+  end
+
+  def add_example_facts
+    @satisfied = params[:sort] == 'truth'
+    @available_properties = @example.structure.original_properties
+    @available_properties -= @example.example_facts.map(&:property)
+    @available_properties -= if @satisfied
+                               @example.violated_atoms_by_sat.map(&:property)
+                             else
+                               @example.satisfied_atoms_by_sat.map(&:property)
+                             end
+  end
+
+  def update_example_facts
+    example_facts_params[:properties].each do |k,v|
+      next unless v.to_i == 1
+      fact = ExampleFact.new(example_id: @example.id,
+                             property_id: k.to_i,
+                             satisfied: example_facts_params[:satisfied])
+      fact.save
+    end
     redirect_to edit_example_path(@example)
   end
 
@@ -63,6 +86,10 @@ class ExamplesController < ApplicationController
   def example_params
     params.require(:example).permit(:description, :structure_id,
                                     building_block_realizations: {})
+  end
+
+  def example_facts_params
+    params.require(:example_facts).permit(:satisfied, properties: {})
   end
 
   def extract_building_block_realizations!

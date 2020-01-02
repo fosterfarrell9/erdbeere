@@ -1,0 +1,30 @@
+<%= form_with url: update_example_facts_path(example),
+              method: 'post',
+              scope: 'example_facts' do |f|%>
+  <% available_properties.each do |p| %>
+    <div class="form-row">
+      <div class="col-12">
+        <div class="custom-control custom-checkbox mb-2">
+          <%= f.check_box "properties[#{p.id}]",
+                          class: 'custom-control-input' %>
+          <%= f.label "properties[#{p.id}]",
+                      p.name,
+                      { class: 'custom-control-label' } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <%= f.hidden_field :satisfied,
+                     value: satisfied %>
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <%= f.submit t('buttons.save'),
+                   class: "btn btn-primary" %>
+      <button type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal">
+        <%= t('buttons.cancel') %>
+     </button>
+    </div>
+  </div>
+<% end %>

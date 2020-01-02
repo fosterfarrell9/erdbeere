@@ -7,6 +7,10 @@ de:
   atom:
     show:
       no_explanation: 'Es liegt keine Erklärung vor.'
+  example_fact:
+    edit:
+      title: 'Beispiel-Eigenschaft bearbeiten'
+      explanation: 'Erklärung'
   example:
     show:
       title: >
@@ -22,6 +26,9 @@ de:
         'Realisierung des Bausteins %{building_block}'
     edit:
       description: 'Bezeichnung'
+    add_example_facts:
+      add_truths: 'Erfüllte Eigenschaften hinterlegen'
+      add_falsehoods: 'Verletzte Eigenschaften hinterlegen'
   examples:
     find:
       description: Beschreibung
@@ -146,6 +153,8 @@ de:
     no_building_block: 'Einen Baustein mit dieser id gibt es nicht.'
     no_implication: 'Eine Implikation mit dieser id gibt es nicht.'
     no_structure: 'Ein Beispiel mit dieser id gibt es nicht.'
+    no_example: 'Ein Beispiel mit dieser id gibt es nicht.'
+    no_example_fact: 'Einen Beispielfakt mit dieser id gibt es nicht.'
   buttons:
     show: 'Anzeigen'
     edit: 'Bearbeiten'

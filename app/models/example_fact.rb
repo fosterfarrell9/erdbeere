@@ -10,7 +10,7 @@ end
 class ExampleFact < ApplicationRecord
   belongs_to :example, touch: true
   belongs_to :property
-  has_many :explanations, as: :explainable, dependent: :destroy
+  has_one :explanation, as: :explainable, dependent: :destroy
 
   validates :example, presence: true
   validates :property, presence: true, uniqueness: { scope: :example }

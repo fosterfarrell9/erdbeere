@@ -28,9 +28,7 @@
          id="atomExplanations-<%= atom.id %>">
       <article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %>">
       <% explanations.each do |e| %>
-        <p>
-           <%= raw(e) %>
-         </p>
+        <%= raw(e) %>
       <% end %>
       <% if explanations.blank? %>
         <%= t('atom.show.no_explanation') %>
