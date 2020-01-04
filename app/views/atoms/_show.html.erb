@@ -4,38 +4,46 @@
 <% example ||= nil %>
 <% explanations ||= nil %>
 <% with_explanations ||= false %>
+<% only_example ||= false %>
+<% edit ||= false %>
 <% unless atom.property.nil? %>
   <% if proof.nil? %>
     <% if with_explanations %>
-    <p>
-    <a>
-      <span class="icon is-small">
-        <i class="fa fa-plus-square toggle-derivation"
-           data-toggle="collapse"
-           href="#atomExplanations-<%= atom.id %>">
-        </i>
-      </span>
-    </a>
-    <span>
+      <p>
+      <a>
+        <span class="icon is-small">
+          <i class="fa fa-plus-square toggle-derivation"
+             data-toggle="collapse"
+            href="#atomExplanations-<%= atom.id %>-<%= example&.id.to_i %>">
+          </i>
+        </span>
+      </a>
+      <span>
     <% end %>
-     <%= render partial: "atoms/inline_atom",
-                locals: { atom: atom,
-                          modifier: modifier,
-                          example: example } %>
+    <% if only_example %>
+      <%= link_to example.description,
+                  edit ? edit_example_path(example) : example_path(example) %>
+    <% else %>
+      <%= render partial: "atoms/inline_atom",
+                  locals: { atom: atom,
+                            modifier: modifier,
+                            example: example,
+                            edit: edit } %>
+    <% end %>
     <% if with_explanations %>
-    </span>
-    <div class="collapse"
-         id="atomExplanations-<%= atom.id %>">
-      <article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %>">
-      <% explanations.each do |e| %>
-        <%= raw(e) %>
-      <% end %>
-      <% if explanations.blank? %>
-        <%= t('atom.show.no_explanation') %>
-      <% end %>
-      </article>
-    </div>
-    </p>
+      </span>
+      <div class="collapse"
+           id="atomExplanations-<%= atom.id %>-<%= example&.id.to_i %>">
+        <article class="alert alert-<%= success == 'truth' ? 'success' : 'danger' %>">
+          <% explanations.each do |e| %>
+            <%= raw(e) %>
+          <% end %>
+          <% if explanations.blank? %>
+            <%= t('atom.show.no_explanation') %>
+          <% end %>
+        </article>
+      </div>
+      </p>
     <% end %>
   <% else %>
     <p>
@@ -43,22 +51,29 @@
         <span class="icon is-small">
           <i class="fa fa-plus-square toggle-derivation"
              data-toggle="collapse"
-             href="#atomDerivation-<%= atom.id %>">
+             href="#atomDerivation-<%= atom.id %>-<%= example&.id.to_i %>">
           </i>
         </span>
       </a>
       <span>
-        <%= render partial: "atoms/inline_atom",
-                   locals: { atom: atom,
-                             modifier: modifier,
-                             example: @example } %>
+        <% if only_example %>
+          <%= link_to example.description,
+                      edit ? edit_example_path(example) : example_path(example) %>
+        <% else %>
+          <%= render partial: "atoms/inline_atom",
+                     locals: { atom: atom,
+                               modifier: modifier,
+                               example: example,
+                               edit: edit } %>
+        <% end %>
       </span>
       <div class="collapse"
-           id="atomDerivation-<%= atom.id %>">
+           id="atomDerivation-<%= atom.id %>-<%= example&.id.to_i %>">
         <%= render partial: 'proofs/show',
                    locals: { proof: proof,
                              success: success,
-                             example: @example } %>
+                             example: example,
+                             edit: edit } %>
       </div>
     </p>
   <% end %>

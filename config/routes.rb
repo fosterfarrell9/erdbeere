@@ -13,6 +13,11 @@ Rails.application.routes.draw do
     match 'search', as: 'main_search', via: :get, to: 'main#search'
 
     resources :structures
+    get '/properties/:id/add_example_facts', to: 'properties#add_example_facts',
+                                             as: 'add_example_facts_to_property'
+    post '/properties/:id/update_example_facts',
+         to: 'properties#update_example_facts',
+         as: 'update_example_facts_to_property'
     resources :properties
     resources :building_blocks
     resources :implications

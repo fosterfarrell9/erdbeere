@@ -47,6 +47,16 @@ class ExamplesController < ApplicationController
                              satisfied: example_facts_params[:satisfied])
       fact.save
     end
+    if example_facts_params[:new_property].present?
+      new_property = Property.new(name: example_facts_params[:new_property],
+                                  structure_id: @example.structure.id)
+      new_property.save
+      if new_property.valid?
+          ExampleFact.create(example_id: @example.id,
+                             property_id: new_property.id,
+                             satisfied: example_facts_params[:satisfied])
+      end
+    end
     redirect_to edit_example_path(@example)
   end
 
@@ -89,7 +99,8 @@ class ExamplesController < ApplicationController
   end
 
   def example_facts_params
-    params.require(:example_facts).permit(:satisfied, properties: {})
+    params.require(:example_facts).permit(:satisfied, :new_property,
+                                          properties: {})
   end
 
   def extract_building_block_realizations!

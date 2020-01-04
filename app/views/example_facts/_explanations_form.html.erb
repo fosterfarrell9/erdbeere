@@ -25,6 +25,8 @@
        id="example-fact-explanation-preview">
       <%= raw(@example_fact.explanation&.text) %>
   </div>
+  <%= f.hidden_field :from,
+                     value: from %>
   <div class="row mt-3">
     <div class="col-12 text-center">
       <%= f.submit t('buttons.save'),

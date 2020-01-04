@@ -60,6 +60,14 @@ select[multiple].multi-select:active, select[multiple].multi-select:focus {
 
 @import "trix";
 
+trix-toolbar .trix-button-row {
+  flex-wrap: wrap;
+}
+
+.trix-button-group--file-tools {
+  display: none !important;
+}
+
 .bg-truth {
   background-color: #e6ffe9;
 }

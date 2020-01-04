@@ -1,6 +1,6 @@
 <div class="row p-2">
-	<div class="col-6">
-		<div class="card">
+	<div class="col-4">
+		<div class="card propertiesCard">
 			<div class="card-header">
 				<h5>
 					<%= t('property.show.title',
@@ -16,7 +16,7 @@
                       style: 'text-decoration: none;' %>
 				</h5>
 			</div>
-			<div class="card-body">
+			<div class="card-body propertiesCardBody">
 				<h5>
 					<%= t('structure.show.definition') %>
 				</h5>
@@ -36,43 +36,91 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-3">
-		<div class="card bg-truth">
+	<div class="col-4">
+		<div class="card bg-truth propertiesCard">
     <div class="card-header">
       <h5 class="title">
       	<%= t('structure.show.examples') %>
       	(<%= t('property.show.satisfied') %>)
       </h5>
     </div>
-    <div class="card-body">
-      <ul>
-        <% @property.positive_examples.each do |e| %>
-          <li>
-            <%= link_to e.description[0..100],
-                        example_path(e) %>
-          </li>
+    <div class="card-body propertiesCardBody">
+      <% unless @positive_hardcoded_facts.empty? %>
+        <strong>
+          <%= I18n.t("example.show.hardcoded") %>:
+        </strong>
+        <div class="row">
+          <% @positive_hardcoded_facts.each do |fact| %>
+            <div class="col-12">
+              <%= render partial: 'atoms/show',
+                         locals: { atom: fact.property.to_atom,
+                                   modifier: t('logic.is'),
+                                   example: fact.example,
+                                   explanations: [fact.explanation&.text] - ['', nil],
+                                   with_explanations: true,
+                                   success: 'truth',
+                                   only_example: true } %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <% unless @positive_derived_examples.empty? %>
+        <strong>
+          <%= I18n.t("example.show.derived") %>:
+        </strong>
+        <% @positive_derived_examples.each do |e| %>
+            <%= render partial: 'atoms/show',
+                       locals: { atom: @property.to_atom,
+                                 modifier: t('logic.is'),
+                                 proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 example: e,
+                                 only_example: true } %>
         <% end %>
-      </ul>
+      <% end %>
     </div>
   </div>
 	</div>
-	<div class="col-3">
-		<div class="card bg-falsehood">
+	<div class="col-4">
+		<div class="card bg-falsehood propertiesCard">
     <div class="card-header">
       <h5 class="title">
       	<%= t('structure.show.examples') %>
 				(<%= t('property.show.violated') %>)
       </h5>
     </div>
-    <div class="card-body">
-      <ul>
-        <% @property.negative_examples.each do |e| %>
-          <li>
-            <%= link_to e.description[0..100],
-                        example_path(e) %>
-          </li>
+    <div class="card-body propertiesCardBody">
+      <% unless @negative_hardcoded_facts.empty? %>
+        <strong>
+          <%= I18n.t("example.show.hardcoded") %>:
+        </strong>
+        <div class="row">
+          <% @negative_hardcoded_facts.each do |fact| %>
+            <div class="col-12">
+              <%= render partial: 'atoms/show',
+                         locals: { atom: fact.property.to_atom,
+                                   modifier: t('logic.is_not'),
+                                   example: fact.example,
+                                   explanations: [fact.explanation&.text] - ['', nil],
+                                   with_explanations: true,
+                                   success: 'falsehood',
+                                   only_example: true } %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <% unless @negative_derived_examples.empty? %>
+        <strong>
+          <%= I18n.t("example.show.derived") %>:
+        </strong>
+        <% @negative_derived_examples.each do |e| %>
+            <%= render partial: 'atoms/show',
+                       locals: { atom: @property.to_atom,
+                                 modifier: t('logic.is_not'),
+                                 proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 example: e,
+                                 only_example: true } %>
         <% end %>
-      </ul>
+      <% end %>
     </div>
   </div>
 	</div>

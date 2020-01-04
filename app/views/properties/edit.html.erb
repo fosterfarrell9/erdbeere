@@ -1,8 +1,8 @@
 <div class="row p-2">
-	<div class="col-6">
+	<div class="col-4">
     <%= form_with model: @property,
                   html: { id: 'property-form' } do |f| %>
-		<div class="card">
+		<div class="card propertiesCard">
 			<div class="card-header">
 				<h5>
 					<%= t('property.show.title',
@@ -31,7 +31,7 @@
           </div>
         </div>
 			</div>
-			<div class="card-body">
+			<div class="card-body propertiesCardBody">
         <div class="form-group">
           <%= f.label :name,
                       t('property.edit.name') %>
@@ -66,44 +66,160 @@
 		</div>
     <% end %>
 	</div>
-	<div class="col-3">
-		<div class="card bg-truth">
+	<div class="col-4">
+    <div class="card bg-truth propertiesCard">
     <div class="card-header">
       <h5 class="title">
-      	<%= t('structure.show.examples') %>
-      	(<%= t('property.show.satisfied') %>)
+        <%= t('structure.show.examples') %>
+        (<%= t('property.show.satisfied') %>)
+        <%= link_to '',
+                    add_example_facts_to_property_path(@property,
+                                           params: { sort: 'truth' }),
+                    class: 'fas fa-plus-circle text-dark',
+                    data: { toggle: 'tooltip',
+                            placement: 'bottom' },
+                    title: t('buttons.create'),
+                    style: 'text-decoration: none;',
+                    remote: true %>
       </h5>
     </div>
-    <div class="card-body">
-      <ul>
-        <% @property.positive_examples.each do |e| %>
-          <li>
-            <%= link_to e.description[0..100],
-                        example_path(e) %>
-          </li>
+    <div class="card-body propertiesCardBody">
+      <% unless @positive_hardcoded_facts.empty? %>
+        <strong>
+          <%= I18n.t("example.show.hardcoded") %>:
+        </strong>
+        <div class="row">
+          <% @positive_hardcoded_facts.each do |fact| %>
+            <div class="col-10">
+              <%= render partial: 'atoms/show',
+                         locals: { atom: fact.property.to_atom,
+                                   modifier: t('logic.is'),
+                                   example: fact.example,
+                                   explanations: [fact.explanation&.text] - ['', nil],
+                                   with_explanations: true,
+                                   success: 'truth',
+                                   only_example: true,
+                                   edit: true } %>
+            </div>
+            <div class="col-2 text-right">
+              <%= link_to '',
+                          edit_example_fact_path(fact,
+                                                 params: { from: 'Property' }),
+                          class: 'far fa-edit text-dark',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom' },
+                          title: t('buttons.edit'),
+                          style: 'text-decoration: none;',
+                          remote: true %>
+              <%= link_to '',
+                          example_fact_path(fact,
+                                            params: { from: 'Property' }),
+                          class: 'fas fa-trash-alt text-dark ml-2',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom',
+                                  confirm: t('confirmation.generic') },
+                          title: t('buttons.delete'),
+                          style: 'text-decoration: none;',
+                          remote: true,
+                          method: :delete %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <% unless @positive_derived_examples.empty? %>
+        <strong>
+          <%= I18n.t("example.show.derived") %>:
+        </strong>
+        <% @positive_derived_examples.each do |e| %>
+            <%= render partial: 'atoms/show',
+                       locals: { atom: @property.to_atom,
+                                 modifier: t('logic.is'),
+                                 proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 example: e,
+                                 only_example: true,
+                                 edit: true } %>
         <% end %>
-      </ul>
+      <% end %>
     </div>
   </div>
 	</div>
-	<div class="col-3">
-		<div class="card bg-falsehood">
+	<div class="col-4">
+    <div class="card bg-falsehood propertiesCard">
     <div class="card-header">
       <h5 class="title">
-      	<%= t('structure.show.examples') %>
-				(<%= t('property.show.violated') %>)
+        <%= t('structure.show.examples') %>
+        (<%= t('property.show.violated') %>)
+        <%= link_to '',
+                    add_example_facts_to_property_path(@property,
+                                           params: { sort: 'falsehood' }),
+                    class: 'fas fa-plus-circle text-dark',
+                    data: { toggle: 'tooltip',
+                            placement: 'bottom' },
+                    title: t('buttons.create'),
+                    style: 'text-decoration: none;',
+                    remote: true %>
       </h5>
     </div>
-    <div class="card-body">
-      <ul>
-        <% @property.negative_examples.each do |e| %>
-          <li>
-            <%= link_to e.description[0..100],
-                        example_path(e) %>
-          </li>
+    <div class="card-body propertiesCardBody">
+      <% unless @negative_hardcoded_facts.empty? %>
+        <strong>
+          <%= I18n.t("example.show.hardcoded") %>:
+        </strong>
+        <div class="row">
+          <% @negative_hardcoded_facts.each do |fact| %>
+            <div class="col-10">
+              <%= render partial: 'atoms/show',
+                         locals: { atom: fact.property.to_atom,
+                                   modifier: t('logic.is_not'),
+                                   example: fact.example,
+                                   explanations: [fact.explanation&.text] - ['', nil],
+                                   with_explanations: true,
+                                   success: 'falsehood',
+                                   only_example: true,
+                                   edit: true } %>
+            </div>
+            <div class="col-2 text-right">
+              <%= link_to '',
+                          edit_example_fact_path(fact,
+                                                 params: { from: 'Property' }),
+                          class: 'far fa-edit text-dark',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom' },
+                          title: t('buttons.edit'),
+                          style: 'text-decoration: none;',
+                          remote: true %>
+              <%= link_to '',
+                          example_fact_path(fact,
+                                            params: { from: 'Property' }),
+                          class: 'fas fa-trash-alt text-dark ml-2',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom',
+                                  confirm: t('confirmation.generic') },
+                          title: t('buttons.delete'),
+                          style: 'text-decoration: none;',
+                          remote: true,
+                          method: :delete %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <% unless @negative_derived_examples.empty? %>
+        <strong>
+          <%= I18n.t("example.show.derived") %>:
+        </strong>
+        <% @negative_derived_examples.each do |e| %>
+            <%= render partial: 'atoms/show',
+                       locals: { atom: @property.to_atom,
+                                 modifier: t('logic.is_not'),
+                                 proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 example: e,
+                                 only_example: true,
+                                 edit: true } %>
         <% end %>
-      </ul>
+      <% end %>
     </div>
+  </div>
   </div>
 	</div>
 </div>
+<%= render partial: 'example_facts/modal' %>

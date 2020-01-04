@@ -4,6 +4,7 @@
 <% fullstop = '.' if delim_close.nil? %>
 <% delim_close = '' if delim_close.nil? %>
 <% example ||= nil %>
+<% edit ||= false %>
 <%= delim_open %>
 	<%= atom.deep_stuff_w_props_name %>
 	<% if example %>
@@ -13,7 +14,7 @@
 		<%= modifier %>
 	</i>
 	<%= link_to atom.property.name,
-							property_path(atom.property),
+							edit ? edit_property_path(atom.property) : property_path(atom.property),
 							class: 'text-dark' %>
 	<%= fullstop %>
 <%= delim_close %>

@@ -1,14 +1,14 @@
-<%= form_with url: update_example_facts_path(example),
+<%= form_with url: update_example_facts_to_property_path(property),
               method: 'post',
               scope: 'example_facts' do |f|%>
-  <% available_properties.each do |p| %>
+  <% available_examples.each do |e| %>
     <div class="form-row">
       <div class="col-12">
         <div class="custom-control custom-checkbox mb-2">
-          <%= f.check_box "properties[#{p.id}]",
+          <%= f.check_box "examples[#{e.id}]",
                           class: 'custom-control-input' %>
-          <%= f.label "properties[#{p.id}]",
-                      p.name,
+          <%= f.label "examples[#{e.id}]",
+                      e.description,
                       { class: 'custom-control-label' } %>
         </div>
       </div>
@@ -17,14 +17,14 @@
   <div class="row mt-2">
     <div class="col-12">
       <strong>
-        <%= t("property.create.title") %>
+        <%= t("example.create.title") %>
       </strong>
     </div>
   </div>
   <div class="form-group">
-    <%= f.label :new_property,
-                t('property.edit.name') %>
-    <%= f.text_field :new_property,
+    <%= f.label :new_example,
+                t('example.edit.description') %>
+    <%= f.text_field :new_example,
                      class: 'form-control' %>
   </div>
   <%= f.hidden_field :satisfied,

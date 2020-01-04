@@ -2,7 +2,7 @@
   <%= I18n.t('example.show.title',
              example: @example.description) %>
   <%= link_to @example.structure.name,
-              structure_path(@example.structure),
+              edit_structure_path(@example.structure),
               class: 'text-dark' %>
   <%= link_to '',
               example_path(@example),
@@ -110,7 +110,8 @@
                                      example: @example,
                                      explanations: [fact.explanation&.text] - ['', nil],
                                      with_explanations: true,
-                                     success: 'truth' } %>
+                                     success: 'truth',
+                                     edit: true } %>
               </div>
               <div class="col-2 text-right">
                 <%= link_to '',
@@ -145,7 +146,8 @@
                              locals: { atom: atom,
                                        modifier: t('logic.is'),
                                        proof: proof,
-                                       example: @example } %>
+                                       example: @example,
+                                       edit: true } %>
               <% end %>
             <% end %>
           <% end %>
@@ -182,7 +184,8 @@
                                    example: @example,
                                    explanations: [fact.explanation&.text] - ['', nil],
                                    with_explanations: true,
-                                   success: 'falsehood' } %>
+                                   success: 'falsehood',
+                                   edit: true } %>
             </div>
             <div class="col-2 text-right">
               <%= link_to '',
@@ -218,7 +221,8 @@
                                      modifier: t('logic.is_not'),
                                      proof: proof,
                                      success: 'falsehood',
-                                     example: @example } %>
+                                     example: @example,
+                                     edit: true } %>
               <% end %>
             <% end %>
           <% end %>

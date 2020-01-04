@@ -1,11 +1,10 @@
 $('#example-facts-modal-content').empty()
-  .append('<%= j render partial: "example_facts/explanations_form",
-                        locals: { example_fact: @example_fact,
+  .append('<%= j render partial: "example_facts/properties_form",
+                        locals: { property: @property,
                                   satisfied: @satisfied,
-                                  available_properties: @available_properties,
-                                  from: @from } %>')
+                                  available_examples: @available_examples } %>')
 $('#exampleFactsModalLabel').empty()
-  .append('<%= t("example_fact.edit.title") %>')
+  .append('<%= @satisfied ? t("property.add_example_facts.add_positive_examples") : t("property.add_example_facts.add_negative_examples") %>')
 $('#exampleFactsModal').modal('show')
 exampleFactsModalContent = document.getElementById('example-facts-modal-content')
 renderMathInElement exampleFactsModalContent,

@@ -1,3 +1,4 @@
+<% edit ||= false %>
 <% last_premise = implication.premises.last %>
 <% (implication.premises - [last_premise]).each do |p| %>
   <%= render partial: "atoms/inline_atom",
@@ -6,7 +7,7 @@
                        delim_close: ')',
                        fullstop: '',
                        modifier: p.value ? t('logic.is') : t('logic.is_not'),
-                        } %>
+                       edit: edit } %>
   <%= content_tag(:i, t('implications.and')) %>
 <% end %>
 <%= render partial: "atoms/inline_atom",
@@ -14,8 +15,10 @@
                      delim_open: '(',
                      delim_close: ')',
                      fullstop: '',
-                     modifier:  last_premise.value ? t('logic.is') : t('logic.is_not') } %>
+                     modifier:  last_premise.value ? t('logic.is') : t('logic.is_not'),
+                     edit: edit } %>
 $\Rightarrow$
 <%= render partial: "atoms/inline_atom",
            locals: { atom: implication.implies,
-                     modifier: implication.implies_value ? t('logic.is') : t('logic.is_not') } %>
+                     modifier: implication.implies_value ? t('logic.is') : t('logic.is_not'),
+                     edit: edit } %>

@@ -222,7 +222,7 @@
         <% @structure.examples.each do |e| %>
           <li>
             <%= link_to e.description[0..100],
-                        example_path(e) %>
+                        edit_example_path(e) %>
           </li>
         <% end %>
       </ul>
@@ -260,7 +260,8 @@
                         remote: true,
                         method: :delete %>
             <%= render partial: 'implications/show',
-                       locals: { implication: i } %>
+                       locals: { implication: i,
+                                 edit: true } %>
           </li>
         <% end %>
       </ul>

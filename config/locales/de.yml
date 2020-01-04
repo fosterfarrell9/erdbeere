@@ -97,6 +97,9 @@ de:
       stacks_tag: 'Tag im Stacks Project'
     create:
       title: 'Eigenschaft anlegen'
+    add_example_facts:
+      add_positive_examples: 'Beispiele (für Eigenschaft erfüllt) hinterlegen'
+      add_negative_examples: 'Beispiele (für Eigenschaft verletzt) hinterlegen'
   implication:
     create:
       title: 'Implikation anlegen'
