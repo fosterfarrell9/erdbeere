@@ -1,5 +1,5 @@
 <% provide(:title, I18n.t('main.search.title')) %>
-<div class="row">
+<div class="row ml-2">
   <div class="col-2">
     <ul class="nav flex-column nav-pills" id="myTab" role="tablist">
       <% Structure.find_each do |s| %>
@@ -22,44 +22,60 @@
            id="structure-<%= s.id.to_s %>"
            role="tabpanel"
            aria-labelledby="profile-tab">
-        <%= form_tag(examples_find_path, method: 'post') do %>
-          <%= hidden_field_tag 'structure_id', s.id %>
-          <div class="row border">
+        <%= form_with url: examples_find_path,
+                      method: :post,
+                      scope: 'find' do  |f| %>
+          <%= f.hidden_field :structure_id, value: s.id %>
+          <div class="row mx-2 px-3">
             <div class="col-12 p-2">
               <h2>
                 <%= s.name %>
+                <%= f.submit I18n.t('main.search.search_button'),
+                             class: 'btn btn-secondary' %>
               </h2>
             </div>
-            <div class="col-6 bg-truth p-2">
-              <%= label_tag(:satisfies,
-                            I18n.t("main.search.satisfies", default: 'Satisfies:'),
-                            class: 'label') %>
-              <%= select_tag(:satisfies,
-                             options_for_select(s.properties.map { |p| [p.name, p.to_atom.id] }),
-                             multiple: true,
-                             class: 'multi-select') %>
+            <div class="col-6">
+              <div class="card bg-truth">
+                <div class="card-header">
+                  <h5>
+                    <%= I18n.t("main.search.satisfies", default: 'Satisfies:') %>
+                  </h5>
+                </div>
+                <div class="card-body">
+                <%= f.select :satisfies,
+                           options_for_select(s.properties.map { |p| [p.name, p.to_atom.id] }),
+                           {},
+                           { class: 'form-control',
+                             size: s.properties.count,
+                             multiple: true } %>
+                </div>
+              </div>
             </div>
-            <div class="col-6 bg-falsehood p-2">
-              <%= label_tag(:violates,
-                            I18n.t("main.search.violates", default: 'Violates:'),
-                            class: 'label') %>
-              <%= select_tag(:violates,
-                             options_for_select(s.properties.map { |p| [p.name, p.to_atom.id] }),
-                             multiple: true,
-                             class: 'multi-select') %>
+            <div class="col-6">
+              <div class="card bg-falsehood">
+                <div class="card-header">
+                  <h5>
+                    <%= I18n.t("main.search.violates", default: 'Violates:') %>
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <%= f.select :violates,
+                               options_for_select(s.properties.map { |p| [p.name, p.to_atom.id] }),
+                               {},
+                               { class: 'form-control',
+                                 size: s.properties.count,
+                                 multiple: true } %>
+                </div>
+              </div>
             </div>
-            <% unless s.building_blocks.empty? %>
-              <% s.building_blocks.each_slice(2) do |slice| %>
-                <% slice.each do |bb| %>
-                  <div class="col-6 border">
-                    <%= render("building_blocks/search_properties_row", bb: bb)%>
-                  </div>
-                <% end %>
-              <% end %>
-            <% end %>
           </div>
-          <%= submit_tag(I18n.t('main.search.search_button'),
-                         class: 'btn btn-secondary') %>
+          <% unless s.building_blocks.empty? %>
+              <% s.building_blocks.each do |bb| %>
+                  <%= render partial: "building_blocks/search_properties_row",
+                             locals: { bb: bb,
+                                       f: f } %>
+              <% end %>
+          <% end %>
         <% end %>
       </div>
     <% end %>

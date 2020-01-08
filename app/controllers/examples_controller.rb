@@ -61,8 +61,8 @@ class ExamplesController < ApplicationController
   end
 
   def find
-    @satisfies = params[:satisfies].to_a.map { |i| Atom.find(i.to_i) }.to_a
-    @violates = params[:violates].to_a.map { |i| Atom.find(i.to_i) }.to_a
+    @satisfies = Atom.where(id: find_params[:satisfies]).to_a.compact
+    @violates = Atom.where(id: find_params[:violates]).to_a.compact
 
     if (@satisfies + @violates).empty?
       flash[:alert] = I18n.t('examples.find.flash.no_search_params')
@@ -70,7 +70,7 @@ class ExamplesController < ApplicationController
       return
     end
 
-    @proof = Example.find_restricted(Structure.find(params[:structure_id]),
+    @proof = Example.find_restricted(Structure.find_by_id(find_params[:structure_id]),
                                      @satisfies,
                                      @violates)
     if @proof
@@ -78,7 +78,7 @@ class ExamplesController < ApplicationController
       return
     end
 
-    @almost_hits = Example.where('structure_id = ?', params[:structure_id].to_i).all.to_a.find_all do |e|
+    @almost_hits = Example.where('structure_id = ?', find_params[:structure_id].to_i).all.to_a.find_all do |e|
       (@satisfies - e.satisfied_atoms_by_sat).empty? && (@violates & e.satisfied_atoms_by_sat).empty?
     end
 
@@ -101,6 +101,12 @@ class ExamplesController < ApplicationController
   def example_facts_params
     params.require(:example_facts).permit(:satisfied, :new_property,
                                           properties: {})
+  end
+
+  def find_params
+    params.require(:find).permit(:structure_id,
+                                 satisfies: [],
+                                 violates: [])
   end
 
   def extract_building_block_realizations!
