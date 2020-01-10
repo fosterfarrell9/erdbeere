@@ -61,6 +61,7 @@ class ExamplesController < ApplicationController
   end
 
   def find
+    @structure = Structure.find_by_id(find_params[:structure_id])
     @satisfies = Atom.where(id: find_params[:satisfies]).to_a.compact
     @violates = Atom.where(id: find_params[:violates]).to_a.compact
 
@@ -70,24 +71,11 @@ class ExamplesController < ApplicationController
       return
     end
 
-    @proof = Example.find_restricted(Structure.find_by_id(find_params[:structure_id]),
-                                     @satisfies,
-                                     @violates)
-    if @proof
-      render 'violates_logic'
-      return
-    end
+    @proof = Example.find_restricted(@structure, @satisfies, @violates)
+    return if @proof
 
-    @almost_hits = Example.where('structure_id = ?', find_params[:structure_id].to_i).all.to_a.find_all do |e|
-      (@satisfies - e.satisfied_atoms_by_sat).empty? && (@violates & e.satisfied_atoms_by_sat).empty?
-    end
-
-    if @almost_hits.empty?
-      flash.now[:warning] = I18n.t('examples.find.flash.nothing_found')
-    else
-      @hits = @almost_hits.find_all do |e|
-        (@violates - e.violated_atoms_by_sat).empty?
-      end
+    @hits = Example.where(structure_id: @structure.id).all.to_a.find_all do |e|
+      (@satisfies - e.satisfied_atoms_by_sat).empty? && (@violates - e.violated_atoms_by_sat).empty?
     end
   end
 

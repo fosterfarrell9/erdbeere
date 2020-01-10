@@ -42,6 +42,14 @@ de:
       nothing_found: >
         In der Datenbank wurde kein solches Objekt gefunden,
         es wurden aber auch keine Widersprüche gefunden.
+      you_were_looking_for: >
+        Du hast nach einem Objekt gesucht mit folgenden Eigenschaften gesucht:
+      structure: Struktur
+      search_params: Suchparameter
+      contradiction: Widerspruch
+      no_hit: Kein Treffer
+      satisfies: Erfüllt
+      violates: Verletzt
     list:
       title: Alle Beispiele, die ich kenne
     show:
