@@ -120,26 +120,11 @@ BuildingBlockRealization.create(example: zee_r, building_block:
 zee_r.satisfies! module_is_fg
 ```
 
-### Using the logic engine
+### The logic engine
 
-The internal logic engine is as stupid as one get away with. I assume that it is
-hence very slow, which still might be fast enough for practical purposes.
-Working with it roughly looks like this:
+The logic engine makes use of the SATSolver picosat with enabled trace generation.
+The obtained results are then translated to human-readable proofs.
 
-```ruby
-[comm.to_atom, l_noeth.to_atom].is_equivalent! [comm.to_atom, r_noeth.to_atom]
+### The GUI
 
-zee_r.satisfies?(module_has_acc)
-zee_r.satisfies?(Atom.find_or_create_by(stuff_w_props:
-                                                   base_ring,
-                                                   satisfies:
-                                                   r_noeth))
-zee_r.satisfied_atoms.each do |a|
-  puts a.to_s
-end
-```
-
-As one can see, the implications on the level of examples work recursively: Even
-though we never had an ExampleFact that stated that for commutative *base
-rings* (and not *rings*) left and right noetherian are equivalent, the logic
-engine derives those kind of statements from the bottom up.
+The GUI is in the state of being developed.
