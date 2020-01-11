@@ -6,12 +6,15 @@ class Example < ApplicationRecord
   has_many :building_block_realizations
   belongs_to :structure
   has_many :explanations, as: :explainable
-  has_many :appearances_as_building_block_realizations, class_name: 'BuildingBlockRealization', foreign_key: 'realization_id'
+  has_many :appearances_as_building_block_realizations,
+           class_name: 'BuildingBlockRealization',
+           foreign_key: 'realization_id'
 
   validates :structure, presence: true
   after_commit :touch_appearances_as_building_block_realizations
 
   translates :description, fallbacks_for_empty_translations: true
+  validates :description, presence: true
   globalize_accessors
 
   def self.find_restricted(structure, satisfies, violates)

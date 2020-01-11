@@ -181,3 +181,18 @@ de:
     unsaved_changes: 'Ungespeicherte Änderungen'
   confirmation:
     generic: 'Bist du sicher?'
+  activerecord:
+    errors:
+      models:
+        structure:
+          attributes:
+            name:
+              blank: 'Es muss eine Bezeichnung angegeben werden.'
+        example:
+          attributes:
+            description:
+              blank: 'Es muss eine Bezeichnung angegeben werden.'
+        property:
+          attributes:
+            name:
+              blank: 'Es muss eine Bezeichnung angegeben werden.'                              

@@ -16,12 +16,19 @@ class PropertiesController < ApplicationController
   	@property = Property.create(property_params)
 		if @property.valid?
 			redirect_to edit_structure_path(@property.structure)
+      return
 		end
+    @errors = @property.errors
+    render :update    
   end
 
   def update
   	@property.update(property_params)
-  	redirect_to edit_property_path(@property)
+    if @property.valid?
+  	  redirect_to edit_property_path(@property)
+      return
+    end
+    @errors = @property.errors    
   end
 
   def add_example_facts

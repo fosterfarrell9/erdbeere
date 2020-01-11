@@ -13,7 +13,11 @@ class StructuresController < ApplicationController
 
   def update
     @structure.update(structure_params)
-    redirect_to edit_structure_path(@structure)
+    if @structure.valid?
+      redirect_to structures_path
+      return
+    end
+    @errors = @structure.errors
   end
 
   def new
@@ -26,6 +30,8 @@ class StructuresController < ApplicationController
       redirect_to structures_path
       return
     end
+    @errors = @structure.errors
+    render :update
   end
 
   private

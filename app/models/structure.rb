@@ -20,8 +20,10 @@ class Structure < ApplicationRecord
 
   after_commit :touch_examples
 
-  translates :name, :definition, fallbacks_for_empty_translations: true
+  translates :name, :definition, fallbacks_for_empty_translations: true 
   globalize_accessors
+  # note that the following only works on creation
+  validates :name, presence: true  
 
   def structure
     self

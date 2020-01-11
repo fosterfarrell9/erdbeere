@@ -37,6 +37,9 @@
                       t('property.edit.name') %>
           <%= f.text_field :name,
                            class: 'form-control' %>
+          <div class="invalid-feedback"
+               id="property-name-error">
+          </div>                               
         </div>
         <div class="row my-2">
           <div class="col-12">

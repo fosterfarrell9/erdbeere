@@ -1,9 +1,12 @@
-<%= form_with model: structure do |f| %>
+<%= form_with model: structure do |f|%>
 	<div class="form-group">
 		<%= f.label :name,
 								t('structure.edit.name') %>
    	<%= f.text_field :name,
   									 class: 'form-control' %>
+    <div class="invalid-feedback"
+         id="structure-name-error">
+    </div>                     
   </div>
  	<div class="form-group">
 		<%= f.label :derives_from_id,

@@ -4,6 +4,9 @@
 								t('property.edit.name') %>
    	<%= f.text_field :name,
   									 class: 'form-control' %>
+    <div class="invalid-feedback"
+         id="property-name-error">
+    </div>                     
   </div>
   <%= f.hidden_field :structure_id,
   									 value: property.structure_id %>

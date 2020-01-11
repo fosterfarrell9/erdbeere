@@ -44,6 +44,9 @@
                           t('example.edit.description') %>
               <%= f.text_field :description,
                                class: 'form-control' %>
+              <div class="invalid-feedback"
+                   id="example-description-error">
+              </div>                                  
             </div>
           <% unless @example.building_block_realizations.empty? %>
           <div class="row mt-3">

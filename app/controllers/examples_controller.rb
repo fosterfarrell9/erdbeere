@@ -19,13 +19,21 @@ class ExamplesController < ApplicationController
     @example.save
     if @example.valid?
       redirect_to edit_structure_path(@example.structure)
+      return
     end
+    @errors = @example.errors
+    pp @errors
+    render :update
   end
 
   def update
     @example.update(description: example_params[:description])
     update_building_block_realizations!
-    redirect_to edit_example_path(@example)
+    if @example.valid?
+      redirect_to edit_example_path(@example)
+      return
+    end
+    @errors = @example.errors
   end
 
   def add_example_facts

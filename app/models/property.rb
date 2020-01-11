@@ -5,6 +5,7 @@ class Property < ApplicationRecord
   validates :structure, presence: true
 
   translates :name, :definition, fallbacks_for_empty_translations: true
+  validates :name, presence: true
   globalize_accessors
 
   def to_atom(stuff_w_props = structure)

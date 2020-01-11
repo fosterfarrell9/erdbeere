@@ -4,6 +4,9 @@
 								t('example.edit.description') %>
    	<%= f.text_field :description,
   									 class: 'form-control' %>
+    <div class="invalid-feedback"
+         id="example-description-error">
+    </div>                       
   </div>
   <% example.structure.original_building_blocks.each do |bb| %>
     <div class="form-group">
