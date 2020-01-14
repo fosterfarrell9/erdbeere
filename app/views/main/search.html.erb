@@ -24,6 +24,7 @@
            aria-labelledby="profile-tab">
         <%= form_with url: examples_find_path,
                       method: :post,
+                      local: true,
                       scope: 'find' do  |f| %>
           <%= f.hidden_field :structure_id, value: s.id %>
           <div class="row mx-2 px-3">

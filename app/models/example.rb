@@ -16,6 +16,7 @@ class Example < ApplicationRecord
   translates :description, fallbacks_for_empty_translations: true
   validates :description, presence: true
   globalize_accessors
+  validate :correct_bb_realizations
 
   def self.find_restricted(structure, satisfies, violates)
     dimacs = "p cnf #{Atom.count} "
@@ -216,5 +217,16 @@ class Example < ApplicationRecord
       raise "already set to #{!value}" if send(methods[!value], atom)
       ExampleFact.find_or_create_by(example: self, property: atom.property, satisfied: value)
     end
+  end
+
+  def correct_bb_realizations
+    return true unless structure
+    return true unless structure.original_building_blocks
+    structure.original_building_blocks.each do |bb|
+      next if building_block_realizations.select { |bbr| bbr.building_block == bb }.count == 1
+      errors.add(:building_block_realizations, :incorrect)
+      return false
+    end
+    true
   end
 end

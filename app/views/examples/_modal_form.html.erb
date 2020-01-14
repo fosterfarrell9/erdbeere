@@ -1,4 +1,5 @@
-<%= form_with model: example do |f| %>
+<%= form_with model: example,
+              html: { id: 'newExampleForm' } do |f| %>
 	<div class="form-group">
 		<%= f.label :description,
 								t('example.edit.description') %>
@@ -6,17 +7,19 @@
   									 class: 'form-control' %>
     <div class="invalid-feedback"
          id="example-description-error">
-    </div>                       
+    </div>
   </div>
   <% example.structure.original_building_blocks.each do |bb| %>
     <div class="form-group">
-    <%= f.label "building_block_realizations[#{bb.id}]",
-                t('example.create.building_block_realization',
-                  building_block: "#{bb.name}: #{bb.definition}") %>
-    <%= f.select "building_block_realizations[#{bb.id}]",
-                 options_for_select(bb.structure.examples.map { |e| [e.description, e.id]}),
-                 { prompt: t('basics.select') },
-                 { class: 'form-control' } %>
+      <%= f.label "building_block_realizations[#{bb.id}]",
+                  t('example.create.building_block_realization',
+                    building_block: "#{bb.name}: #{bb.definition}") %>
+      <%= f.select "building_block_realizations[#{bb.id}]",
+                   options_for_select(bb.structure.examples.map { |e| [e.description, e.id]}),
+                   { prompt: t('basics.select') },
+                   { class: 'form-control building_block_select' } %>
+      <div class="invalid-feedback building-block-error">
+      </div>
     </div>
   <% end %>
   <%= f.hidden_field :structure_id,

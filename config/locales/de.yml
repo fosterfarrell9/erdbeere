@@ -192,7 +192,10 @@ de:
           attributes:
             description:
               blank: 'Es muss eine Bezeichnung angegeben werden.'
+            building_block_realizations:
+              invalid: 'Ungültige Baustein-Realisierung(en).'
+              incorrect: 'Fehlende oder überzählige Baustein-Realisierungen.'
         property:
           attributes:
             name:
-              blank: 'Es muss eine Bezeichnung angegeben werden.'                              
+              blank: 'Es muss eine Bezeichnung angegeben werden.'

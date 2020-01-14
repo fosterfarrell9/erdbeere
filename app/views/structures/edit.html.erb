@@ -59,7 +59,7 @@
 					<li>
 						<%= bb.name %>: <%= bb.definition %>
 						(<%= link_to bb.structure.name,
-												 structure_path(bb.structure) %>)
+												 edit_structure_path(bb.structure) %>)
       			<%= link_to '',
             			      edit_building_block_path(bb),
                   			class: 'far fa-edit text-dark',

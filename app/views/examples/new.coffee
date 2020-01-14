@@ -28,3 +28,14 @@ renderMathInElement exampleModalContent,
   ]
   ignoredClasses: ['trix-content', 'form-control']
   throwOnError: false
+
+# custom validation of example form:
+# form = document.getElementById('newExampleForm')
+# form.addEventListener 'submit', ((event) ->
+#   console.log 'Hi'
+#   if form.checkValidity() == false
+#     event.preventDefault()
+#     event.stopPropagation()
+#   form.classList.add 'was-validated'
+#   return
+# ), false
