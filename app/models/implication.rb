@@ -1,15 +1,3 @@
-class ImplicationUniqueness < ActiveModel::Validator
-  # given a set of atoms (a premise) and an implies-atom, the implication should
-  # be unique. if rails were able to cope with this, it would just be
-  # validates :implies, uniqueness: { scope: :atoms }
-  def validate(obj)
-    matches = (Implication.all.to_a.find_all do |i|
-      i.implies == obj.implies && i.atoms.to_a == obj.atoms.to_a
-    end) - [obj]
-    obj.errors[:base] << 'duplicate found' unless matches.empty?
-  end
-end
-
 class Implication < ApplicationRecord
   # a premise is a collection of atoms connected by a logical AND
   # "has_many :premises" should be "belongs_to_many :premises".
@@ -19,7 +7,8 @@ class Implication < ApplicationRecord
   has_many :explanations, as: :explainable
 
   validates :implies, presence: true
-  validates_with ImplicationUniqueness
+  validates :premises, presence: true
+  validate :uniqueness
 
   # TODO
   # after_create :apply_to_building_blocks
@@ -52,6 +41,18 @@ class Implication < ApplicationRecord
     Rails.cache.fetch('implication_dimacs') do
       self.to_dimacs
     end
+  end
+
+  # given a set of atoms (a premise) and an implies-atom, the implication should
+  # be unique. if rails were able to cope with this, it would just be
+  # validates :implies, uniqueness: { scope: :atoms }
+  def uniqueness
+    implications_in_scope = Implication.where(implies: implies)
+    matches = (implications_in_scope.find_all do |i|
+      i.implies == implies && i.atom_ids.sort == premises.map(&:atom_id).sort
+    end) - [self]
+    return true unless matches.any?
+    errors.add(:base, :not_unique)
   end
 
   # TODO

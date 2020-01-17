@@ -15,6 +15,7 @@ class ImplicationsController < ApplicationController
       redirect_to edit_structure_path(params[:implication][:structure_id])
       return
     end
+    @errors = @implication.errors
     pp @implication.errors
   end
 

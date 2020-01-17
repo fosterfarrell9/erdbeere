@@ -4,20 +4,31 @@
 								t('building_block.edit.name') %>
    	<%= f.text_field :name,
   									 class: 'form-control' %>
+    <div class="invalid-feedback"
+         id="building-block-name-error">
+    </div>
   </div>
   <div class="form-group">
 		<%= f.label :definition,
 								t('building_block.edit.definition') %>
 		<%= f.text_field :definition,
 										 class: 'form-control' %>
+    <div class="invalid-feedback"
+         id="building-block-definition-error">
+    </div>
 	</div>
  	<div class="form-group">
 		<%= f.label :structure_id,
 								t('building_block.edit.structure') %>
 		<%= f.select :structure_id,
 								 options_for_select(Structure.all.map { |s| [s.name, s.id] }, building_block.structure_id),
-								  {},
-	    						{ class: 'form-control' } %>
+								  { prompt: t('basics.select') },
+	    						{ class: 'form-control',
+                    required: true,
+                    disabled: building_block.explained_structure.examples.present? } %>
+    <div class="invalid-feedback"
+         id="building-block-structure-error">
+    </div>
 	</div>
 	<%= f.hidden_field :explained_structure_id,
 										 value: building_block.explained_structure_id %>

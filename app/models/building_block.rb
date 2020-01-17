@@ -2,6 +2,7 @@ class BuildingBlock < ApplicationRecord
   belongs_to :explained_structure, class_name: 'Structure',
              foreign_key: 'explained_structure_id'
   belongs_to :structure
+  before_destroy :destroy_dependent_stuff
   has_many :atoms, as: :stuff_w_props
 
   validates :explained_structure, presence: true
@@ -9,9 +10,17 @@ class BuildingBlock < ApplicationRecord
 
   translates :name, :definition, fallbacks_for_empty_translations: true
   globalize_accessors
+  validates :name, presence: true
+  validates :definition, presence: true
 
   def stuff_id
   	"b-#{id}"
+  end
+
+  def destroy_dependent_stuff
+    axioms = Axiom.where(atom: atoms)
+    axioms.delete_all
+    atoms.delete_all
   end
 
 # TODO

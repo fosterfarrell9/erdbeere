@@ -14,7 +14,8 @@
 									 options_for_select(structure.eligible_for_premise_select, nil),
 								   { prompt: t('basics.select') },
 	    						 { class: 'form-control atomStuffWProps',
-	    						 	 data: { id: "p-#{i}"} } %>
+	    						 	 data: { id: "p-#{i}"},
+	    						 	 required: i == 1 } %>
 		</div>
 		<div class="col-2">
 			<%= f.select "premises#{[i]}[value]",
@@ -27,10 +28,14 @@
 									 [[]],
 								   { prompt: t('basics.select') },
 	    						 { class: 'form-control atomSatisfies',
-	    						 	 data: { id: "p-#{i}"} } %>
+	    						 	 data: { id: "p-#{i}"},
+	    						 	 required: i == 1 } %>
 		</div>
 	</div>
 	<% end %>
+  <div class="invalid-feedback"
+       id="implication-premises-error">
+  </div>
 	<div class="row my-2">
 		<div class="col-12">
 			<%= t('implication.edit.implies') %>
@@ -42,7 +47,8 @@
 									 options_for_select(structure.eligible_for_premise_select, nil),
 								   { prompt: t('basics.select') },
 	    						 { class: 'form-control atomStuffWProps',
-	    						 	 data: { id: 'i'} } %>
+	    						 	 data: { id: 'i'},
+	    						 	 required: true } %>
 		</div>
 		<div class="col-2">
 			<%= f.select 'implies[value]',
@@ -55,9 +61,16 @@
 									 options_for_select(structure.properties.map { |p| [p.name, p.id] }, nil),
 								   { prompt: t('basics.select') },
 	    						 { class: 'form-control atomSatisfies',
-	    						 	 data: { id: 'i'} } %>
+	    						 	 data: { id: 'i'},
+	    						 	 required: true } %>
 		</div>
 	</div>
+  <div class="invalid-feedback"
+       id="implication-implies-error">
+  </div>
+  <div class="invalid-feedback"
+       id="implication-base-error">
+  </div>
   <div class="row mt-3">
     <div class="col-12 text-center">
       <%= f.submit t('buttons.save'),

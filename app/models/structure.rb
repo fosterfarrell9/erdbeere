@@ -20,10 +20,10 @@ class Structure < ApplicationRecord
 
   after_commit :touch_examples
 
-  translates :name, :definition, fallbacks_for_empty_translations: true 
+  translates :name, :definition, fallbacks_for_empty_translations: true
   globalize_accessors
   # note that the following only works on creation
-  validates :name, presence: true  
+  validates :name, presence: true
 
   def structure
     self
@@ -110,5 +110,18 @@ class Structure < ApplicationRecord
     ids_from_premises = Premise.where(atom_id: atom_ids).pluck(:implication_id)
     ids_from_implies = Implication.where(implies_id: atom_ids).pluck(:id)
     Implication.where(id: (ids_from_premises + ids_from_implies).uniq)
+  end
+
+  # for a locked structure, building blocks and axioms cannot be added,
+  # destroyed or modified (except for the building block's name and
+  # notation)
+  # a structure becomes locked as soon as an example exists for
+  # - itself
+  # - one of its descendants
+  # - a structure that has the given structure as a building block
+  # - a descendant of a structure that has the given structure as a building
+  #   block
+  def locked?
+    false
   end
 end

@@ -13,12 +13,12 @@ class AxiomsController < ApplicationController
 		@axiom = Axiom.new(structure: @structure,
 											 atom: @atom,
 											 value: value)
-		pp @atom
-		pp @atom.errors
 		@axiom.save
 		if @axiom.valid?
 			redirect_to edit_structure_path(@axiom.structure)
 		end
+    @errors = @axiom.errors
+    pp @errors
 	end
 
 	def destroy

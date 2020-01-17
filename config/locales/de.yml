@@ -82,6 +82,7 @@ de:
       implications: 'Implikationen'
       parent_building_blocks: 'mit Baustein(en)'
       axioms: 'Axiome'
+      no_axioms: 'Es liegen keine Axiome vor.'
     create:
       title: 'Struktur anlegen'
       derives_from: 'Elternstruktur'
@@ -199,3 +200,22 @@ de:
           attributes:
             name:
               blank: 'Es muss eine Bezeichnung angegeben werden.'
+        building_block:
+          attributes:
+            name:
+              blank: 'Es muss eine Bezeichnung angegeben werden.'
+            definition:
+              blank: 'Es muss eine Notation angegeben werden.'
+            structure:
+              blank: 'Es muss eine Struktur ausgewählt werden.'
+        axiom:
+          attributes:
+            atom:
+              blank: 'Muss ausgefüllt werden.'
+        implication:
+          not_unique: 'Diese Implikation ist schon vorhanden.'
+          attributes:
+            implies:
+              problem: 'Es ist ein Problem mit der Konsequenz aufgetreten.'
+            premises:
+              problem: 'Es ist ein Problem mit den Voraussetzungen aufgetreten.'

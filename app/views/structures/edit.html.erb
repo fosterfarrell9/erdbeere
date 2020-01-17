@@ -42,17 +42,19 @@
 	    <div class="row my-2">
   	    <div class="col-12">
     	    <%= t('examples.show.building_blocks') %>
-     			<%= link_to '',
-           			      new_building_block_path(params: { structure_id: @structure.id }),
-                  		class: 'fas fa-plus-circle text-dark',
-                 			data: { toggle: 'tooltip',
-  		                        placement: 'bottom' },
-                 			title: t('buttons.create'),
-                 			style: 'text-decoration: none;',
-                 			remote: true %>
+          <% unless @structure.original_examples.present? %>
+       			<%= link_to '',
+             			      new_building_block_path(params: { structure_id: @structure.id }),
+                    		class: 'fas fa-plus-circle text-dark',
+                   			data: { toggle: 'tooltip',
+  		                          placement: 'bottom' },
+                   			title: t('buttons.create'),
+                   			style: 'text-decoration: none;',
+                   			remote: true %>
+          <% end %>
       	</div>
     	</div>
-      <% if @structure.original_building_blocks %>
+      <% if @structure.original_building_blocks.present? %>
     	<ul>
 				<% @structure.original_building_blocks.each do |bb| %>
 					<% if bb.persisted? %>
@@ -68,6 +70,7 @@
                   			title: t('buttons.edit'),
                   			style: 'text-decoration: none;',
                   			remote: true %>
+            <% unless @structure.original_examples.present? %>
       			<%= link_to '',
             			      building_block_path(bb),
                   			class: 'fas fa-trash-alt text-dark ml-2',
@@ -78,13 +81,14 @@
                   			style: 'text-decoration: none;',
                   			remote: true,
                   			method: :delete %>
+            <% end %>
 					</li>
 					<% end %>
-				<% end %>
+        <% end %>
 			</ul>
-    <% else %>
-      <%= t('building_block.edit.none') %>
-		<% end %>
+      <% else %>
+        <%= t('building_block.edit.none') %>
+		  <% end %>
 		<% if @structure.derives_from.present? %>
       <div class="row my-2">
         <div class="col-12">
@@ -102,24 +106,28 @@
         <div class="row my-2">
           <div class="col-12">
             <%= t('structure.edit.axioms') %>
-            <%= link_to '',
-                        new_axiom_path(params: { structure_id: @structure.id }),
-                        class: 'fas fa-plus-circle text-dark',
-                        data: { toggle: 'tooltip',
-                                placement: 'bottom' },
-                        title: t('buttons.create'),
-                        style: 'text-decoration: none;',
-                        remote: true %>
+            <% unless @structure.original_examples.present? %>
+              <%= link_to '',
+                          new_axiom_path(params: { structure_id: @structure.id }),
+                          class: 'fas fa-plus-circle text-dark',
+                          data: { toggle: 'tooltip',
+                                  placement: 'bottom' },
+                          title: t('buttons.create'),
+                          style: 'text-decoration: none;',
+                          remote: true %>
+            <% end %>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
+            <% if @structure.axioms.present? %>
     			  <ul>
 		    	 	  <% @structure.axioms.each do |a| %>
                 <li>
                   <%= render partial: "atoms/inline_atom",
                              locals: { atom: a.atom,
                                        modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
+                  <% unless @structure.original_examples.any? %>
                   <%= link_to '',
                               axiom_path(a),
                               class: 'fas fa-trash-alt text-dark ml-2',
@@ -130,9 +138,13 @@
                               style: 'text-decoration: none;',
                               remote: true,
                               method: :delete %>
+                  <% end %>
                 </li>
 				      <% end %>
 			      </ul>
+            <% else %>
+              <%= t('structure.edit.no_axioms') %>
+            <% end %>
           </div>
         </div>
       <% end %>

@@ -1,7 +1,7 @@
 # clean up from previous error messages
 $('#example_description').removeClass('is-invalid')
 $('#example-description-error').empty()
-$('.building_block_select').addClass('is-invalid')
+$('.building_block_select').removeClass('is-invalid')
 $('.building-block-error').empty()
 
 # display error message

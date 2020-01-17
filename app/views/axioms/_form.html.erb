@@ -8,7 +8,11 @@
 									 options_for_select(structure.eligible_for_axiom_select, nil),
 								   { prompt: t('basics.select') },
 	    						 { class: 'form-control atomStuffWProps',
-	    						 	 data: { id: 'a'} } %>
+	    						 	 data: { id: 'a'},
+                     required: true } %>
+      <div class="invalid-feedback"
+           id="axiom-stuff-error">
+      </div>
 		</div>
 		<div class="col-2">
 			<%= f.select :value,
@@ -21,7 +25,11 @@
 									 options_for_select([[]]),
 								   { prompt: t('basics.select') },
 	    						 { class: 'form-control atomSatisfies',
-	    						 	 data: { id: 'a'} } %>
+	    						 	 data: { id: 'a'},
+                     required: true } %>
+      <div class="invalid-feedback"
+           id="axiom-satisfies-error">
+      </div>
 		</div>
 	</div>
   <div class="row mt-3">

@@ -21,6 +21,7 @@ class Atom < ApplicationRecord
   belongs_to :stuff_w_props, polymorphic: true
   belongs_to :satisfies, polymorphic: true
   has_many :atoms, as: :satisfies
+  has_many :axioms, dependent: :destroy
 
   validates :stuff_w_props, presence: true
   validates :satisfies, presence: true

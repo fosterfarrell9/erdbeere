@@ -13,12 +13,18 @@ class BuildingBlocksController < ApplicationController
 		@building_block = BuildingBlock.create(building_block_params)
 		if @building_block.valid?
 			redirect_to edit_structure_path(@building_block.explained_structure)
+      return
 		end
+    @errors = @building_block.errors
+    render :update
 	end
 
 	def update
 		@building_block.update(building_block_params)
-		redirect_to edit_structure_path(@building_block.explained_structure)
+    if @building_block.valid?
+		  redirect_to edit_structure_path(@building_block.explained_structure)
+    end
+    @errors = @building_block.errors
 	end
 
 	def destroy
