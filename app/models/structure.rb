@@ -68,6 +68,17 @@ class Structure < ApplicationRecord
     result
   end
 
+  def descendants
+    result = []
+    tmp = [self]
+    while result != tmp
+      result = tmp
+      tmp += tmp.map(&:children).flatten.compact
+      tmp = tmp.flatten.compact.uniq
+    end
+    result    
+  end
+
   def building_blocks_flattened
     return [] unless building_blocks.any?
     result = building_blocks
@@ -115,13 +126,15 @@ class Structure < ApplicationRecord
   # for a locked structure, building blocks and axioms cannot be added,
   # destroyed or modified (except for the building block's name and
   # notation)
-  # a structure becomes locked as soon as an example exists for
-  # - itself
-  # - one of its descendants
-  # - a structure that has the given structure as a building block
-  # - a descendant of a structure that has the given structure as a building
-  #   block
+  # a structure becomes locked as soon as
+  # - an example exists for itself
+  # - one of its children is locked
+  # implicitly, it will also be locked if one of the structures that has the
+  # given structure as a building block is locked, because of the necessity to
+  # specify building block realizations for examples
   def locked?
+    return true if original_examples.any?
+    return true if children.any? { |d| d.locked? }
     false
   end
 end

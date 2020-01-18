@@ -9,6 +9,7 @@ class StructuresController < ApplicationController
   end
 
   def edit
+    @locked = @structure.locked?
   end
 
   def update

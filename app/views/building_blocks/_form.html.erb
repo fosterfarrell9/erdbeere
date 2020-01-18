@@ -21,7 +21,8 @@
 		<%= f.label :structure_id,
 								t('building_block.edit.structure') %>
 		<%= f.select :structure_id,
-								 options_for_select(Structure.all.map { |s| [s.name, s.id] }, building_block.structure_id),
+								 options_for_select(building_block.selectable_structures
+                                                  .map { |s| [s.name, s.id] }, building_block.structure_id),
 								  { prompt: t('basics.select') },
 	    						{ class: 'form-control',
                     required: true,

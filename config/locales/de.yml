@@ -83,6 +83,11 @@ de:
       parent_building_blocks: 'mit Baustein(en)'
       axioms: 'Axiome'
       no_axioms: 'Es liegen keine Axiome vor.'
+      locked:  >
+        Diese Struktur kann nur eingeschränkt bearbeitet werden (kein Anlegen oder Löschen von
+        Bausteinen und Axiomen, nur Änderung der Bezeichnung oder Notation von Bausteinen).
+        Ursache ist die Existenz von Beispielen in der Struktur oder Kinderstrukturen (diese würden
+        durch solche Änderungen ungültig.)
     create:
       title: 'Struktur anlegen'
       derives_from: 'Elternstruktur'

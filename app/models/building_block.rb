@@ -18,13 +18,19 @@ class BuildingBlock < ApplicationRecord
   end
 
   def destroy_dependent_stuff
-    axioms = Axiom.where(atom: atoms)
-    axioms.delete_all
-    atoms.delete_all
+    atoms.destroy_all
   end
 
+  def selectable_structures
+    return Structure.all unless explained_structure
+    Structure.all - explained_structure.descendants
+  end
 # TODO
 #  after_create :inherit_implications_from_structure
+#  implication benötigt parent_id, damit bei Löschen dieser die kinder gelöscht werden
+#  können
+#  außerdem sollten bei den Implikationen im structures view nur diejenigen rausgefiltert werden,
+#  die geerbt sind, d.h. die mit einer parent_id
 
   private
 

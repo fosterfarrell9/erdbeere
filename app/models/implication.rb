@@ -5,7 +5,11 @@ class Implication < ApplicationRecord
   has_many :atoms, through: :premises
   belongs_to :implies, class_name: 'Atom', touch: true
   has_many :explanations, as: :explainable
-
+  belongs_to :parent_implication, class_name: 'Implication', optional: true
+  has_many :children,
+           class_name: 'Implication',
+           foreign_key: 'parent_implication_id',
+           inverse_of: :parent_implication
   validates :implies, presence: true
   validates :premises, presence: true
   validate :uniqueness

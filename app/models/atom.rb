@@ -21,7 +21,7 @@ class Atom < ApplicationRecord
   belongs_to :stuff_w_props, polymorphic: true
   belongs_to :satisfies, polymorphic: true
   has_many :atoms, as: :satisfies
-  has_many :axioms, dependent: :destroy
+  has_many :axioms
 
   validates :stuff_w_props, presence: true
   validates :satisfies, presence: true
@@ -31,6 +31,7 @@ class Atom < ApplicationRecord
 
   after_commit :touch_potentially_relevant_examples
   after_create :create_trivial_implications
+  before_destroy :destroy_dependent_stuff
 
   def create_trivial_implications
     satisfies.implies! self if satisfies.is_a?(Atom)
@@ -43,13 +44,6 @@ class Atom < ApplicationRecord
 
   def to_s
     "#{deep_stuff_w_props_name} *IS* #{property.name}"
-  end
-
-  # call follows_from?(atom1, atom2, …) or follows_from?([atom1, atom2, …])
-  def follows_from?(*atoms)
-    atoms = atoms.first if atoms.length == 1 && atoms.first.is_a?(Array)
-
-    atoms.all_that_follows.include?(self)
   end
 
   def implies!(atom)
@@ -72,5 +66,16 @@ class Atom < ApplicationRecord
   def deep_stuff_w_props_name
     return stuff_w_props.name if satisfies.is_a?(Property)
     stuff_w_props.name + '.' + satisfies.stuff_w_props.name
+  end
+
+  def related_implications
+    Implication.where(id: premises.pluck(:implication_id))
+               .or(Implication.where(implies: self))
+  end
+
+  def destroy_dependent_stuff
+    axioms.destroy_all
+    premises.destroy_all    
+    related_implications.delete_all
   end
 end

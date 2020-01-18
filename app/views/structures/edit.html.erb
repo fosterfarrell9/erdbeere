@@ -8,6 +8,12 @@
 			<div class="col-6">
 				<h4>
  					<%= @structure.name %>
+          <% if @locked %>
+            <i class="fas fa-lock redtext ml-2"
+               data-toggle="tooltip"
+               title="<%= t('structure.edit.locked') %>">
+            </i>
+          <% end %>
     	  	<%= link_to '',
       	  	          structure_path(@structure),
         	  	        class: 'fas fa-eye text-dark mt-3',
@@ -42,7 +48,7 @@
 	    <div class="row my-2">
   	    <div class="col-12">
     	    <%= t('examples.show.building_blocks') %>
-          <% unless @structure.original_examples.present? %>
+          <% unless @locked %>
        			<%= link_to '',
              			      new_building_block_path(params: { structure_id: @structure.id }),
                     		class: 'fas fa-plus-circle text-dark',
@@ -106,7 +112,7 @@
         <div class="row my-2">
           <div class="col-12">
             <%= t('structure.edit.axioms') %>
-            <% unless @structure.original_examples.present? %>
+            <% unless @locked %>
               <%= link_to '',
                           new_axiom_path(params: { structure_id: @structure.id }),
                           class: 'fas fa-plus-circle text-dark',
@@ -127,7 +133,7 @@
                   <%= render partial: "atoms/inline_atom",
                              locals: { atom: a.atom,
                                        modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
-                  <% unless @structure.original_examples.any? %>
+                  <% unless @locked %>
                   <%= link_to '',
                               axiom_path(a),
                               class: 'fas fa-trash-alt text-dark ml-2',
