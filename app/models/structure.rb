@@ -18,6 +18,8 @@ class Structure < ApplicationRecord
   has_many :axioms
   has_many :defining_atoms, through: :axioms, source: :atom
 
+  has_many :implications
+
   after_commit :touch_examples
 
   translates :name, :definition, fallbacks_for_empty_translations: true
@@ -76,7 +78,7 @@ class Structure < ApplicationRecord
       tmp += tmp.map(&:children).flatten.compact
       tmp = tmp.flatten.compact.uniq
     end
-    result    
+    result
   end
 
   def building_blocks_flattened
@@ -117,10 +119,8 @@ class Structure < ApplicationRecord
            .update_all(updated_at: Time.now)
   end
 
-  def implications
-    ids_from_premises = Premise.where(atom_id: atom_ids).pluck(:implication_id)
-    ids_from_implies = Implication.where(implies_id: atom_ids).pluck(:id)
-    Implication.where(id: (ids_from_premises + ids_from_implies).uniq)
+  def original_implications
+    implications.where(parent_implication: nil)
   end
 
   # for a locked structure, building blocks and axioms cannot be added,

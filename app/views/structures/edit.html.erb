@@ -265,7 +265,7 @@
     <div class="card-body"
          style="overflow-y: scroll;">
       <ul>
-        <% @structure.implications.each do |i| %>
+        <% @structure.original_implications.each do |i| %>
           <li>
             <%= link_to '',
                         implication_path(i, params: { structure_id: @structure.id }),

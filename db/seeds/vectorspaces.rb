@@ -118,12 +118,17 @@ polynomials_low_deg.satisfies! vsp['finite dimensional']
 derivation = Example.create do |e|
   e.structure = vsp_endo
   e.description = '$f\mapsto f\'$'
-end
-
-BuildingBlockRealization.create do |bbr|
-  bbr.example = derivation
-  bbr.building_block = underlying_vsp
-  bbr.realization = polynomials_low_deg
+  e.building_block_realizations.build(building_block: underlying_vsp,
+                                      realization: polynomials_low_deg)
 end
 
 derivation.violates! endop['injective']
+
+# hotfix for missing structure_id in implications in these seeds
+Implication.all.each do |i|
+  if i.implies.stuff_w_props_type == 'Structure'
+    i.update(structure: i.implies.stuff_w_props)
+  elsif i.implies.stuff_w_props_type == 'BuildingBlock'
+    i.update(structure: i.implies.stuff_w_props.explained_structure)
+  end
+end

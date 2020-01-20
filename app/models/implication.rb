@@ -10,6 +10,7 @@ class Implication < ApplicationRecord
            class_name: 'Implication',
            foreign_key: 'parent_implication_id',
            inverse_of: :parent_implication
+  belongs_to :structure, optional: true
   validates :implies, presence: true
   validates :premises, presence: true
   validate :uniqueness

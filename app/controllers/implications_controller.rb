@@ -7,7 +7,7 @@ class ImplicationsController < ApplicationController
   end
 
   def create
-    @implication = Implication.new
+    @implication = Implication.new(structure_id: implication_params[:structure_id])
     extract_premises!
     extract_conclusion!
     @implication.save
@@ -27,7 +27,7 @@ class ImplicationsController < ApplicationController
   private
 
   def implication_params
-  	params.require(:implication).permit(:atom_ids, :implies_id,
+  	params.require(:implication).permit(:atom_ids, :implies_id, :structure_id,
                                         premises: {}, implies: {})
   end
 
