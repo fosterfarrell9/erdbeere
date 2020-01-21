@@ -9,7 +9,8 @@ class Implication < ApplicationRecord
   has_many :children,
            class_name: 'Implication',
            foreign_key: 'parent_implication_id',
-           inverse_of: :parent_implication
+           inverse_of: :parent_implication,
+           dependent: :destroy
   belongs_to :structure, optional: true
   validates :implies, presence: true
   validates :premises, presence: true

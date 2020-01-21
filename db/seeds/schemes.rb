@@ -27,6 +27,7 @@ domain = BuildingBlock.create do |b|
   b.explained_structure = s_mor
   b.name_en = 'Domain'
   b.name_de = 'Quelle'
+  b.definition_de = '$\mathcal{X}$'
 end
 
 codomain = BuildingBlock.create do |b|
@@ -34,6 +35,7 @@ codomain = BuildingBlock.create do |b|
   b.explained_structure = s_mor
   b.name_en = 'Codomain'
   b.name_de = 'Ziel'
+  b.definition_de = '$\mathcal{Y}$'
 end
 
 mp = {}
