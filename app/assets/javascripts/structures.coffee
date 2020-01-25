@@ -54,6 +54,14 @@ $(document).on 'turbolinks:load', ->
     return
   return
 
+$(document).on 'click', '#toggleImplications', ->
+  $('#inheritedImplications').toggle()
+  if $(this).hasClass('fa-eye')
+    $(this).removeClass('fa-eye').addClass('fa-eye-slash').prop('title', $(this).data('hide'))
+  else
+    $(this).removeClass('fa-eye-slash').addClass('fa-eye').prop('title', $(this).data('hide'))
+  return
+
 # clean up everything before turbolinks caches
 $(document).on 'turbolinks:before-cache', ->
   $(document).off 'click', '#structure-form :input'

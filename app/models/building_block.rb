@@ -3,6 +3,7 @@ class BuildingBlock < ApplicationRecord
              foreign_key: 'explained_structure_id'
   belongs_to :structure
   before_destroy :destroy_dependent_stuff
+  after_create :copy_structure_implications_to_explained_structure
   has_many :atoms, as: :stuff_w_props
 
   validates :explained_structure, presence: true
@@ -25,32 +26,29 @@ class BuildingBlock < ApplicationRecord
     return Structure.all unless explained_structure
     Structure.all - explained_structure.descendants
   end
-# TODO
-#  after_create :inherit_implications_from_structure
-#  implication benötigt parent_id, damit bei Löschen dieser die kinder gelöscht werden
-#  können
-#  außerdem sollten bei den Implikationen im structures view nur diejenigen rausgefiltert werden,
-#  die geerbt sind, d.h. die mit einer parent_id
 
   private
 
+  # inherit the implications associated to the building block's structure
+  # to the explained_structure
+  def copy_structure_implications_to_explained_structure
+    structure.implications.each do |i|
+      implies_stuff = i.implies.stuff_w_props == structure ? self : i.implies.stuff_w_props
+      implies_for_bb = Atom.find_or_create_by(stuff_w_props: implies_stuff,
+                                              satisfies: i.implies.satisfies)
+      atoms_for_bb = []
+      atoms.each do |a|
+        atoms_stuff = a.stuff_w_props == structure ? bb : a.stuff_w_props
+        atom_for_bb = Atom.find_or_create_by(stuff_w_props: atoms_stuff,
+                                              satisfies: a.satisfies)
+        atoms_for_bb.push(atom_for_bb)
+      end
+      Implication.create(atoms: atoms_for_bb,
+                         implies: implies_for_bb,
+                         structure: explained_structure,
+                         parent_implication: i,
+                         implies_value: i.implies_value)            
 
-  # fülle BuildingBlock mit passenden Implikationen von seiner
-  # Struktur, z.B. Basisring von R-Mod mit den Implikationen für
-  # Ringe
-	# TODO: cf. copy_implications in core_ext/array.rb , seeds/rings_and_modules.rb
-  # def inherit_implications_from_structure
-  # 	hash = {}
-  # 	structure.properties.each do |p|
-  # 		hash[p] = Atom.create(stuff_w_props: self, satisfies: p)
-  # 	end
-  # 	Implication.all.to_a.each do |im|
-  # 		if im.implies.in?(structure.properties)
-  # 			Implication.create do |c|
-  # 				c.atoms =
-  # 				c.implies = hash.select { |k,v| im.implies == structure.p}
-  # 			end
-  # 		end
-  # 	end
-  # end
+    end
+  end
 end

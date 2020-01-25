@@ -123,6 +123,10 @@ class Structure < ApplicationRecord
     implications.where(parent_implication: nil)
   end
 
+  def inherited_implications
+    implications.where.not(parent_implication: nil)
+  end
+
   # for a locked structure, building blocks and axioms cannot be added,
   # destroyed or modified (except for the building block's name and
   # notation)

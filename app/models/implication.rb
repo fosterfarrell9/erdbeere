@@ -12,6 +12,7 @@ class Implication < ApplicationRecord
            inverse_of: :parent_implication,
            dependent: :destroy
   belongs_to :structure, optional: true
+  after_create :apply_to_building_blocks
   validates :implies, presence: true
   validates :premises, presence: true
   validate :uniqueness
@@ -61,13 +62,26 @@ class Implication < ApplicationRecord
     errors.add(:base, :not_unique)
   end
 
-  # TODO
-  # def apply_to_building_blocks
-  # finde passende building blocks und speichere sie dort auch ab
-  # z.B.: Eigenschaft für Ringe wird angelegt -> diese sollte dann
-  # auch für Basisringe von Moduln gelten
-  # def remove_from_building_blocks
-  # selbes, nur in die andere Richtung. Evtl. ist es dafür geschickt,
-  # zu protokollieren, von welcher Implikation eine gegebene Implikation
-  # hochinduziert wurde.
+  # inherit the implication to all structures where the implication's structure
+  # appears as a building block
+  def apply_to_building_blocks
+    return unless structure
+    BuildingBlock.where(structure: structure).each do |bb|
+      implies_stuff = implies.stuff_w_props == structure ? bb : implies.stuff_w_props
+      implies_for_bb = Atom.find_or_create_by(stuff_w_props: implies_stuff,
+                                              satisfies: implies.satisfies)
+      atoms_for_bb = []
+      atoms.each do |a|
+        atoms_stuff = a.stuff_w_props == structure ? bb : implies.stuff_w_props
+        atom_for_bb = Atom.find_or_create_by(stuff_w_props: atoms_stuff,
+                                              satisfies: a.satisfies)
+        atoms_for_bb.push(atom_for_bb)
+      end
+      Implication.create(atoms: atoms_for_bb,
+                         implies: implies_for_bb,
+                         structure: bb.explained_structure,
+                         parent_implication: self,
+                         implies_value: implies_value)      
+    end
+  end
 end
