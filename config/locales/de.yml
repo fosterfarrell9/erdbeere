@@ -110,6 +110,10 @@ de:
       name: 'Bezeichnung'
       definition: 'Definition'
       stacks_tag: 'Tag im Stacks Project'
+      delete: 'Eigenschaft löschen'
+      relevant_property: >
+        Diese Eigenschaft kommt in %{implications} Implikationen und %{axioms} Axiomen vor.
+        Wenn Du diese Eigenschaft löschst, werden diese ebenfalls entfernt.
     create:
       title: 'Eigenschaft anlegen'
     add_example_facts:
@@ -186,6 +190,7 @@ de:
     select: 'auswählen'
     show: 'Anzeigen'
     hide: 'Verbergen'
+    warning: 'Achtung:'
   warnings:
     unsaved_changes: 'Ungespeicherte Änderungen'
   confirmation:

@@ -63,6 +63,11 @@ class PropertiesController < ApplicationController
     redirect_to edit_property_path(@property)
   end
 
+  def destroy
+    @property.destroy
+    redirect_to edit_structure_path(@property.structure)    
+  end
+
   private
 
   def property_params
