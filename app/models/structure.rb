@@ -147,6 +147,7 @@ class Structure < ApplicationRecord
       hash[bb] = realizations
     end
     hash
+  end
 
   def inherited_implications
     implications.where.not(parent_implication: nil)
