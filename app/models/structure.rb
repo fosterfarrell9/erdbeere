@@ -147,6 +147,9 @@ class Structure < ApplicationRecord
       hash[bb] = realizations
     end
     hash
+
+  def inherited_implications
+    implications.where.not(parent_implication: nil)
   end
 
   # for a locked structure, building blocks and axioms cannot be added,

@@ -1,6 +1,7 @@
 class Property < ApplicationRecord
   belongs_to :structure
-  has_many :atoms, as: :satisfies
+  has_many :atoms, as: :satisfies, dependent: :destroy
+  before_destroy :destroy_example_facts
 
   validates :structure, presence: true
 
@@ -43,5 +44,23 @@ class Property < ApplicationRecord
 
   def example_facts
     ExampleFact.where(property: self)
+  end
+
+  def related_implications
+    atoms.map(&:related_implications).flatten.uniq
+  end
+
+  def related_axioms
+    atoms.map(&:axioms).flatten.uniq
+  end
+
+  def irrelevant?
+    return false if related_implications.any?
+    return false if related_axioms.any?
+    true
+  end
+
+  def destroy_example_facts
+    example_facts.delete_all
   end
 end

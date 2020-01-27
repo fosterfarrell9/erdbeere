@@ -59,9 +59,10 @@ reals = Example.create do |e|
   e.description_en = '$\mathbb R$ over $\mathbb Q$'
   e.description_de = '$\mathbb R$ über $\mathbb Q$'
   e.structure = vector_space
+  e.building_block_realizations.build(building_block: base_ring,
+                                      realization: rationals)  
 end
 
-BuildingBlockRealization.create(example: reals, building_block: base_ring, realization: rationals)
 reals.violates! vsp['finite dimensional'].property
 
 vsp_endo = Structure.create do |s|

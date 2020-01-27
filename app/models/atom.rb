@@ -74,8 +74,8 @@ class Atom < ApplicationRecord
   end
 
   def destroy_dependent_stuff
+    related_implications.delete_all
     axioms.destroy_all
     premises.destroy_all    
-    related_implications.delete_all
   end
 end

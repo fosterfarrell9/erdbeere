@@ -2,7 +2,7 @@ require 'open3'
 
 class Example < ApplicationRecord
   include CacheIt
-  has_many :example_facts
+  has_many :example_facts, dependent: :destroy
   has_many :building_block_realizations
   belongs_to :structure
   has_many :explanations, as: :explainable
@@ -11,6 +11,7 @@ class Example < ApplicationRecord
            foreign_key: 'realization_id'
 
   validates :structure, presence: true
+  after_create :create_axiom_facts
   after_commit :touch_appearances_as_building_block_realizations
 
   translates :description, fallbacks_for_empty_translations: true
@@ -228,5 +229,14 @@ class Example < ApplicationRecord
       return false
     end
     true
+  end
+
+  def create_axiom_facts
+    structure.axioms.each do |a|
+      next unless a.atom.stuff_w_props_type == 'Structure'
+      ExampleFact.find_or_create_by(example: self,
+                                    property: a.atom.property,
+                                    satisfied: a.value)
+    end
   end
 end
