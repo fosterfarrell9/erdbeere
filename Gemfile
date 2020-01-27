@@ -15,7 +15,7 @@ gem 'sqlite3'
 gem 'bootstrap'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.2'
+gem 'rails', '~> 6.0.2.1'
 # Use Puma as the app server
 gem 'puma'
 # Use SCSS for stylesheets

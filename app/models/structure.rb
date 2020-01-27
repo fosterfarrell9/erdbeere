@@ -94,7 +94,8 @@ class Structure < ApplicationRecord
     start_blocks = [self]
     start_blocks += [derives_from] if derives_from.present?
     (start_blocks + building_blocks_flattened).uniq.map do |x|
-      [x.stuff_id, x.structure.properties.map { |p| [p.name, p.id] }]
+      [x.stuff_id, x.structure.descendants.map(&:properties).flatten.uniq
+                    .map { |p| [p.name, p.id] }]
     end .to_h
   end
 
@@ -121,6 +122,31 @@ class Structure < ApplicationRecord
 
   def original_implications
     implications.where(parent_implication: nil)
+  end
+
+  # returns the array of all bulding blocks that need to be realized in
+  # order have a well-defined example for this structure
+  def example_building_blocks
+    result = original_building_blocks.to_a
+    return result unless derives_from.present?
+    result + derives_from.example_building_blocks
+  end
+
+  def example_building_block_realizations
+    hash = {}
+    example_building_blocks.each do |bb|
+      relevant_axioms = defining_atoms.where(stuff_w_props: bb).map do |a|
+        Atom.find_or_create_by(stuff_w_props: bb.structure,
+                               satisfies: a.satisfies)
+      end
+      realizations = bb.structure.examples.select do |e|
+        relevant_axioms.all? do |a|
+          e.satisfies?(a)
+        end
+      end
+      hash[bb] = realizations
+    end
+    hash
   end
 
   # for a locked structure, building blocks and axioms cannot be added,

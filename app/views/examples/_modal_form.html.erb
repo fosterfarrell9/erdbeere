@@ -9,13 +9,13 @@
          id="example-description-error">
     </div>
   </div>
-  <% example.structure.original_building_blocks.each do |bb| %>
+  <% bbr_hash.each do |bb, realizations| %>
     <div class="form-group">
       <%= f.label "building_block_realizations[#{bb.id}]",
                   t('example.create.building_block_realization',
                     building_block: "#{bb.name}: #{bb.definition}") %>
       <%= f.select "building_block_realizations[#{bb.id}]",
-                   options_for_select(bb.structure.examples.map { |e| [e.description, e.id]}),
+                   options_for_select(realizations.map { |e| [e.description, e.id]}),
                    { prompt: t('basics.select') },
                    { class: 'form-control building_block_select' } %>
       <div class="invalid-feedback building-block-error">

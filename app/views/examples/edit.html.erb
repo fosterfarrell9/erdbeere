@@ -46,7 +46,7 @@
                                class: 'form-control' %>
               <div class="invalid-feedback"
                    id="example-description-error">
-              </div>                                  
+              </div>
             </div>
           <% unless @example.building_block_realizations.empty? %>
           <div class="row mt-3">
@@ -66,9 +66,8 @@
                             building_block:
                               "#{bbr.building_block.name}: #{bbr.building_block.definition}") %>
               <%= f.select "building_block_realizations[#{bbr.id}]",
-                           options_for_select(bbr.building_block
-                                                 .structure
-                                                 .examples.map { |e| [e.description, e.id]},
+                           options_for_select(@bbr_hash[bbr.building_block]
+                                                .map { |e| [e.description, e.id]},
                                               bbr.realization.id),
                  {},
                  { class: 'form-control' } %>

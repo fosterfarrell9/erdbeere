@@ -115,7 +115,7 @@ class Example < ApplicationRecord
       a += structure.negative_defining_atoms
     end
 
-    a.flatten
+    a.flatten.uniq
   end
 
   def hardcoded_truths

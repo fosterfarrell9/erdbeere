@@ -6,10 +6,12 @@ class ExamplesController < ApplicationController
   end
 
   def edit
+    @bbr_hash = @example.structure.example_building_block_realizations
   end
 
   def new
     @example = Example.new(structure_id: params[:structure_id].to_i)
+    @bbr_hash = @example.structure.example_building_block_realizations
   end
 
   def create

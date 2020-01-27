@@ -1,6 +1,7 @@
 $('#example-modal-content').empty()
 	.append('<%= j render partial: "examples/modal_form",
-												locals: { example: @example } %>')
+												locals: { example: @example,
+                                  bbr_hash: @bbr_hash } %>')
 $('#exampleModal').modal('show')
 exampleModalContent = document.getElementById('example-modal-content')
 renderMathInElement exampleModalContent,
