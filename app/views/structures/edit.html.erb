@@ -239,8 +239,14 @@
       <ul>
         <% @structure.examples.each do |e| %>
           <li>
-            <%= link_to e.description[0..100],
+            <%= link_to e.description,
                         edit_example_path(e) %>
+          <% if !e.valid? %>
+            <i class="fas fa-exclamation-triangle redtext ml-2"
+               data-toggle="tooltip"
+               title="<%= t('example.edit.invalid') %>">
+            </i>
+          <% end %>
           </li>
         <% end %>
       </ul>
@@ -312,7 +318,7 @@
           </li>
         <% end %>
       </ul>
-      <% end %>      
+      <% end %>
     </div>
   </div>
 </div>

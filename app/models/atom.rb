@@ -46,6 +46,10 @@ class Atom < ApplicationRecord
     "#{deep_stuff_w_props_name} *IS* #{property.name}"
   end
 
+  def to_atom
+    self
+  end
+
   def implies!(atom)
     [self].implies!(atom)
   end
@@ -76,6 +80,6 @@ class Atom < ApplicationRecord
   def destroy_dependent_stuff
     related_implications.delete_all
     axioms.destroy_all
-    premises.destroy_all    
+    premises.destroy_all
   end
 end

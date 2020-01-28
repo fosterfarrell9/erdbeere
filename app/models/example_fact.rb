@@ -29,4 +29,14 @@ class ExampleFact < ApplicationRecord
   def satisfied?
     satisfied
   end
+
+  def irrelevant?
+    atoms = Atom.where(satisfies: property)
+    structure_atoms = atoms.where(stuff_w_props_type: 'Structure')
+    structure_axioms = Axiom.where(atom: structure_atoms)
+    structures = structure_axioms.map(&:structure)
+    structures.each do |s|
+      return false if example.in?(s.examples)
+    end
+  end
 end

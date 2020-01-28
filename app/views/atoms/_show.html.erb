@@ -30,6 +30,12 @@
                             example: example,
                             edit: edit } %>
     <% end %>
+    <% if example && !example.valid? %>
+      <i class="fas fa-exclamation-triangle redtext ml-2"
+         data-toggle="tooltip"
+         title="<%= t('example.edit.invalid') %>">
+      </i>
+    <% end %>
     <% if with_explanations %>
       </span>
       <div class="collapse"

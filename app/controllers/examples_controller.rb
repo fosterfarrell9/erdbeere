@@ -85,7 +85,7 @@ class ExamplesController < ApplicationController
     return if @proof
 
     @hits = Example.where(structure_id: @structure.id).all.to_a.find_all do |e|
-      (@satisfies - e.satisfied_atoms_by_sat).empty? && (@violates - e.violated_atoms_by_sat).empty?
+      e.valid? && (@satisfies - e.satisfied_atoms_by_sat).empty? && (@violates - e.violated_atoms_by_sat).empty?
     end
   end
 

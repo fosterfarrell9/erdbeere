@@ -6,5 +6,28 @@ class BuildingBlockRealization < ApplicationRecord
   validates :example, presence: true
   validates :building_block, presence: true
   validates :realization, presence: true
-  validates_with IncludesTest, a: 'building_block.structure.related_structures', b: 'realization.structure'
+
+  validate :compatibility
+  validate :valid_realization
+  validate :realization_match
+
+  def compatibility
+    if realization.structure.in?(building_block.structure.related_structures)
+      return true
+    end
+    errors.add(:realization, :incompatible_structure)
+  end
+
+  def valid_realization
+    return true if realization.valid?
+    errors.add(:realization, :invalid)
+  end
+
+  def realization_match
+    if (building_block.structure.defining_atoms -
+          realization.satisfied_atoms_by_sat).empty?
+      return true
+    end
+    errors.add(:realization, :axioms_violated)
+  end
 end

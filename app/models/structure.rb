@@ -124,7 +124,7 @@ class Structure < ApplicationRecord
     implications.where(parent_implication: nil)
   end
 
-  # returns the array of all bulding blocks that need to be realized in
+  # returns the array of all building blocks that need to be realized in
   # order have a well-defined example for this structure
   def example_building_blocks
     result = original_building_blocks.to_a

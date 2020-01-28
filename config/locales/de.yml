@@ -26,6 +26,15 @@ de:
         'Realisierung des Bausteins %{building_block}'
     edit:
       description: 'Bezeichnung'
+      delete: 'Beispiel löschen'
+      relevant_example: >
+        Dieses Beispiel taucht als Realisierung eines Bausteins in folgenden
+        Beispielen auf und kann deswegen nicht gelöscht werden:
+      invalid: >
+        Dieses Beispiel ist ungültig. Das kann etwa daran liegen, dass von
+        den Baustein-Realisierung Axiome verletzt werden (z.B. durch Änderungen
+        an anderer Stelle in der Datenbank), oder dass die
+        Baustein-Realisierungen nicht (mehr) zu den Bausteinen passen.
     add_example_facts:
       add_truths: 'Erfüllte Eigenschaften hinterlegen'
       add_falsehoods: 'Verletzte Eigenschaften hinterlegen'
@@ -112,8 +121,9 @@ de:
       stacks_tag: 'Tag im Stacks Project'
       delete: 'Eigenschaft löschen'
       relevant_property: >
-        Diese Eigenschaft kommt in %{implications} Implikationen und %{axioms} Axiomen vor.
-        Wenn Du diese Eigenschaft löschst, werden diese ebenfalls entfernt.
+        Die Eigenschaft kommt in %{implications} Implikationen und %{axioms}
+        Axiomen vor. Wenn Du die Eigenschaft löschst, werden diese ebenfalls
+        entfernt.
     create:
       title: 'Eigenschaft anlegen'
     add_example_facts:
@@ -209,6 +219,10 @@ de:
             building_block_realizations:
               invalid: 'Ungültige Baustein-Realisierung(en).'
               incorrect: 'Fehlende oder überzählige Baustein-Realisierungen.'
+            base:
+              axioms_fail: >
+                Eines der Axiome der zugehörigen Struktur ist in diesem
+                Beispiel verletzt.
         property:
           attributes:
             name:
@@ -232,3 +246,14 @@ de:
               problem: 'Es ist ein Problem mit der Konsequenz aufgetreten.'
             premises:
               problem: 'Es ist ein Problem mit den Voraussetzungen aufgetreten.'
+        building_block_realization:
+          attributes:
+            realization:
+              incompatible_structure: >
+                Die Struktur der Baustein-Realisierung passt nicht zur
+                Struktur des Bausteins.
+              invalid: >
+                Die Baustein_Realisierung ist als Beispiel ungültig.
+              axioms_violated: >
+                Die Baustein-Realisierungen verletzt Axiom(e) der
+                Baustein-Struktur.

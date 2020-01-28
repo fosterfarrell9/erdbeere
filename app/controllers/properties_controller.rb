@@ -19,7 +19,7 @@ class PropertiesController < ApplicationController
       return
 		end
     @errors = @property.errors
-    render :update    
+    render :update
   end
 
   def update
@@ -28,7 +28,7 @@ class PropertiesController < ApplicationController
   	  redirect_to edit_property_path(@property)
       return
     end
-    @errors = @property.errors    
+    @errors = @property.errors
   end
 
   def add_example_facts
@@ -43,7 +43,7 @@ class PropertiesController < ApplicationController
   end
 
   def update_example_facts
-    example_facts_params[:examples].each do |k,v|
+    example_facts_params[:examples]&.each do |k,v|
       next unless v.to_i == 1
       fact = ExampleFact.new(example_id: k.to_i,
                              property_id: @property.id,
@@ -65,7 +65,7 @@ class PropertiesController < ApplicationController
 
   def destroy
     @property.destroy
-    redirect_to edit_structure_path(@property.structure)    
+    redirect_to edit_structure_path(@property.structure)
   end
 
   private

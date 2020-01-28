@@ -60,7 +60,7 @@ reals = Example.create do |e|
   e.description_de = '$\mathbb R$ über $\mathbb Q$'
   e.structure = vector_space
   e.building_block_realizations.build(building_block: base_ring,
-                                      realization: rationals)  
+                                      realization: rationals)
 end
 
 reals.violates! vsp['finite dimensional'].property
@@ -106,12 +106,8 @@ end
 polynomials_low_deg = Example.create do |e|
   e.structure = vector_space
   e.description = '$\mathbb C[X]_{\mathrm{deg} \leq 5}$'
-end
-
-BuildingBlockRealization.create do |bbr|
-  bbr.example = polynomials_low_deg
-  bbr.building_block = base_ring
-  bbr.realization = complex
+  e.building_block_realizations.build(building_block: base_ring,
+                                      realization: complex)
 end
 
 polynomials_low_deg.satisfies! vsp['finite dimensional']

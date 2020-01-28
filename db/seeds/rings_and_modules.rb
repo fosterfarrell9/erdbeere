@@ -110,7 +110,7 @@ rmod = Structure.create do |s|
                     '(LM1) $a(x+y)=ax+ay$ <br>' \
                     '(LM2) $(a+b)x=ax+bx$ <br>' \
                     '(LM3) $a(bx)=(ab)x$ <br>' \
-                    '(LM4) $1x=x$'  
+                    '(LM4) $1x=x$'
 end
 
 base_ring = BuildingBlock.create do |b|
@@ -144,10 +144,9 @@ zee_r = Example.create do |e|
   e.structure = rmod
   e.description_de = '$\mathbb Z^r$ als Modul über $\mathbb Z$'
   e.description_en = '$\mathbb Z^r$ as a module over the integers'
+  e.building_block_realizations.build(building_block: base_ring,
+                                      realization: zee)
 end
-
-BuildingBlockRealization.create(example: zee_r, building_block:
-  base_ring, realization: zee)
 
 zee_r.satisfies! mp['finitely generated']
 
@@ -155,8 +154,9 @@ fg_not_noeth_mod = Example.create do |e|
   e.structure = rmod
   e.description_en = '$\mathbb Z[X_1, X_2, \dots]$ as a module over itself'
   e.description_de = '$\mathbb Z[X_1, X_2, \dots]$ als Modul über sich selbst'
+  e.building_block_realizations.build(building_block: base_ring,
+                                      realization: comm_not_noeth)
 end
 
-BuildingBlockRealization.create(example: fg_not_noeth_mod, building_block: base_ring, realization: comm_not_noeth)
 fg_not_noeth_mod.satisfies! mp['finitely generated']
 fg_not_noeth_mod.violates! mp['ACC for submodules']

@@ -4,6 +4,12 @@
   <%= link_to @example.structure.name,
               edit_structure_path(@example.structure),
               class: 'text-dark' %>
+  <% if !@example.valid? %>
+    <i class="fas fa-exclamation-triangle redtext ml-2"
+       data-toggle="tooltip"
+       title="<%= t('example.edit.invalid') %>">
+    </i>
+  <% end %>
   <%= link_to '',
               example_path(@example),
               class: 'fas fa-eye text-dark mt-3',
@@ -67,6 +73,7 @@
                               "#{bbr.building_block.name}: #{bbr.building_block.definition}") %>
               <%= f.select "building_block_realizations[#{bbr.id}]",
                            options_for_select(@bbr_hash[bbr.building_block]
+                                                .push(bbr.realization).compact
                                                 .map { |e| [e.description, e.id]},
                                               bbr.realization.id),
                  {},
@@ -78,6 +85,32 @@
           <% end %>
           </ul>
           <% end %>
+          <div class="row mt-3">
+            <% if @example.irrelevant? %>
+              <div class="col-12 mt-3 text-center">
+                <%= link_to t('example.edit.delete'),
+                            example_path(@example),
+                            class: 'btn btn-danger',
+                            method: :delete,
+                            data: { confirm: t('confirmation.generic') } %>
+              </div>
+            <% else %>
+              <div class="col-12 mt-2">
+                <span class="redtext">
+                  <%= t('basics.warning') %>
+                </span>
+                <%= t('example.edit.relevant_example') %>
+                <ul>
+                  <% @example.appearances_as_building_block_realizations.each do |bbr| %>
+                    <li>
+                      <%= link_to bbr.example.description,
+                                  edit_example_path(bbr.example) %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </div>
         </div>
       </div>
     <% end %>

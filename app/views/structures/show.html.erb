@@ -93,7 +93,7 @@
     </div>
     <div class="card-body">
       <ul>
-        <% @structure.examples.each do |e| %>
+        <% @structure.examples.select {|e| e.valid? }.each do |e| %>
           <li>
             <%= link_to e.description[0..100],
                         example_path(:id => e.id) %>

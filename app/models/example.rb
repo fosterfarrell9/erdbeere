@@ -5,7 +5,7 @@ class Example < ApplicationRecord
   has_many :example_facts, dependent: :destroy
   has_many :building_block_realizations
   belongs_to :structure
-  has_many :explanations, as: :explainable
+  has_many :explanations, as: :explainable, dependent: :destroy
   has_many :appearances_as_building_block_realizations,
            class_name: 'BuildingBlockRealization',
            foreign_key: 'realization_id'
@@ -18,6 +18,8 @@ class Example < ApplicationRecord
   validates :description, presence: true
   globalize_accessors
   validate :correct_bb_realizations
+  validates_associated :building_block_realizations
+  validate :axioms_fulfilled?
 
   def self.find_restricted(structure, satisfies, violates)
     dimacs = "p cnf #{Atom.count} "
@@ -238,5 +240,28 @@ class Example < ApplicationRecord
                                     property: a.atom.property,
                                     satisfied: a.value)
     end
+  end
+
+  def axioms_fulfilled?
+    structure.defining_atoms.each do |a|
+      next if a.stuff_w_props_type == 'Structure'
+      bb = a.stuff_w_props
+      bbr = building_block_realizations.find { |x| x.building_block == bb }
+      if bbr.nil?
+        errors.add(:building_block_realizations, :incorrect)
+        return false
+      end
+      realization = bbr.realization
+      satisfies_atom = a.satisfies.to_atom
+      return true if satisfies_atom.in?(realization.satisfied_atoms_by_sat)
+      errors.add(:base, :axioms_fail)
+      return false
+    end
+    true
+  end
+
+  def irrelevant?
+    return false if appearances_as_building_block_realizations.any?
+    true
   end
 end

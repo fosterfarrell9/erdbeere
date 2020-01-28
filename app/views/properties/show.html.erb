@@ -45,12 +45,12 @@
       </h5>
     </div>
     <div class="card-body propertiesCardBody">
-      <% unless @positive_hardcoded_facts.empty? %>
+      <% unless @positive_hardcoded_facts.select { |f| f.example.valid?}.empty? %>
         <strong>
           <%= I18n.t("example.show.hardcoded") %>:
         </strong>
         <div class="row">
-          <% @positive_hardcoded_facts.each do |fact| %>
+          <% @positive_hardcoded_facts.select { |f| f.example.valid?}.each do |fact| %>
             <div class="col-12">
               <%= render partial: 'atoms/show',
                          locals: { atom: fact.property.to_atom,
@@ -64,11 +64,11 @@
           <% end %>
         </div>
       <% end %>
-      <% unless @positive_derived_examples.empty? %>
+      <% unless @positive_derived_examples.select { |e| e.valid? }.empty? %>
         <strong>
           <%= I18n.t("example.show.derived") %>:
         </strong>
-        <% @positive_derived_examples.each do |e| %>
+        <% @positive_derived_examples.select { |e| e.valid? }.each do |e| %>
             <%= render partial: 'atoms/show',
                        locals: { atom: @property.to_atom,
                                  modifier: t('logic.is'),
@@ -89,12 +89,12 @@
       </h5>
     </div>
     <div class="card-body propertiesCardBody">
-      <% unless @negative_hardcoded_facts.empty? %>
+      <% unless @negative_hardcoded_facts.select { |f| f.example.valid?}.empty? %>
         <strong>
           <%= I18n.t("example.show.hardcoded") %>:
         </strong>
         <div class="row">
-          <% @negative_hardcoded_facts.each do |fact| %>
+          <% @negative_hardcoded_facts.select { |f| f.example.valid?}.each do |fact| %>
             <div class="col-12">
               <%= render partial: 'atoms/show',
                          locals: { atom: fact.property.to_atom,
@@ -108,11 +108,11 @@
           <% end %>
         </div>
       <% end %>
-      <% unless @negative_derived_examples.empty? %>
+      <% unless @negative_derived_examples.select { |e| e.valid? }.empty? %>
         <strong>
           <%= I18n.t("example.show.derived") %>:
         </strong>
-        <% @negative_derived_examples.each do |e| %>
+        <% @negative_derived_examples.select { |e| e.valid? }.each do |e| %>
             <%= render partial: 'atoms/show',
                        locals: { atom: @property.to_atom,
                                  modifier: t('logic.is_not'),
