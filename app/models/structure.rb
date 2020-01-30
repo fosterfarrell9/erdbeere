@@ -110,9 +110,13 @@ class Structure < ApplicationRecord
   end
 
   def examples
-    related_structures.map(&:original_examples).flatten.find_all do |e|
+    candidates = related_structures.map(&:original_examples).flatten
+    valid_candidates = candidates.select { |e| e.valid? }
+    invalid_candidates = candidates - valid_candidates
+    valid_examples = valid_candidates.select do |e|
       (defining_atoms - e.satisfied_atoms_by_sat).empty?
     end
+    valid_examples + invalid_candidates
   end
 
   def touch_examples

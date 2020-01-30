@@ -73,14 +73,16 @@
                               "#{bbr.building_block.name}: #{bbr.building_block.definition}") %>
               <%= f.select "building_block_realizations[#{bbr.id}]",
                            options_for_select(@bbr_hash[bbr.building_block]
-                                                .push(bbr.realization).compact
+                                                .push(bbr.realization).compact.uniq
                                                 .map { |e| [e.description, e.id]},
-                                              bbr.realization.id),
-                 {},
+                                              bbr.realization&.id),
+                 { prompt: t('basics.select') },
                  { class: 'form-control' } %>
               </div>
-              <%= render partial: 'building_block_realizations/show',
-                          locals: { bbr: bbr } %>
+              <% if bbr.realization %>
+                <%= render partial: 'building_block_realizations/show',
+                           locals: { bbr: bbr } %>
+              <% end %>
             </li>
           <% end %>
           </ul>
@@ -115,6 +117,7 @@
       </div>
     <% end %>
     </div>
+    <% if @example.valid? %>
     <div class="col-4">
       <div class="card bg-truth propertiesCard mb-3">
         <div class="card-header">
@@ -264,5 +267,6 @@
         </div>
       </div>
     </div>
+    <% end %>
   </div>
 <%= render partial: 'example_facts/modal' %>

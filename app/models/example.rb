@@ -17,8 +17,8 @@ class Example < ApplicationRecord
   translates :description, fallbacks_for_empty_translations: true
   validates :description, presence: true
   globalize_accessors
-  validate :correct_bb_realizations
   validates_associated :building_block_realizations
+  validate :correct_bb_realizations
   validate :axioms_fulfilled?
 
   def self.find_restricted(structure, satisfies, violates)
@@ -226,7 +226,8 @@ class Example < ApplicationRecord
     return true unless structure
     return true unless structure.original_building_blocks
     structure.original_building_blocks.each do |bb|
-      next if building_block_realizations.select { |bbr| bbr.building_block == bb }.count == 1
+      realizations = building_block_realizations.select { |bbr| bbr.building_block == bb }
+      next if realizations.count == 1 && realizations.first.valid?
       errors.add(:building_block_realizations, :incorrect)
       return false
     end
@@ -247,7 +248,7 @@ class Example < ApplicationRecord
       next if a.stuff_w_props_type == 'Structure'
       bb = a.stuff_w_props
       bbr = building_block_realizations.find { |x| x.building_block == bb }
-      if bbr.nil?
+      if bbr.nil? || !bbr.valid?
         errors.add(:building_block_realizations, :incorrect)
         return false
       end
