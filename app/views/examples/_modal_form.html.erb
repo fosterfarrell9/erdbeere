@@ -9,12 +9,12 @@
          id="example-description-error">
     </div>
   </div>
-  <% bbr_hash.each do |bb, realizations| %>
+  <% bbr_hash.each do |bb_id, realizations| %>
     <div class="form-group">
-      <%= f.label "building_block_realizations[#{bb.id}]",
+      <%= f.label "building_block_realizations[#{bb_id}]",
                   t('example.create.building_block_realization',
-                    building_block: "#{bb.name}: #{bb.definition}") %>
-      <%= f.select "building_block_realizations[#{bb.id}]",
+                    building_block: "#{bb.name}: #{BuildingBlock.find_by_id(bb_id).definition}") %>
+      <%= f.select "building_block_realizations[#{bb_id}]",
                    options_for_select(realizations.map { |e| [e.description, e.id]}),
                    { prompt: t('basics.select') },
                    { class: 'form-control building_block_select' } %>

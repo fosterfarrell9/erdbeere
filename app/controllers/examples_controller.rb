@@ -29,13 +29,14 @@ class ExamplesController < ApplicationController
   end
 
   def update
-    @example.update(description: example_params[:description])
     update_building_block_realizations!
+    @example.update(description: example_params[:description])
     if @example.valid?
       redirect_to edit_example_path(@example)
       return
     end
     @errors = @example.errors
+    pp @errors
   end
 
   def add_example_facts

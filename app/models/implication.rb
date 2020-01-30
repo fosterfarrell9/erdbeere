@@ -52,11 +52,11 @@ class Implication < ApplicationRecord
 
   # given a set of atoms (a premise) and an implies-atom, the implication should
   # be unique. if rails were able to cope with this, it would just be
-  # validates :implies, uniqueness: { scope: :atoms }
+  # validates :implies, uniqueness: { scope: :atoms, :implies_value }
   def uniqueness
     implications_in_scope = Implication.where(implies: implies)
     matches = (implications_in_scope.find_all do |i|
-      i.implies == implies && i.atom_ids.sort == premises.map(&:atom_id).sort
+      i.implies == implies && i.implies_value == implies_value && i.atom_ids.sort == premises.map(&:atom_id).sort
     end) - [self]
     return true unless matches.any?
     errors.add(:base, :not_unique)
@@ -81,7 +81,7 @@ class Implication < ApplicationRecord
                          implies: implies_for_bb,
                          structure: bb.explained_structure,
                          parent_implication: self,
-                         implies_value: implies_value)      
+                         implies_value: implies_value)
     end
   end
 end

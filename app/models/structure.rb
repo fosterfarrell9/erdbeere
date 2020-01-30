@@ -148,7 +148,7 @@ class Structure < ApplicationRecord
           e.satisfies?(a)
         end
       end
-      hash[bb] = realizations
+      hash[bb.id] = realizations
     end
     hash
   end
