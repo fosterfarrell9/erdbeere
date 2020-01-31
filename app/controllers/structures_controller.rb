@@ -15,7 +15,7 @@ class StructuresController < ApplicationController
   def update
     @structure.update(structure_params)
     if @structure.valid?
-      redirect_to structures_path
+      redirect_to edit_structure_path(@structure)
       return
     end
     @errors = @structure.errors

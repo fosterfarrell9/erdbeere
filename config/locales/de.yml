@@ -86,6 +86,7 @@ de:
       related_structures: 'Verwandte Strukturen'
       definition_details_html: 'Ein(e) %{name} ist ein(e) %{derives_from}, für den(die) gilt:'
       examples: 'Beispiele'
+      axioms: 'Axiome'
     edit:
       name: 'Bezeichnung'
       implications: 'Implikationen'

@@ -43,6 +43,20 @@
 				<% end %>
 			</ul>
 		<% end %>
+    <% if @structure.axioms.present? %>
+      <h5>
+        <%= t('structure.show.axioms') %>
+      </h5>
+      <ul>
+        <% @structure.axioms.each do |a| %>
+          <li>
+            <%= render partial: "atoms/inline_atom",
+                       locals: { atom: a.atom,
+                                 modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
 		<% unless @structure.definition.blank? %>
 			<h5>
 				<%= t('structure.show.definition') %>

@@ -1,6 +1,6 @@
 class ExamplesController < ApplicationController
   before_action :set_example, only: [:show, :edit, :update, :add_example_facts,
-                                     :update_example_facts]
+                                     :update_example_facts, :destroy]
 
   def show
   end
@@ -88,6 +88,11 @@ class ExamplesController < ApplicationController
     @hits = Example.where(structure_id: @structure.id).all.to_a.find_all do |e|
       e.valid? && (@satisfies - e.satisfied_atoms_by_sat).empty? && (@violates - e.violated_atoms_by_sat).empty?
     end
+  end
+
+  def destroy
+    @example.destroy
+    redirect_to edit_structure_path(@example.structure)
   end
 
   private

@@ -119,7 +119,9 @@ class Structure < ApplicationRecord
     valid_candidates = candidates.select { |e| e.valid? }
     invalid_candidates = candidates - valid_candidates
     valid_examples = valid_candidates.select do |e|
-      (defining_atoms - e.satisfied_atoms_by_sat).empty?
+      (axioms.where(value: true).map(&:atom_id) - e.satisfied_atoms_by_sat.map(&:id)).empty? &&
+        (axioms.where(value: false).map(&:atom_id) - e.violated_atoms_by_sat.map(&:id)).empty?
+#      (defining_atom_ids - e.satisfied_atoms_by_sat.map(&:id)).empty?
     end
     valid_examples + invalid_candidates
   end
@@ -144,14 +146,14 @@ class Structure < ApplicationRecord
   def example_building_block_realizations
     hash = {}
     example_building_blocks.each do |bb|
-      relevant_axioms = defining_atoms.where(stuff_w_props: bb).map do |a|
-        Atom.find_or_create_by(stuff_w_props: bb.structure,
-                               satisfies: a.satisfies)
+      relevant_axioms = axioms.select { |ax| ax.atom.stuff_w_props == bb }.map do |axiom|
+        [Atom.find_or_create_by(stuff_w_props: bb.structure,
+                                satisfies: axiom.atom.satisfies),
+         axiom.value]
       end
       realizations = bb.structure.examples.select do |e|
-        relevant_axioms.all? do |a|
-          e.satisfies?(a)
-        end
+        relevant_axioms.select { |a| a.second }.all? { |a| e.satisfies?(a.first) } &&
+          relevant_axioms.reject { |a| a.second }.all? { |a| e.violates?(a.first) }
       end
       hash[bb.id] = realizations
     end
