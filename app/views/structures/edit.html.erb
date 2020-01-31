@@ -45,6 +45,7 @@
            id="structure-name-error">
       </div>
     </div>
+    <% unless @structure.derives_from.present? %>
 	    <div class="row my-2">
   	    <div class="col-12">
     	    <%= t('examples.show.building_blocks') %>
@@ -108,6 +109,7 @@
       <% else %>
         <%= t('building_block.edit.none') %>
 		  <% end %>
+    <% end %>
 		<% if @structure.derives_from.present? %>
       <div class="row my-2">
         <div class="col-12">
@@ -198,6 +200,17 @@
 				<% end %>
 			</ul>
 		<% end %>
+    <% unless @locked %>
+      <div class="row mt-3">
+        <div class="col-12 mt-3 text-center">
+          <%= link_to t('structure.edit.delete'),
+                        structure_path(@structure),
+                        class: 'btn btn-danger',
+                        method: :delete,
+                        data: { confirm: t('confirmation.generic') } %>
+        </div>
+      </div>
+    <% end %>
 	</div>
 </div>
 <% end %>

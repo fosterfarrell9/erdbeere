@@ -35,6 +35,11 @@ class StructuresController < ApplicationController
     render :update
   end
 
+  def destroy
+    @structure.destroy
+    redirect_to structures_path
+  end
+
   private
 
   def set_structure

@@ -85,6 +85,7 @@ de:
       properties: 'Mögliche Eigenschaften'
       related_structures: 'Verwandte Strukturen'
       definition_details_html: 'Ein(e) %{name} ist ein(e) %{derives_from}, für den(die) gilt:'
+      definition_no_axioms_html: 'Ein(e) %{name} ist ein(e) %{derives_from}.'
       examples: 'Beispiele'
       axioms: 'Axiome'
     edit:
@@ -104,6 +105,7 @@ de:
         Baustein-Rekursion auf. Beispiele
         zu dieser Struktur sind nur gültig, wenn diese Sub-Bausteine jeweils
         gleich gewählt werden.
+      delete: 'Struktur löschen'
     create:
       title: 'Struktur anlegen'
       derives_from: 'Elternstruktur'
