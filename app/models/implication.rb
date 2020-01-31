@@ -12,14 +12,11 @@ class Implication < ApplicationRecord
            inverse_of: :parent_implication,
            dependent: :destroy
   belongs_to :structure, optional: true
+  after_create :check_consistency
   after_create :apply_to_building_blocks
   validates :implies, presence: true
   validates :premises, presence: true
   validate :uniqueness
-
-  # TODO
-  # after_create :apply_to_building_blocks
-  # after_destroy :remove_from_building_blocks
 
   def to_s
     base_struct = implies.stuff_w_props.structure
@@ -70,18 +67,29 @@ class Implication < ApplicationRecord
       implies_stuff = implies.stuff_w_props == structure ? bb : implies.stuff_w_props
       implies_for_bb = Atom.find_or_create_by(stuff_w_props: implies_stuff,
                                               satisfies: implies.satisfies)
-      atoms_for_bb = []
-      atoms.each do |a|
-        atoms_stuff = a.stuff_w_props == structure ? bb : implies.stuff_w_props
+      premises_for_bb = []
+      premises.each do |p|
+        atoms_stuff = p.atom.stuff_w_props == structure ? bb : implies.stuff_w_props
         atom_for_bb = Atom.find_or_create_by(stuff_w_props: atoms_stuff,
-                                              satisfies: a.satisfies)
-        atoms_for_bb.push(atom_for_bb)
+                                              satisfies: p.atom.satisfies)
+        premise_for_bb = Premise.new(atom: atom_for_bb, value: p.value)
+        premises_for_bb.push(premise_for_bb)
       end
-      Implication.create(atoms: atoms_for_bb,
+      Implication.create(premises: premises_for_bb,
                          implies: implies_for_bb,
                          structure: bb.explained_structure,
                          parent_implication: self,
                          implies_value: implies_value)
+    end
+  end
+
+  def check_consistency
+    dimacs = "p cnf #{Atom.count} "
+    dimacs.concat("#{Implication.count} \n")
+    dimacs.concat(Implication.to_dimacs)
+    out, err, st = Open3.capture3("echo '#{dimacs}' | picosat -n")
+    if out == "s UNSATISFIABLE\n"
+      throw :abort
     end
   end
 end

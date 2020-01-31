@@ -129,7 +129,7 @@ class Proof
 									.to_h
 		@premises[:lines] = (1..@premises.count)
 													.zip(@premises_lines.map(&:first)).to_h
-		if @sort == 'example'
+		if @sort == 'example' && @assumption_line
 			@assumption = [[@assumption_line.second.abs,
 											@assumption_line.second.positive?]].to_h
 			@assumption[:line] = @assumption_line.first

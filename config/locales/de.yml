@@ -132,6 +132,9 @@ de:
   implication:
     create:
       title: 'Implikation anlegen'
+      contradiction: >
+        Das Anlegen dieser Implikation führt zu einem Widerspruch und kann daher
+        nicht ausgeführt werden.
     edit:
       premises: 'Voraussetzungen'
       implies: 'Konsequenz'

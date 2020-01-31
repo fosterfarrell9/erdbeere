@@ -10,13 +10,17 @@ class ImplicationsController < ApplicationController
     @implication = Implication.new(structure_id: implication_params[:structure_id])
     extract_premises!
     extract_conclusion!
-    @implication.save
-    if @implication.valid?
-      redirect_to edit_structure_path(params[:implication][:structure_id])
-      return
+    begin
+      @implication.save
+      if @implication.valid?
+        redirect_to edit_structure_path(params[:implication][:structure_id])
+        return
+      end
+      @errors = @implication.errors
+    rescue
+      @implication.errors.add(:base, I18n.t('implication.create.contradiction'))
+      @errors = @implication.errors
     end
-    @errors = @implication.errors
-    pp @implication.errors
   end
 
   def destroy
