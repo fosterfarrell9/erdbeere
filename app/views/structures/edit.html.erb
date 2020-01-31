@@ -92,6 +92,19 @@
 					<% end %>
         <% end %>
 			</ul>
+      <% if @structure.duplicate_building_blocks.any? %>
+        <span class="redtext">
+          <%= t('basics.warning') %>
+        </span>
+        <%= t('structure.edit.duplicate_building_blocks') %>
+        <ul>
+        <% @structure.duplicate_building_blocks.each do |bb| %>
+          <li>
+            <%= bb.name %>: <%= bb.definition %>
+          </li>
+        <% end %>
+        </ul>
+      <% end %>
       <% else %>
         <%= t('building_block.edit.none') %>
 		  <% end %>

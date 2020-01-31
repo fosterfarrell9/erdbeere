@@ -98,6 +98,11 @@ de:
         Ursache ist die Existenz von Beispielen in der Struktur oder Kinderstrukturen (diese würden
         durch solche Änderungen ungültig.)
       inherited_implications: 'Geerbte Implikationen (%{count})'
+      duplicate_building_blocks: >
+        Die folgenden Sub-Bausteine tauchen mehrfach auf in der
+        Baustein-Rekursion auf. Beispiele
+        zu dieser Struktur sind nur gültig, wenn diese Sub-Bausteine jeweils
+        gleich gewählt werden.
     create:
       title: 'Struktur anlegen'
       derives_from: 'Elternstruktur'
@@ -226,6 +231,8 @@ de:
               axioms_fail: >
                 Eines der Axiome der zugehörigen Struktur ist in diesem
                 Beispiel verletzt.
+              realization_conflict: >
+                Sub-Bausteine sind inkompatibel.
         property:
           attributes:
             name:

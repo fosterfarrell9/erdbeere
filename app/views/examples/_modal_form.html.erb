@@ -13,11 +13,12 @@
     <div class="form-group">
       <%= f.label "building_block_realizations[#{bb_id}]",
                   t('example.create.building_block_realization',
-                    building_block: "#{bb.name}: #{BuildingBlock.find_by_id(bb_id).definition}") %>
+                    building_block: "#{BuildingBlock.find_by_id(bb_id).name}: #{BuildingBlock.find_by_id(bb_id).definition}") %>
       <%= f.select "building_block_realizations[#{bb_id}]",
                    options_for_select(realizations.map { |e| [e.description, e.id]}),
                    { prompt: t('basics.select') },
-                   { class: 'form-control building_block_select' } %>
+                   { class: 'form-control building_block_select',
+                     required: true } %>
       <div class="invalid-feedback building-block-error">
       </div>
     </div>

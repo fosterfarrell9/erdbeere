@@ -90,6 +90,11 @@ class Structure < ApplicationRecord
     result.flatten
   end
 
+  def duplicate_building_blocks
+    building_blocks_flattened.group_by { |e| e }.select { |k, v| v.size > 1 }
+                             .map(&:first)
+  end
+
   def deep_building_blocks_properties_select
     start_blocks = [self]
     start_blocks += [derives_from] if derives_from.present?

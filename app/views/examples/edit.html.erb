@@ -77,7 +77,10 @@
                                                 .map { |e| [e.description, e.id]},
                                               bbr.realization&.id),
                  { prompt: t('basics.select') },
-                 { class: 'form-control' } %>
+                 { class: 'form-control building_block_select',
+                   required: true } %>
+              </div>
+              <div class="invalid-feedback building-block-error">
               </div>
               <% if bbr.realization %>
                 <%= render partial: 'building_block_realizations/show',

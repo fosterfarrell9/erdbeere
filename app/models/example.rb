@@ -20,6 +20,9 @@ class Example < ApplicationRecord
   validates_associated :building_block_realizations
   validate :correct_bb_realizations
   validate :axioms_fulfilled?
+  validate :no_duplicate_deep_realizations
+
+  accepts_nested_attributes_for :building_block_realizations
 
   def self.find_restricted(structure, satisfies, violates)
     dimacs = "p cnf #{Atom.count} "
@@ -57,7 +60,6 @@ class Example < ApplicationRecord
     end
     bbrs.flatten
   end
-  cache_it :building_block_realizations_flattened
 
   def touch_appearances_as_building_block_realizations
     appearances_as_building_block_realizations.update_all(updated_at: Time.now)
@@ -263,6 +265,19 @@ class Example < ApplicationRecord
 
   def irrelevant?
     return false if appearances_as_building_block_realizations.any?
+    true
+  end
+
+  def no_duplicate_deep_realizations
+    return unless building_block_realizations.any?
+    structure.duplicate_building_blocks.each do |bb|
+      realizations = building_block_realizations_flattened.select do |bbr|
+        bbr.building_block == bb
+      end
+      next if realizations.map(&:realization_id).uniq.count == 1
+      errors.add(:base, :realization_conflict)
+      return false
+    end
     true
   end
 end

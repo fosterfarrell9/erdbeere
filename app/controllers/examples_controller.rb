@@ -118,11 +118,13 @@ class ExamplesController < ApplicationController
 
   def update_building_block_realizations!
     return unless example_params[:building_block_realizations]
+    bbrs = @example.building_block_realizations.to_a
     example_params[:building_block_realizations].each do |k,v|
-      bbr = @example.building_block_realizations.find_by(id: k)
+      bbr = bbrs.find { |x| x.id == k.to_i }
       next unless bbr && bbr.realization_id != v.to_i
-      bbr.update(realization_id: v)
+      bbr.realization_id = v
     end
+    @example.update(building_block_realizations: bbrs)
   end
 
   def set_example

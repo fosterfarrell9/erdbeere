@@ -15,3 +15,8 @@ $('.building-block-error')
   .append('<%= @errors[:building_block_realizations].first %>').show()
 $('.building_block_select').addClass('is-invalid')
 <% end %>
+<% if @errors[:base].present? %>
+$('.building-block-error')
+  .append('<%= @errors[:base].first %>').show()
+$('.building_block_select').addClass('is-invalid')
+<% end %>
