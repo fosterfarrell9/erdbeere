@@ -106,7 +106,7 @@ class Structure < ApplicationRecord
   end
 
   def eligible_for_premise_select
-    ([self] + building_blocks_flattened).map { |x| [x.name, x.stuff_id] }
+    ([self] + building_blocks_flattened).uniq.map { |x| [x.name, x.stuff_id] }
   end
 
   def eligible_for_axiom_select
