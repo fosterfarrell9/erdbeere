@@ -6,8 +6,7 @@ then
   echo running: bundle exec rails assets:precompile &> >(tee -a /usr/src/app/log/initialisation.log)
   bundle exec rails assets:precompile &> >(tee -a /usr/src/app/log/initialisation.log)
   echo running: bundle exec rails db:schema:load &> >(tee -a /usr/src/app/log/initialisation.log)
-  bundle exec rails db:schema:load &> >(tee -a /usr/src/app/log/initialisation.log)
-  echo running: bundle exec rails db:seed &> >(tee -a /usr/src/app/log/initialisation.log)
+  bundle exec rails db:schema:migrate &> >(tee -a /usr/src/app/log/initialisation.log)
   bundle exec rails db:seed &> >(tee -a /usr/src/app/log/initialisation.log)
   echo 'finished initialisation' &> >(tee -a /usr/src/app/log/initialisation.log)
   touch completed_initial_run
