@@ -177,6 +177,9 @@ de:
     step: Schritt
     contradiction: Widerspruch
     follows_from: Das folgt aus
+    use_axioms_html: >
+      Wir benutzen die folgenden <strong>Axiome</strong>
+      der Struktur %{structure}
     there_is_no_structure: >
       Es gibt kein(e)(n) %{structure} mit sämtlichen der
       Eigenschaften:

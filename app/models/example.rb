@@ -26,8 +26,11 @@ class Example < ApplicationRecord
 
   def self.find_restricted(structure, satisfies, violates)
     dimacs = "p cnf #{Atom.count} "
-    dimacs.concat("#{Implication.count + satisfies.size + violates.size} \n")
+    dimacs.concat("#{Implication.count + satisfies.size + violates.size + structure.axioms.size} \n")
     dimacs.concat(Implication.to_dimacs)
+    structure.axioms.each do |axiom|
+      dimacs.concat("#{axiom.modifier}#{axiom.atom.id} 0 \n")
+    end
     satisfies.each { |s| dimacs.concat("#{s.id} 0 \n") }
     violates.each { |v| dimacs.concat("#{-v.id} 0 \n") }
     out, err, st = Open3.capture3("echo '#{dimacs}' | picosat -n")
@@ -35,6 +38,7 @@ class Example < ApplicationRecord
       out, trace, st = Open3.capture3("echo '#{dimacs}' | picosat.trace -T /dev/stderr")
       proof = Proof.new('find', trace, nil, structure)
     end
+    pp proof
     proof
   end
 

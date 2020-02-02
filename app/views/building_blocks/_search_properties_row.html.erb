@@ -13,7 +13,7 @@
           </div>
           <div class="card-body">
             <%= f.select :satisfies,
-                     options_for_select(bb.structure.properties
+                     options_for_select(bb.structure.original_properties
                                           .map { |p| [p.name, p.to_atom(bb).id] }),
                      {},
                      { multiple: true,
@@ -31,7 +31,7 @@
           </div>
           <div class="card-body">
             <%= f.select :violates,
-                         options_for_select(bb.structure.properties
+                         options_for_select(bb.structure.original_properties
                                               .map { |p| [p.name, p.to_atom(bb).id] }),
                          {},
                          { multiple: true,

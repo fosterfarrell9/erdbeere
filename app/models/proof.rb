@@ -2,13 +2,13 @@
 # plain old ruby class to store proofs
 class Proof
 	attr_reader :sort, :used_implications, :premises, :assumption, :steps,
-						  :example, :structure
+							:axioms, :example, :structure
 
 	def initialize(sort, text, example_id, structure)
 		@sort = sort
-		parse_proof(text)
 		@example = example_id if @sort == 'example'
 		@structure = structure if @sort == 'find'
+		parse_proof(text)
 	end
 
 	def parse_proof(text)
@@ -32,6 +32,8 @@ class Proof
 								  [:implication, @used_implications[:lines].key(u)]
 								 elsif u.in?(@premises[:lines].values)
 								 	 [:premise, @premises[:lines].key(u)]
+								 elsif @axioms[:lines] && u.in?(@axioms[:lines].values)
+								 	 [:axiom, @axioms[:lines].key(u)]
 								 elsif u == @assumption[:line]
 								 	 [:assumption]
 								 else
@@ -49,54 +51,12 @@ class Proof
 		remove_instance_variable(:@premises_lines)
 		remove_instance_variable(:@assumption_line)
 		remove_instance_variable(:@steps_lines)
+		remove_instance_variable(:@axioms_lines)
 		@used_implications.except!(:lines)
 		@premises.except!(:lines)
 		@assumption.except!(:line)
+		@axioms.except!(:lines)
 		@steps.except!(:lines)
-	end
-
-	def to_s
-		aim = "Wir möchten zeigen: \n #{Example.find(@example).description} ist "
-		aim += 'nicht ' if true.in?(@assumption.values)
-		aim += "#{Atom.find(@assumption.keys.first).property.name}.\n"
-		used = "Wir verwenden: \n"
-		@used_implications.each do |k,v|
-			used += "(I#{k}) #{Implication.find(v).to_s} \n"
-		end
-		know = "Wir wissen:\n"
-		@premises.each do |k,v|
-			know += "(V#{k}) #{Example.find(@example).description} ist "
-			know += 'nicht ' if false.in?(v.values)
-			know += "#{Atom.find(v.keys.first).property.name}.\n"
-		end
-		assumption = "Annahme: \n #{Example.find(@example).description} ist "
-		assumption += 'nicht ' if false.in?(@assumption.values)
-		assumption += "#{Atom.find(@assumption.keys.first).property.name}.\n"
-		proof = "Beweis: \n"
-		@steps.each do |i,s|
-			proof += "Schritt (#{i}): \n"
-			if s[:conclusion] != :contradiction
-				proof += "#{Example.find(@example).description} ist "
-				proof += 'nicht ' if false.in?(s[:conclusion].values)
-				proof += "#{Atom.find(s[:conclusion].keys.first).property.name}.\n"
-			else
-				proof += "Widerspruch.\n"
-			end
-			proof += "Das folgt aus:"
-			s[:used].each do |u|
-				if u.first == :implication
-					proof += "I(#{u.second}), "
-				elsif u.first == :premise
-					proof += "V(#{u.second}), "
-				elsif u.first == :step
-					proof += "Schritt (#{u.second}), "
-				elsif u.first == :assumption
-					proof += "Annahme"
-				end
-			end
-			proof += ".\n"
-		end
-		aim + used + know + assumption + proof
 	end
 
 	def extract_lines!(text)
@@ -122,7 +82,13 @@ class Proof
 		@premises_lines = (@lines - @used_implications_lines).select do |l|
 												l.drop(2) == [0,0]
 											end
-		@assumption_line = @premises_lines.pop unless @sort == 'find'
+		if sort == 'example'
+			@assumption_line = @premises_lines.pop
+			@axioms_lines = nil
+			@axioms = {}
+		else
+			@axioms_lines = @premises_lines.shift(@structure.axioms.size)
+		end
 		@premises = (1..@premises_lines.count)
 									.zip(@premises_lines
 												 .map { |l| [[l.second.abs, l.second.positive?]].to_h })
@@ -136,12 +102,22 @@ class Proof
 		else
 			@assumption = {}
 			@assumption_line = nil
+			@axioms = (1..@axioms_lines.count)
+									.zip(@axioms_lines
+												 .map { |l| [[l.second.abs, l.second.positive?]].to_h })
+									.to_h
+			@axioms[:lines] = (1..@axioms.count)
+													.zip(@axioms_lines.map(&:first)).to_h
 		end
 	end
 
 	def extract_steps!
 		previous_lines = @used_implications_lines + @premises_lines
-		previous_lines += [@assumption_line] if @sort == 'example'
+		previous_lines += if @sort == 'example'
+												[@assumption_line]
+											else
+												@axioms_lines
+											end
 		@steps_lines = @lines - previous_lines
 		@steps = {}
 		@steps[:lines] = {}

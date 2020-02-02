@@ -59,6 +59,19 @@
 			<br>
 		<% end %>
 	<% end %>
+	<% if proof.axioms.any? %>
+		<%= t('proof.use_axioms_html',
+					structure: proof.structure.name) %>:
+		<br>
+		<% proof.axioms.each do |k,v| %>
+			<%= "(A#{k})" %>
+			<%= render partial: 'atoms/inline_atom',
+								 locals: { atom: Atom.find(v.keys.first),
+								 					 modifier: false.in?(v.values) ? t('proof.isnt') : t('proof.is'),
+								 					 edit: edit } %>
+		<% end %>
+		<br>
+	<% end %>
 <% end %>
 <strong>
 	<%= t('proof.proof') %>:
@@ -95,18 +108,21 @@
 	<i>
 		<%= t('proof.follows_from') %>:
 	</i>
-	<% s[:used].each do |u| %>
+	<% s[:used].each_with_index do |u, i| %>
 		<% if u.first == :implication %>
-			<%= "I(#{u.second}), " %>
+			<%= "I(#{u.second})" %>
 		<% elsif u.first == :premise %>
-			<%= "V(#{u.second}), " %>
+			<%= "V(#{u.second})" %>
+		<% elsif u.first == :axiom %>
+			<%= "A(#{u.second})" %>
 		<% elsif u.first == :step %>
 			<span class="badge badge-secondary">
 				<%= u.second %>
-			</span>,
+			</span>
 		<% elsif u.first == :assumption %>
 			<%= t('proof.assumption') %>
 		<% end %>
+		<%= i + 1 == s[:used].size ? '.' : ', ' %>
 	<% end %>
 	<br>
 <% end %>
