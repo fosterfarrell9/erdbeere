@@ -46,8 +46,23 @@ class Structure < ApplicationRecord
 
   def properties
     return original_properties if derives_from.nil?
-    original_properties + derives_from.properties
+    original_properties + inherited_properties
   end
+
+  def inherited_properties
+    derives_from.properties
+  end
+
+  def properties_select(bb)
+    original = descendants.map(&:original_properties).flatten.uniq
+                          .map { |p| [p.name, p.to_atom(bb).id] }
+    return [:ungrouped, original] if derives_from.nil?
+    derived = inherited_properties.map { |p| [p.name, p.to_atom(bb).id] }
+    return [:ungrouped, derived] if original.nil?
+    [:grouped, [[I18n.t('examples.find.direct_properties'), original],
+                [I18n.t('examples.find.inherited_properties'), derived]]]
+  end
+
 
   def properties_as_atoms
     properties.map(&:to_atom)
@@ -122,7 +137,6 @@ class Structure < ApplicationRecord
     valid_examples = valid_candidates.select do |e|
       (axioms.where(value: true).map(&:atom_id) - e.satisfied_atoms_by_sat.map(&:id)).empty? &&
         (axioms.where(value: false).map(&:atom_id) - e.violated_atoms_by_sat.map(&:id)).empty?
-#      (defining_atom_ids - e.satisfied_atoms_by_sat.map(&:id)).empty?
     end
     valid_examples + invalid_candidates
   end
@@ -142,6 +156,17 @@ class Structure < ApplicationRecord
     result = original_building_blocks.to_a
     return result unless derives_from.present?
     result + derives_from.example_building_blocks
+  end
+
+  def example_bb_facts
+    result = []
+    example_building_blocks.each do |bb|
+      bb.structure.original_properties.each do |p|
+        result.push(Atom.find_or_create_by(stuff_w_props: bb,
+                                           satisfies: p))
+      end
+    end
+    result.uniq
   end
 
   def example_building_block_realizations

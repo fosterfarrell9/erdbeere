@@ -69,9 +69,9 @@ class Implication < ApplicationRecord
                                               satisfies: implies.satisfies)
       premises_for_bb = []
       premises.each do |p|
-        atoms_stuff = p.atom.stuff_w_props == structure ? bb : implies.stuff_w_props
+        atoms_stuff = p.atom.stuff_w_props == structure ? bb : p.atom.stuff_w_props
         atom_for_bb = Atom.find_or_create_by(stuff_w_props: atoms_stuff,
-                                              satisfies: p.atom.satisfies)
+                                             satisfies: p.atom.satisfies)
         premise_for_bb = Premise.new(atom: atom_for_bb, value: p.value)
         premises_for_bb.push(premise_for_bb)
       end

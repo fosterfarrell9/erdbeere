@@ -59,6 +59,8 @@ de:
       no_hit: Kein Treffer
       satisfies: Erfüllt
       violates: Verletzt
+      direct_properties: direkte Eigenschaften
+      inherited_properties: Eigenschaften von Elternstrukturen
     list:
       title: Alle Beispiele, die ich kenne
     show:

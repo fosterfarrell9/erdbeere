@@ -43,6 +43,9 @@ class ImplicationsController < ApplicationController
       stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
       stuff_id = stuff.second.to_i
       satisfies_id = v['satisfies'].to_i
+      if stuff_type == 'Structure'
+        stuff_id = Property.find_by_id(satisfies_id).structure.id
+      end
       value = v['value'].to_i.zero? ? false : true
       atom = Atom.find_or_create_by(stuff_w_props_type: stuff_type,
                                     stuff_w_props_id: stuff_id,
@@ -59,6 +62,9 @@ class ImplicationsController < ApplicationController
     stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
     stuff_id = stuff.second.to_i
     satisfies_id = implies['satisfies'].to_i
+    if stuff_type == 'Structure'
+      stuff_id = Property.find_by_id(satisfies_id).structure.id
+    end
     extracted_conclusion = Atom.find_or_create_by(stuff_w_props_type: stuff_type,
                                                   stuff_w_props_id: stuff_id,
                                                   satisfies_type: 'Property',

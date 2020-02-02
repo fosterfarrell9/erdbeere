@@ -3,7 +3,7 @@ require 'open3'
 class Example < ApplicationRecord
   include CacheIt
   has_many :example_facts, dependent: :destroy
-  has_many :building_block_realizations
+  has_many :building_block_realizations, dependent: :destroy
   belongs_to :structure
   has_many :explanations, as: :explainable, dependent: :destroy
   has_many :appearances_as_building_block_realizations,
@@ -104,7 +104,8 @@ class Example < ApplicationRecord
         # stuff_w_props = bbr.realization.structure, not the building block we want!
         sub_facts.map do |st|
           if st.stuff_w_props.is_a?(Structure)
-            Atom.find_or_create_by(stuff_w_props: bbr.building_block, satisfies: st.satisfies)
+            Atom.find_or_create_by(stuff_w_props: bbr.building_block,
+                                   satisfies: st.satisfies)
           else
             st
           end
@@ -147,10 +148,12 @@ class Example < ApplicationRecord
   end
   cache_it :to_dimacs
 
-  def derived_atoms_by_sat(satisfied: true, with_proof: false)
+  def derived_atoms_by_sat(satisfied: true, with_proof: false, deep: false)
     result = []
     proofs = {}
     props = structure.properties_as_atoms - (hardcoded_truths + hardcoded_falsehoods)
+    props += structure.example_bb_facts if deep
+    props.uniq!
     props.each do |prop|
       dimacs = to_dimacs
       assumption = satisfied ? -prop.id : prop.id
@@ -191,6 +194,17 @@ class Example < ApplicationRecord
     derived_atoms_by_sat(satisfied: false, with_proof: true)
   end
   cache_it :violated_atoms_by_sat_with_proof
+
+  def satisfied_deep_atoms
+    derived_atoms_by_sat(satisfied: true, with_proof: false, deep: true)
+  end
+  cache_it :satisfied_deep_atoms
+
+
+  def violated_deep_atoms
+    derived_atoms_by_sat(satisfied: false, with_proof: false, deep: true)
+  end
+  cache_it :violated_deep_atoms
 
   def satisfies?(atom)
     # atom might be a property

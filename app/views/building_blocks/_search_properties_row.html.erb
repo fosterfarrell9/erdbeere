@@ -13,12 +13,11 @@
           </div>
           <div class="card-body">
             <%= f.select :satisfies,
-                     options_for_select(bb.structure.original_properties
-                                          .map { |p| [p.name, p.to_atom(bb).id] }),
-                     {},
-                     { multiple: true,
-                       class: 'custom-select',
-                       size: bb.structure.properties.count } %>
+                         structured_options_for_select(bb.structure.properties_select(bb)),
+                         {},
+                         { multiple: true,
+                           class: 'custom-select',
+                           size: bb.structure.properties.count + 2 } %>
           </div>
         </div>
       </div>
@@ -31,12 +30,11 @@
           </div>
           <div class="card-body">
             <%= f.select :violates,
-                         options_for_select(bb.structure.original_properties
-                                              .map { |p| [p.name, p.to_atom(bb).id] }),
+                         structured_options_for_select(bb.structure.properties_select(bb)),
                          {},
                          { multiple: true,
                            class: 'custom-select',
-                           size: bb.structure.properties.count } %>
+                           size: bb.structure.properties.count + 2 } %>
           </div>
         </div>
       </div>

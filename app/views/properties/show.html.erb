@@ -74,6 +74,7 @@
                                  modifier: t('logic.is'),
                                  proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom],
                                  example: e,
+                                 success: 'truth',
                                  only_example: true } %>
         <% end %>
       <% end %>
@@ -118,6 +119,7 @@
                                  modifier: t('logic.is_not'),
                                  proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom],
                                  example: e,
+                                 success: 'falsehood',
                                  only_example: true } %>
         <% end %>
       <% end %>
