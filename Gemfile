@@ -13,6 +13,7 @@ gem 'globalize-accessors'
 gem 'rails-i18n'
 gem 'sqlite3'
 gem 'bootstrap'
+gem 'pg'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.2.1'
