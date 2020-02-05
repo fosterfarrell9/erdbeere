@@ -43,8 +43,10 @@
                   </h5>
                 </div>
                 <div class="card-body">
+                <!-- flat properties vs properties -->
                 <%= f.select :satisfies,
-                           options_for_select(s.properties.map { |p| [p.name, p.to_atom.id] }),
+                           options_for_select(s.properties_as_atoms
+                                               .map { |a| [a.satisfies.name, a.id] }),
                            {},
                            { class: 'form-control',
                              size: s.properties.count,
@@ -60,8 +62,10 @@
                   </h5>
                 </div>
                 <div class="card-body">
+                  <!-- flat properties vs properties -->
                   <%= f.select :violates,
-                               options_for_select(s.properties.map { |p| [p.name, p.to_atom.id] }),
+                               options_for_select(s.properties_as_atoms
+                                                   .map { |a| [a.satisfies.name, a.id] }),
                                {},
                                { class: 'form-control',
                                  size: s.properties.count,

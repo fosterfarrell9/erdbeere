@@ -37,8 +37,8 @@ class Example < ApplicationRecord
     if out == "s UNSATISFIABLE\n"
       out, trace, st = Open3.capture3("echo '#{dimacs}' | picosat.trace -T /dev/stderr")
       proof = Proof.new('find', trace, nil, structure)
+      pp trace
     end
-    pp proof
     proof
   end
 
@@ -151,7 +151,10 @@ class Example < ApplicationRecord
   def derived_atoms_by_sat(satisfied: true, with_proof: false, deep: false)
     result = []
     proofs = {}
+    ####################
+    # flat properties vs properties
     props = structure.properties_as_atoms - (hardcoded_truths + hardcoded_falsehoods)
+    ####################
     props += structure.example_bb_facts if deep
     props.uniq!
     props.each do |prop|

@@ -54,13 +54,16 @@ class Structure < ApplicationRecord
   end
 
   def properties_select(bb)
-    original = descendants.map(&:original_properties).flatten.uniq
-                          .map { |p| [p.name, p.to_atom(bb).id] }
-    return [:ungrouped, original] if derives_from.nil?
-    derived = inherited_properties.map { |p| [p.name, p.to_atom(bb).id] }
-    return [:ungrouped, derived] if original.nil?
-    [:grouped, [[I18n.t('examples.find.direct_properties'), original],
-                [I18n.t('examples.find.inherited_properties'), derived]]]
+    descendants.map(&:original_properties).flatten.uniq
+               .map { |p| [p.name, p.to_atom(bb).id] }
+    # ONLY original_properties:
+    # properties.map { |p| [p.name, p.to_atom(bb).id] }
+    # GROUPED:
+    # return [:ungrouped, original] if derives_from.nil?
+    # derived = inherited_properties.map { |p| [p.name, p.to_atom(bb).id] }
+    # return [:ungrouped, derived] if original.nil?
+    # [:grouped, [[I18n.t('examples.find.direct_properties'), original],
+    #             [I18n.t('examples.find.inherited_properties'), derived]]]
   end
 
 
@@ -68,6 +71,14 @@ class Structure < ApplicationRecord
     properties.map(&:to_atom)
   end
   cache_it :properties_as_atoms
+
+  def flat_properties_as_atoms
+    result = []
+    properties.each do |p|
+      result.push p.to_atom(self)
+    end
+    result
+  end
 
   def building_blocks
     return original_building_blocks if derives_from.nil?
@@ -135,8 +146,10 @@ class Structure < ApplicationRecord
     valid_candidates = candidates.select { |e| e.valid? }
     invalid_candidates = candidates - valid_candidates
     valid_examples = valid_candidates.select do |e|
-      (axioms.where(value: true).map(&:atom_id) - e.satisfied_atoms_by_sat.map(&:id)).empty? &&
-        (axioms.where(value: false).map(&:atom_id) - e.violated_atoms_by_sat.map(&:id)).empty?
+      (axioms.where(value: true).empty? ||
+        (axioms.where(value: true).map(&:atom_id) - e.satisfied_atoms_by_sat.map(&:id)).empty?) &&
+      (axioms.where(value: false).empty? ||
+        (axioms.where(value: false).map(&:atom_id) - e.violated_atoms_by_sat.map(&:id)).empty?)
     end
     valid_examples + invalid_candidates
   end
@@ -161,7 +174,7 @@ class Structure < ApplicationRecord
   def example_bb_facts
     result = []
     example_building_blocks.each do |bb|
-      bb.structure.original_properties.each do |p|
+      bb.structure.properties.each do |p|
         result.push(Atom.find_or_create_by(stuff_w_props: bb,
                                            satisfies: p))
       end

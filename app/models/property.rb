@@ -15,7 +15,9 @@ class Property < ApplicationRecord
   end
 
   def positive_examples
-  	structure.examples.select { |e| e.satisfies?(to_atom) }
+  	structure.examples.select do |e|
+      e.satisfies?(to_atom)
+    end
   end
 
   def negative_examples

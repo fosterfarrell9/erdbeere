@@ -70,9 +70,9 @@
         </strong>
         <% @positive_derived_examples.select { |e| e.valid? }.each do |e| %>
             <%= render partial: 'atoms/show',
-                       locals: { atom: @property.to_atom,
+                       locals: { atom: @property.to_atom(e.structure),
                                  modifier: t('logic.is'),
-                                 proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom(e.structure)],
                                  example: e,
                                  success: 'truth',
                                  only_example: true } %>
@@ -115,9 +115,9 @@
         </strong>
         <% @negative_derived_examples.select { |e| e.valid? }.each do |e| %>
             <%= render partial: 'atoms/show',
-                       locals: { atom: @property.to_atom,
+                       locals: { atom: @property.to_atom(e.structure),
                                  modifier: t('logic.is_not'),
-                                 proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom(e.structure)],
                                  example: e,
                                  success: 'falsehood',
                                  only_example: true } %>

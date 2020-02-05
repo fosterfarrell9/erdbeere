@@ -87,7 +87,10 @@ class Proof
 			@axioms_lines = nil
 			@axioms = {}
 		else
-			@axioms_lines = @premises_lines.shift(@structure.axioms.size)
+			axiom_values = @structure.axioms.pluck(:atom_id, :value)
+									 			 						  .map { |a| a[0] * (-1)**(a[1] ? 0 : 1)}
+			@axioms_lines = @premises_lines.select { |l| l.second.in?(axiom_values) }
+			@premises_lines -= @axioms_lines
 		end
 		@premises = (1..@premises_lines.count)
 									.zip(@premises_lines

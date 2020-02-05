@@ -3,6 +3,8 @@ class ExamplesController < ApplicationController
                                      :update_example_facts, :destroy]
 
   def show
+    @satisfied_atoms_with_proof = @example.satisfied_atoms_by_sat_with_proof
+    @violated_atoms_with_proof = @example.violated_atoms_by_sat_with_proof
   end
 
   def edit

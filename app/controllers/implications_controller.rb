@@ -43,6 +43,8 @@ class ImplicationsController < ApplicationController
       stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
       stuff_id = stuff.second.to_i
       satisfies_id = v['satisfies'].to_i
+      ####################
+      # flat properties vs properties
       if stuff_type == 'Structure'
         stuff_id = Property.find_by_id(satisfies_id).structure.id
       end
@@ -62,6 +64,8 @@ class ImplicationsController < ApplicationController
     stuff_type = stuff.first == 's' ? 'Structure' : 'BuildingBlock'
     stuff_id = stuff.second.to_i
     satisfies_id = implies['satisfies'].to_i
+    ####################
+    # flat properties vs properties
     if stuff_type == 'Structure'
       stuff_id = Property.find_by_id(satisfies_id).structure.id
     end

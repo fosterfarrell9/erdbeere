@@ -13,7 +13,7 @@
           </div>
           <div class="card-body">
             <%= f.select :satisfies,
-                         structured_options_for_select(bb.structure.properties_select(bb)),
+                         options_for_select(bb.structure.properties_select(bb)),
                          {},
                          { multiple: true,
                            class: 'custom-select',
@@ -30,7 +30,7 @@
           </div>
           <div class="card-body">
             <%= f.select :violates,
-                         structured_options_for_select(bb.structure.properties_select(bb)),
+                         options_for_select(bb.structure.properties_select(bb)),
                          {},
                          { multiple: true,
                            class: 'custom-select',
