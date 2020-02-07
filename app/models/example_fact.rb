@@ -11,6 +11,8 @@ class ExampleFact < ApplicationRecord
   belongs_to :example, touch: true
   belongs_to :property
   has_one :explanation, as: :explainable, dependent: :destroy
+  after_create :touch_example
+  after_destroy :touch_example
 
   validates :example, presence: true
   validates :property, presence: true, uniqueness: { scope: :example }
@@ -38,5 +40,9 @@ class ExampleFact < ApplicationRecord
     structures.each do |s|
       return false if example.in?(s.examples)
     end
+  end
+
+  def touch_example
+    example.touch
   end
 end

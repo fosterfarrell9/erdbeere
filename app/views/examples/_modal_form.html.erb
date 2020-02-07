@@ -25,6 +25,10 @@
   <% end %>
   <%= f.hidden_field :structure_id,
   									 value: example.structure_id %>
+  <%= f.hidden_field :property_id,
+                     value: property&.id %>
+  <%= f.hidden_field :satisfied,
+                     value: satisfied %>
   <div class="row mt-3">
     <div class="col-12 text-center">
       <%= f.submit t('buttons.save'),

@@ -25,7 +25,7 @@ class Example < ApplicationRecord
   accepts_nested_attributes_for :building_block_realizations
 
   def self.find_restricted(structure, satisfies, violates)
-    dimacs = "p cnf #{Atom.count} "
+    dimacs = "p cnf #{Atom.last.id} "
     dimacs.concat("#{Implication.count + satisfies.size + violates.size + structure.axioms.size} \n")
     dimacs.concat(Implication.to_dimacs)
     structure.axioms.each do |axiom|
@@ -139,7 +139,7 @@ class Example < ApplicationRecord
   cache_it :hardcoded_falsehoods
 
   def to_dimacs
-    dimacs = "p cnf #{Atom.count} "
+    dimacs = "p cnf #{Atom.last.id} "
     dimacs.concat("#{Implication.count + hardcoded_truths.size + hardcoded_falsehoods.size + 1} \n")
     dimacs.concat(Implication.to_dimacs)
     hardcoded_truths.each { |a| dimacs.concat("#{a.id} 0 \n") }

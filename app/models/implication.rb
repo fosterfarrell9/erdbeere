@@ -1,3 +1,5 @@
+require 'open3'
+
 class Implication < ApplicationRecord
   # a premise is a collection of atoms connected by a logical AND
   # "has_many :premises" should be "belongs_to_many :premises".
@@ -14,6 +16,7 @@ class Implication < ApplicationRecord
   belongs_to :structure, optional: true
   after_create :check_consistency
   after_create :apply_to_building_blocks
+#  after_create :touch_relevant_examples
   validates :implies, presence: true
   validates :premises, presence: true
   validate :uniqueness
@@ -84,12 +87,20 @@ class Implication < ApplicationRecord
   end
 
   def check_consistency
-    dimacs = "p cnf #{Atom.count} "
+    dimacs = "p cnf #{Atom.last.id} "
     dimacs.concat("#{Implication.count} \n")
     dimacs.concat(Implication.to_dimacs)
     out, err, st = Open3.capture3("echo '#{dimacs}' | picosat -n")
     if out == "s UNSATISFIABLE\n"
       throw :abort
     end
+  end
+
+  def touch_relevant_examples
+    Structure.where(id: structure.related_structures.map(&:id))
+             .update_all(updated_at: Time.now)
+    Example.where(id: structure.related_structures.map(&:original_example_ids)
+                               .flatten)
+           .update_all(updated_at: Time.now)
   end
 end

@@ -10,6 +10,9 @@ class ImplicationsController < ApplicationController
     @implication = Implication.new(structure_id: implication_params[:structure_id])
     extract_premises!
     extract_conclusion!
+    pp @implication
+    pp @implication.premises
+    pp @implication.implies
     begin
       @implication.save
       if @implication.valid?

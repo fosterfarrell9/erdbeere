@@ -139,6 +139,10 @@ de:
     add_example_facts:
       add_positive_examples: 'Beispiele (für Eigenschaft erfüllt) hinterlegen'
       add_negative_examples: 'Beispiele (für Eigenschaft verletzt) hinterlegen'
+      complex_example_html: >
+        Das Anlegen eines (komplett neuen) Beispiels für die Struktur %{structure}
+        erfordert die Angabe von Baustein. Dies geschieht in einem %{form}.
+      structures_page: eigenen Formular
   implication:
     create:
       title: 'Implikation anlegen'
@@ -221,6 +225,10 @@ de:
     unsaved_changes: 'Ungespeicherte Änderungen'
   confirmation:
     generic: 'Bist du sicher?'
+    example_fact: >
+      Bist du sicher? Beachte, dass hierbei nur gelöscht wird, dass das
+      betreffende Beispiel die hier bearbeitete Eigenschaft hat/nicht hat.
+      Das Beispiel existiert weiterhin (als Beispiel für die gegebene Struktur).
   activerecord:
     errors:
       models:

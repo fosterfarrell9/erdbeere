@@ -21,12 +21,23 @@
       </strong>
     </div>
   </div>
-  <div class="form-group">
-    <%= f.label :new_example,
-                t('example.edit.description') %>
-    <%= f.text_field :new_example,
-                     class: 'form-control' %>
-  </div>
+  <% if property.structure.building_blocks.any? %>
+    <%= t('property.add_example_facts.complex_example_html',
+          structure: property.structure.name,
+          form: link_to(t('property.add_example_facts.structures_page'),
+                        new_example_path(params:
+                                           { structure_id: property.structure.id,
+                                             property_id: property.id,
+                                             satisfied: satisfied }),
+                        remote: true)) %>
+  <% else %>
+    <div class="form-group">
+      <%= f.label :new_example,
+                  t('example.edit.description') %>
+      <%= f.text_field :new_example,
+                       class: 'form-control' %>
+    </div>
+  <% end %>
   <%= f.hidden_field :satisfied,
                      value: satisfied %>
   <div class="row mt-4">

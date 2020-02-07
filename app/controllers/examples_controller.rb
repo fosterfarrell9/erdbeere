@@ -9,21 +9,39 @@ class ExamplesController < ApplicationController
 
   def edit
     @bbr_hash = @example.structure.example_building_block_realizations
+    pp @example.structure.properties_as_atoms.map(&:to_s)
+    pp '---------------------'
+    pp Atom.last.to_s
+    pp '*********************'
+    pp @example.structure.properties.map(&:name)
+    pp @example.structure.cache_key
   end
 
   def new
     @example = Example.new(structure_id: params[:structure_id].to_i)
     @bbr_hash = @example.structure.example_building_block_realizations
+    @property = Property.find_by_id(params[:property_id])
+    @satisfied = params[:satisfied]
   end
 
   def create
     @example = Example.new(structure_id: example_params[:structure_id],
                            description: example_params[:description])
+    @property = Property.find_by_id(example_params[:property_id])
+    @satisfied = example_params[:satisfied] == 'true'
     extract_building_block_realizations!
     @example.save
     if @example.valid?
-      redirect_to edit_structure_path(@example.structure)
-      return
+      if @property.present?
+        ExampleFact.create(example: @example,
+                           property: @property,
+                           satisfied: @satisfied)
+        redirect_to edit_property_path(@property)
+        return
+      else
+        redirect_to edit_structure_path(@example.structure)
+        return
+      end
     end
     @errors = @example.errors
     pp @errors
@@ -101,7 +119,8 @@ class ExamplesController < ApplicationController
   private
 
   def example_params
-    params.require(:example).permit(:description, :structure_id,
+    params.require(:example).permit(:description, :structure_id, :property_id,
+                                    :satisfied,
                                     building_block_realizations: {})
   end
 
