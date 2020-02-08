@@ -60,12 +60,14 @@ class PropertiesController < ApplicationController
                              satisfied: example_facts_params[:satisfied])
       end
     end
+    CachePopulator.perform_async
     redirect_to edit_property_path(@property)
   end
 
   def destroy
     @property.destroy
     redirect_to edit_structure_path(@property.structure)
+    CachePopulator.perform_async
   end
 
   private

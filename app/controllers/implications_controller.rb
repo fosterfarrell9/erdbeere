@@ -16,6 +16,7 @@ class ImplicationsController < ApplicationController
     begin
       @implication.save
       if @implication.valid?
+        CachePopulator.perform_async
         redirect_to edit_structure_path(params[:implication][:structure_id])
         return
       end
@@ -28,6 +29,7 @@ class ImplicationsController < ApplicationController
 
   def destroy
     @implication.destroy
+    CachePopulator.perform_async
     redirect_to edit_structure_path(params[:structure_id])
   end
 

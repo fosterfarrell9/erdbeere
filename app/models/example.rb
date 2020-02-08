@@ -151,6 +151,7 @@ class Example < ApplicationRecord
   def derived_atoms_by_sat(satisfied: true, with_proof: false, deep: false)
     result = []
     proofs = {}
+    pp '------------------------'
     ####################
     # flat properties vs properties
     props = structure.properties_as_atoms - (hardcoded_truths + hardcoded_falsehoods)

@@ -29,7 +29,8 @@ class Atom < ApplicationRecord
             uniqueness: { scope: [:stuff_w_props, :satisfies_type] }
   validates_with AtomValidator
 
-  after_commit :touch_potentially_relevant_examples
+  after_create :touch_potentially_relevant_examples
+  after_destroy :touch_potentially_relevant_examples
   after_create :create_trivial_implications
   before_destroy :destroy_dependent_stuff
 

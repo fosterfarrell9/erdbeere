@@ -16,7 +16,8 @@ class Implication < ApplicationRecord
   belongs_to :structure, optional: true
   after_create :check_consistency
   after_create :apply_to_building_blocks
-#  after_create :touch_relevant_examples
+  after_create :touch_examples
+  after_destroy :touch_examples
   validates :implies, presence: true
   validates :premises, presence: true
   validate :uniqueness
@@ -96,11 +97,8 @@ class Implication < ApplicationRecord
     end
   end
 
-  def touch_relevant_examples
-    Structure.where(id: structure.related_structures.map(&:id))
-             .update_all(updated_at: Time.now)
-    Example.where(id: structure.related_structures.map(&:original_example_ids)
-                               .flatten)
-           .update_all(updated_at: Time.now)
+  def touch_examples
+    Structure.update_all(updated_at: Time.now)
+    Example.update_all(updated_at: Time.now)
   end
 end

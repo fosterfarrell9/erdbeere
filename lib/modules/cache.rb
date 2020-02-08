@@ -7,7 +7,7 @@ module CacheIt
       old_method = instance_method(method)
       define_method(method) do
         # this is a hotfix to cache a result without interference from globalize
-        ck = cache_key.split('/')[0..1].join('/')
+        ck = cache_key.split('/')[0..1].join('/') + "-#{cache_version}"
         Rails.cache.fetch("#{ck}/#{method}") do
           old_method.bind(self).()
         end

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+
+  mount Sidekiq::Web => '/sidekiq'
+
   root to: redirect('/de')
   scope '/:locale', locale: /#{I18n.available_locales.join('|')}/ do
     post '/examples/find'

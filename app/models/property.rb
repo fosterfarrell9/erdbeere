@@ -1,7 +1,9 @@
 class Property < ApplicationRecord
   belongs_to :structure
-  has_many :atoms, as: :satisfies, dependent: :destroy
+  has_many :atoms, as: :satisfies
   before_destroy :destroy_example_facts
+  before_destroy :destroy_atoms
+  after_destroy :touch_examples_and_structures
 
   validates :structure, presence: true
 
@@ -64,5 +66,14 @@ class Property < ApplicationRecord
 
   def destroy_example_facts
     example_facts.delete_all
+  end
+
+  def destroy_atoms
+    atoms.destroy_all
+  end
+
+  def touch_examples_and_structures
+    Structure.update_all(updated_at: Time.now)
+    Example.update_all(updated_at: Time.now)
   end
 end
