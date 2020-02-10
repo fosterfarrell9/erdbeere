@@ -44,5 +44,6 @@ class ExampleFact < ApplicationRecord
 
   def touch_example
     example.touch
+    property.touch
   end
 end
