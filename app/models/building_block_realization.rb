@@ -1,3 +1,4 @@
+# BuildingBlockRealization class
 class BuildingBlockRealization < ApplicationRecord
   belongs_to :example, touch: true
   belongs_to :building_block
@@ -12,23 +13,27 @@ class BuildingBlockRealization < ApplicationRecord
   validate :realization_match
 
   def compatibility
-    if realization&.structure.in?(building_block.structure.related_structures)
+    if realization&.structure&.in?(building_block.structure.related_structures)
       return true
     end
+
     errors.add(:realization, :incompatible_structure)
   end
 
   def valid_realization
     return true if realization&.valid?
+
     errors.add(:realization, :invalid)
   end
 
   def realization_match
     return unless realization
+
     if (building_block.structure.defining_atoms -
-          realization.satisfied_atoms_by_sat).empty?
+          realization.satisfied_atoms).empty?
       return true
     end
+
     errors.add(:realization, :axioms_violated)
   end
 end

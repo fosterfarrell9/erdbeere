@@ -154,7 +154,7 @@
             <%= render partial: 'atoms/show',
                        locals: { atom: @property.to_atom,
                                  modifier: t('logic.is'),
-                                 proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 proof: e.satisfied_atoms_with_proof[@property.to_atom],
                                  example: e,
                                  only_example: true,
                                  edit: true } %>
@@ -231,7 +231,7 @@
             <%= render partial: 'atoms/show',
                        locals: { atom: @property.to_atom,
                                  modifier: t('logic.is_not'),
-                                 proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 proof: e.violated_atoms_with_proof[@property.to_atom],
                                  example: e,
                                  only_example: true,
                                  edit: true } %>

@@ -1,3 +1,5 @@
+require 'open3'
+
 # Proof class
 # plain old ruby class to store proofs
 class Proof
@@ -9,6 +11,13 @@ class Proof
 		@example = example_id if @sort == 'example'
 		@structure = structure if @sort == 'find'
 		parse_proof(text)
+	end
+
+	def self.from_dimacs(sort, dimacs, example_id, structure)
+		out, trace, _st = Open3.capture3("echo '#{dimacs}' | "\
+                                      'picosat.trace -T /dev/stderr')
+		return unless out == "s UNSATISFIABLE\n"
+		Proof.new(sort, trace, example_id, structure)
 	end
 
 	def parse_proof(text)
@@ -84,7 +93,7 @@ class Proof
 											end
 		if sort == 'example'
 			@assumption_line = @premises_lines.pop
-			@axioms_lines = nil
+			@axioms_lines = []
 			@axioms = {}
 		else
 			axiom_values = @structure.axioms.pluck(:atom_id, :value)

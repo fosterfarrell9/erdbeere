@@ -17,6 +17,7 @@ class ExampleFactsController < ApplicationController
 
   def destroy
     @example_fact.destroy
+    CachePopulator.perform_async
     if params[:from] == 'Property'
       redirect_to edit_property_path(@example_fact.property)
       return

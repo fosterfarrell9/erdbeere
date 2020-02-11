@@ -1,20 +1,15 @@
 class ExamplesController < ApplicationController
   before_action :set_example, only: [:show, :edit, :update, :add_example_facts,
                                      :update_example_facts, :destroy]
-
   def show
-    @satisfied_atoms_with_proof = @example.satisfied_atoms_by_sat_with_proof
-    @violated_atoms_with_proof = @example.violated_atoms_by_sat_with_proof
+    @satisfied_atoms = @example.satisfied_atoms
+    @satisfied_atoms_with_proof = @example.satisfied_atoms_with_proof
+    @violated_atoms = @example.violated_atoms
+    @violated_atoms_with_proof = @example.violated_atoms_with_proof
   end
 
   def edit
     @bbr_hash = @example.structure.example_building_block_realizations
-    pp @example.structure.properties_as_atoms.map(&:to_s)
-    pp '---------------------'
-    pp Atom.last.to_s
-    pp '*********************'
-    pp @example.structure.properties.map(&:name)
-    pp @example.structure.cache_key
   end
 
   def new
@@ -36,6 +31,7 @@ class ExamplesController < ApplicationController
         ExampleFact.create(example: @example,
                            property: @property,
                            satisfied: @satisfied)
+        CachePopulator.perform_async
         redirect_to edit_property_path(@property)
         return
       else
@@ -44,7 +40,6 @@ class ExamplesController < ApplicationController
       end
     end
     @errors = @example.errors
-    pp @errors
     render :update
   end
 
@@ -52,11 +47,11 @@ class ExamplesController < ApplicationController
     update_building_block_realizations!
     @example.update(description: example_params[:description])
     if @example.valid?
+      CachePopulator.perform_async
       redirect_to edit_example_path(@example)
       return
     end
     @errors = @example.errors
-    pp @errors
   end
 
   def add_example_facts
@@ -64,9 +59,9 @@ class ExamplesController < ApplicationController
     @available_properties = @example.structure.original_properties
     @available_properties -= @example.example_facts.map(&:property)
     @available_properties -= if @satisfied
-                               @example.violated_atoms_by_sat.map(&:property)
+                               @example.violated_atoms.map(&:property)
                              else
-                               @example.satisfied_atoms_by_sat.map(&:property)
+                               @example.satisfied_atoms.map(&:property)
                              end
   end
 
@@ -88,6 +83,7 @@ class ExamplesController < ApplicationController
                              satisfied: example_facts_params[:satisfied])
       end
     end
+    CachePopulator.perform_async
     redirect_to edit_example_path(@example)
   end
 
@@ -102,7 +98,7 @@ class ExamplesController < ApplicationController
       return
     end
 
-    @proof = Example.find_restricted(@structure, @satisfies, @violates)
+    @proof = Example.find_contradiction(@structure, @satisfies, @violates)
     return if @proof
 
     @hits = Example.where(structure_id: @structure.id).to_a.find_all do |e|

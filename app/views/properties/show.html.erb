@@ -1,3 +1,4 @@
+<% cache @property do %>
 <div class="row p-2">
 	<div class="col-4">
 		<div class="card propertiesCard">
@@ -72,7 +73,7 @@
             <%= render partial: 'atoms/show',
                        locals: { atom: @property.to_atom,
                                  modifier: t('logic.is'),
-                                 proof: e.satisfied_atoms_by_sat_with_proof.second[@property.to_atom],
+                                 proof: e.satisfied_atoms_with_proof[@property.to_atom],
                                  example: e,
                                  success: 'truth',
                                  only_example: true } %>
@@ -117,7 +118,7 @@
             <%= render partial: 'atoms/show',
                        locals: { atom: @property.to_atom(e.structure),
                                  modifier: t('logic.is_not'),
-                                 proof: e.violated_atoms_by_sat_with_proof.second[@property.to_atom(e.structure)],
+                                 proof: e.violated_atoms_with_proof[@property.to_atom(e.structure)],
                                  example: e,
                                  success: 'falsehood',
                                  only_example: true } %>
@@ -127,3 +128,4 @@
   </div>
 	</div>
 </div>
+<% end %>

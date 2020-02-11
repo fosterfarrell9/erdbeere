@@ -1,10 +1,12 @@
+# Structure class
 class Structure < ApplicationRecord
   include CacheIt
   has_many :original_properties, class_name: 'Property', dependent: :destroy
   has_many :original_examples, class_name: 'Example'
 
-  has_many :original_building_blocks, foreign_key: 'explained_structure_id',
-             inverse_of: :explained_structure, class_name: 'BuildingBlock'
+  has_many :original_building_blocks,
+           foreign_key: 'explained_structure_id',
+           inverse_of: :explained_structure, class_name: 'BuildingBlock'
 
   has_many :atoms, as: :stuff_w_props, dependent: :destroy
   belongs_to :derives_from,
@@ -12,11 +14,15 @@ class Structure < ApplicationRecord
              foreign_key: 'derives_from_id',
              optional: true
 
-  has_many :children, class_name: 'Structure', foreign_key: 'derives_from_id',
+  has_many :children,
+           class_name: 'Structure',
+           foreign_key: 'derives_from_id',
            inverse_of: :derives_from
 
   has_many :axioms, dependent: :destroy
-  has_many :defining_atoms, through: :axioms, source: :atom,
+  has_many :defining_atoms,
+           through: :axioms,
+           source: :atom,
            dependent: :destroy
 
   has_many :implications, dependent: :destroy
@@ -46,6 +52,7 @@ class Structure < ApplicationRecord
 
   def properties
     return original_properties if derives_from.nil?
+
     original_properties + inherited_properties
   end
 
@@ -68,7 +75,7 @@ class Structure < ApplicationRecord
 
 
   def properties_as_atoms
-    properties.map(&:to_atom)
+    properties.map(&:to_atom).uniq
   end
   cache_it :properties_as_atoms
 
@@ -82,6 +89,7 @@ class Structure < ApplicationRecord
 
   def building_blocks
     return original_building_blocks if derives_from.nil?
+
     original_building_blocks + derives_from.building_blocks
   end
 
@@ -147,9 +155,9 @@ class Structure < ApplicationRecord
     invalid_candidates = candidates - valid_candidates
     valid_examples = valid_candidates.select do |e|
       (axioms.where(value: true).empty? ||
-        (axioms.where(value: true).map(&:atom_id) - e.satisfied_atoms_by_sat.map(&:id)).empty?) &&
+        (axioms.where(value: true).map(&:atom_id) - e.satisfied_atoms.map(&:id)).empty?) &&
       (axioms.where(value: false).empty? ||
-        (axioms.where(value: false).map(&:atom_id) - e.violated_atoms_by_sat.map(&:id)).empty?)
+        (axioms.where(value: false).map(&:atom_id) - e.violated_atoms.map(&:id)).empty?)
     end
     valid_examples + invalid_candidates
   end

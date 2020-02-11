@@ -177,11 +177,11 @@
             <% end %>
           </div>
           <% end %>
-          <% unless (@example.satisfied_atoms_by_sat_with_proof.first - @example.hardcoded_truths).empty? %>
+          <% unless (@example.satisfied_atoms - @example.hardcoded_truths).empty? %>
               <strong>
               <%= I18n.t("example.show.derived") %>:
               </strong>
-            <% @example.satisfied_atoms_by_sat_with_proof.second.each_pair do |atom, proof| %>
+            <% @example.satisfied_atoms_with_proof.each_pair do |atom, proof| %>
               <% unless @example.hardcoded_truths.include?(atom) || atom.stuff_w_props.is_a?(BuildingBlock) %>
                   <%= render partial: 'atoms/show',
                              locals: { atom: atom,
@@ -251,11 +251,11 @@
             <% end %>
           </div>
           <% end %>
-          <% unless (@example.violated_atoms_by_sat_with_proof.first - @example.hardcoded_falsehoods).empty? %>
+          <% unless (@example.violated_atoms - @example.hardcoded_falsehoods).empty? %>
             <strong>
               <%= t("example.show.derived") %>:
             </strong>
-            <%  @example.violated_atoms_by_sat_with_proof.second.each_pair do |atom, proof| %>
+            <%  @example.violated_atoms_with_proof.each_pair do |atom, proof| %>
               <% unless @example.hardcoded_falsehoods.include?(atom) %>
                 <%= render partial: 'atoms/show',
                            locals: { atom: atom,

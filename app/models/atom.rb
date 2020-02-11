@@ -1,19 +1,5 @@
-# coding: utf-8
-
-class AtomValidator < ActiveModel::Validator
-  def validate(a)
-    if a.satisfies.is_a?(Property)
-      return if a.satisfies.structure.related_structures.include?(a.stuff_w_props.structure)
-      a.errors[:base] << 'Type mismatch between satisfies.structure and stuff_w_props.structure'
-    elsif a.satisfies.is_a?(Atom)
-      return if a.stuff_w_props.structure.building_blocks.map(&:structure).map(&:related_structures).flatten.include?(a.satisfies.structure)
-      a.errors[:base] << 'There is no building block that matches satisfies.structure'
-    else
-      a.errors[:base] << 'Something srsly fucked up happened'
-    end
-  end
-end
-
+# Atom class
+# idea: *stuff_w_props* satisfies *satisfies*
 class Atom < ApplicationRecord
   has_many :premises
   has_many :implications, through: :premises
@@ -47,6 +33,11 @@ class Atom < ApplicationRecord
     "#{deep_stuff_w_props_name} *IS* #{property.name}"
   end
 
+  def to_cnf(value: true)
+    return "#{id} 0 \n" if value
+    "-#{id} 0 \n"
+  end
+
   def to_atom
     self
   end
@@ -65,11 +56,13 @@ class Atom < ApplicationRecord
 
   def property
     return satisfies.property unless satisfies.is_a?(Property)
+
     satisfies
   end
 
   def deep_stuff_w_props_name
     return stuff_w_props.name if satisfies.is_a?(Property)
+
     stuff_w_props.name + '.' + satisfies.stuff_w_props.name
   end
 

@@ -1,3 +1,4 @@
+<% cache @example do %>
 <h4>
   <%= I18n.t('example.show.title',
              example: @example.description) %>
@@ -71,11 +72,11 @@
             <% end %>
           </div>
           <% end %>
-          <% unless (@satisfied_atoms_with_proof.first - @example.hardcoded_truths).empty? %>
+          <% unless (@satisfied_atoms - @example.hardcoded_truths).empty? %>
               <strong>
               <%= I18n.t("example.show.derived") %>:
               </strong>
-            <% @satisfied_atoms_with_proof.second.each_pair do |atom, proof| %>
+            <% @satisfied_atoms_with_proof.each_pair do |atom, proof| %>
               <% if !@example.hardcoded_truths.include?(atom) &&
                     !atom.stuff_w_props.is_a?(BuildingBlock) %>
                   <%= render partial: 'atoms/show',
@@ -115,11 +116,11 @@
             <% end %>
           </div>
           <% end %>
-          <% unless (@violated_atoms_with_proof.first - @example.hardcoded_falsehoods).empty? %>
+          <% unless (@violated_atoms - @example.hardcoded_falsehoods).empty? %>
             <strong>
               <%= t("example.show.derived") %>:
             </strong>
-            <% @violated_atoms_with_proof.second.each_pair do |atom, proof| %>
+            <% @violated_atoms_with_proof.each_pair do |atom, proof| %>
               <% if !@example.hardcoded_falsehoods.include?(atom) &&
                     !atom.stuff_w_props.is_a?(BuildingBlock) %>
                 <%= render partial: 'atoms/show',
@@ -135,4 +136,5 @@
       </div>
     </div>
   </div>
+<% end %>
 <% end %>
