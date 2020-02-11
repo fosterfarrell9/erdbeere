@@ -7,10 +7,11 @@ then
   bundle exec rails assets:precompile &> >(tee -a /usr/src/app/log/initialisation.log)
   echo running: bundle exec rails db:migrate &> >(tee -a /usr/src/app/log/initialisation.log)
   bundle exec rails db:migrate &> >(tee -a /usr/src/app/log/initialisation.log)
-  bundle exec sidekiq
   echo 'finished initialisation' &> >(tee -a /usr/src/app/log/initialisation.log)
   touch completed_initial_run
 fi
+echo "starting sidekiq"
+exec bundle exec sidekiq &
 rm -f tmp/pids/server.pid
-echo "running mampf"
+echo "running erdbeere"
 exec bundle exec rails s -p 3000 -b '0.0.0.0' &> >(tee -a /usr/src/app/log/runtime.log)
