@@ -1,3 +1,4 @@
+# Examples controller
 class ExamplesController < ApplicationController
   before_action :set_example, only: [:show, :edit, :update, :add_example_facts,
                                      :update_example_facts, :destroy]
@@ -20,10 +21,7 @@ class ExamplesController < ApplicationController
   end
 
   def create
-    @example = Example.new(structure_id: example_params[:structure_id],
-                           description: example_params[:description])
-    @property = Property.find_by_id(example_params[:property_id])
-    @satisfied = example_params[:satisfied] == 'true'
+    extract_example_and_property!
     extract_building_block_realizations!
     @example.save
     if @example.valid?
@@ -33,11 +31,10 @@ class ExamplesController < ApplicationController
                            satisfied: @satisfied)
         CachePopulator.perform_async
         redirect_to edit_property_path(@property)
-        return
       else
         redirect_to edit_structure_path(@example.structure)
-        return
       end
+      return
     end
     @errors = @example.errors
     render :update
@@ -66,21 +63,15 @@ class ExamplesController < ApplicationController
   end
 
   def update_example_facts
-    example_facts_params[:properties].each do |k,v|
-      next unless v.to_i == 1
-      fact = ExampleFact.new(example_id: @example.id,
-                             property_id: k.to_i,
-                             satisfied: example_facts_params[:satisfied])
-      fact.save
-    end
+    create_new_example_facts!
     if example_facts_params[:new_property].present?
       new_property = Property.new(name: example_facts_params[:new_property],
                                   structure_id: @example.structure.id)
       new_property.save
       if new_property.valid?
-          ExampleFact.create(example_id: @example.id,
-                             property_id: new_property.id,
-                             satisfied: example_facts_params[:satisfied])
+        ExampleFact.create(example_id: @example.id,
+                           property_id: new_property.id,
+                           satisfied: example_facts_params[:satisfied])
       end
     end
     CachePopulator.perform_async
@@ -92,19 +83,10 @@ class ExamplesController < ApplicationController
     @satisfies = Atom.where(id: find_params[:satisfies]).to_a.compact
     @violates = Atom.where(id: find_params[:violates]).to_a.compact
 
-    if (@satisfies + @violates).empty?
-      flash[:alert] = I18n.t('examples.find.flash.no_search_params')
-      redirect_to main_search_path
-      return
-    end
-
     @proof = Example.find_contradiction(@structure, @satisfies, @violates)
     return if @proof
 
-    @hits = Example.where(structure_id: @structure.id).to_a.find_all do |e|
-      e.valid? && (@satisfies - e.satisfied_deep_atoms).empty? &&
-        (@violates - e.violated_deep_atoms).empty?
-    end
+    @hits = Example.find_match(@structure, @satisfies, @violates)
   end
 
   def destroy
@@ -133,18 +115,28 @@ class ExamplesController < ApplicationController
 
   def extract_building_block_realizations!
     return unless example_params[:building_block_realizations]
-    example_params[:building_block_realizations].each do |k,v|
+
+    example_params[:building_block_realizations].each do |k, v|
       @example.building_block_realizations.build(building_block_id: k.to_i,
                                                  realization_id: v.to_i)
     end
   end
 
+  def extract_example_and_property!
+    @example = Example.new(structure_id: example_params[:structure_id],
+                           description: example_params[:description])
+    @property = Property.find_by_id(example_params[:property_id])
+    @satisfied = example_params[:satisfied] == 'true'
+  end
+
   def update_building_block_realizations!
     return unless example_params[:building_block_realizations]
+
     bbrs = @example.building_block_realizations.to_a
-    example_params[:building_block_realizations].each do |k,v|
+    example_params[:building_block_realizations].each do |k, v|
       bbr = bbrs.find { |x| x.id == k.to_i }
       next unless bbr && bbr.realization_id != v.to_i
+
       bbr.realization_id = v
     end
     @example.update(building_block_realizations: bbrs)
@@ -153,6 +145,18 @@ class ExamplesController < ApplicationController
   def set_example
     @example = Example.find_by_id(params[:id])
     return if @example.present?
+
     redirect_to :root, alert: I18n.t('controllers.no_example')
+  end
+
+  def create_new_example_facts!
+    example_facts_params[:properties].each do |k, v|
+      next unless v.to_i == 1
+
+      fact = ExampleFact.new(example_id: @example.id,
+                             property_id: k.to_i,
+                             satisfied: example_facts_params[:satisfied])
+      fact.save
+    end
   end
 end

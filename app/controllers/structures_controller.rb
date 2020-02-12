@@ -1,3 +1,4 @@
+# Structures controller
 class StructuresController < ApplicationController
   before_action :set_structure, except: [:index, :create, :new]
 
@@ -45,6 +46,7 @@ class StructuresController < ApplicationController
   def set_structure
     @structure = Structure.find_by_id(params[:id])
     return if @structure.present?
+
     redirect_to :root, alert: I18n.t('controllers.no_structure')
   end
 

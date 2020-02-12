@@ -1,3 +1,4 @@
+# ExampleFactsController
 class ExampleFactsController < ApplicationController
   before_action :set_example_fact
 
@@ -30,6 +31,7 @@ class ExampleFactsController < ApplicationController
   def set_example_fact
     @example_fact = ExampleFact.find_by_id(params[:id])
     return if @example_fact.present?
+
     redirect_to :root, alert: I18n.t('controllers.no_example_fact')
   end
 

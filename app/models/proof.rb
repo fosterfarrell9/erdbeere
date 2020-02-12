@@ -22,35 +22,9 @@ class Proof
   end
 
   def parse_proof(text)
-    extract_lines!(text)
-    extract_implications!
-    extract_premises_and_assumption!
-    extract_steps!
+    extract_stuff!(text)
     @steps_lines.each_with_index do |l, i|
-      j = i + 1
-      @steps[j] = {}
-      @steps[:lines][j] = l.first
-      separator = l.index(0)
-      conclusion = l.first(separator).drop(1).map { |x| [x.abs, x.positive?] }
-                    .to_h
-      conclusion = :contradiction if conclusion.empty?
-      @steps[j][:conclusion] = conclusion
-      used_lines = l[(separator + 1)..(l.length - 2)]
-      @steps[j][:used] = []
-      used_lines.each do |u|
-        result = if u.in?(@used_implications[:lines].values)
-                   [:implication, @used_implications[:lines].key(u)]
-                 elsif u.in?(@premises[:lines].values)
-                   [:premise, @premises[:lines].key(u)]
-                 elsif @axioms[:lines] && u.in?(@axioms[:lines].values)
-                   [:axiom, @axioms[:lines].key(u)]
-                 elsif u == @assumption[:line]
-                   [:assumption]
-                 else
-                   [:step, @steps[:lines].key(u)]
-                 end
-        steps[j][:used].push(result)
-      end
+      parse_step(l,i)
     end
     clean_up!
   end
@@ -92,6 +66,69 @@ class Proof
     @premises_lines = (@lines - @used_implications_lines).select do |l|
       l.drop(2) == [0, 0]
     end
+    extract_axioms!
+    @premises = (1..@premises_lines.count)
+                .zip(@premises_lines
+                       .map { |l| [[l.second.abs, l.second.positive?]].to_h })
+                .to_h
+    @premises[:lines] = (1..@premises.count)
+                        .zip(@premises_lines.map(&:first)).to_h
+    extract_assumption!
+  end
+
+  def extract_steps!
+    previous_lines = @used_implications_lines + @premises_lines
+    previous_lines += if @sort == 'example'
+                        [@assumption_line]
+                      else
+                        @axioms_lines
+                      end
+    @steps_lines = @lines - previous_lines
+    @steps = {}
+    @steps[:lines] = {}
+  end
+
+  def extract_stuff!(text)
+    extract_lines!(text)
+    extract_implications!
+    extract_premises_and_assumption!
+    extract_steps!
+  end
+
+  def parse_step(line, ind)
+    used_lines(line, ind + 1).each do |u|
+      @steps[ind + 1][:used].push(interpretation(u))
+    end
+  end
+
+  def used_lines(line, ind)
+    @steps[ind] = {}
+    @steps[:lines][ind] = line.first
+    separator = line.index(0)
+    conclusion = line.first(separator).drop(1).map { |x| [x.abs, x.positive?] }
+                     .to_h
+    conclusion = :contradiction if conclusion.empty?
+    @steps[ind][:conclusion] = conclusion
+    used_lines = line[(separator + 1)..(line.length - 2)]
+    @steps[ind][:used] = []
+    used_lines
+  end
+
+  def interpretation(line)
+    if line.in?(@used_implications[:lines].values)
+      [:implication, @used_implications[:lines].key(line)]
+    elsif line.in?(@premises[:lines].values)
+      [:premise, @premises[:lines].key(line)]
+    elsif @axioms[:lines] && line.in?(@axioms[:lines].values)
+      [:axiom, @axioms[:lines].key(line)]
+    elsif line == @assumption[:line]
+      [:assumption]
+    else
+      [:step, @steps[:lines].key(line)]
+    end
+  end
+
+  def extract_axioms!
     if sort == 'example'
       @assumption_line = @premises_lines.pop
       @axioms_lines = []
@@ -102,12 +139,9 @@ class Proof
       @axioms_lines = @premises_lines.select { |l| l.second.in?(axiom_values) }
       @premises_lines -= @axioms_lines
     end
-    @premises = (1..@premises_lines.count)
-                .zip(@premises_lines
-                       .map { |l| [[l.second.abs, l.second.positive?]].to_h })
-                .to_h
-    @premises[:lines] = (1..@premises.count)
-                        .zip(@premises_lines.map(&:first)).to_h
+  end
+
+  def extract_assumption!
     if @sort == 'example' && @assumption_line
       @assumption = [[@assumption_line.second.abs,
                       @assumption_line.second.positive?]].to_h
@@ -122,17 +156,5 @@ class Proof
       @axioms[:lines] = (1..@axioms.count)
                         .zip(@axioms_lines.map(&:first)).to_h
     end
-  end
-
-  def extract_steps!
-    previous_lines = @used_implications_lines + @premises_lines
-    previous_lines += if @sort == 'example'
-                        [@assumption_line]
-                      else
-                        @axioms_lines
-                      end
-    @steps_lines = @lines - previous_lines
-    @steps = {}
-    @steps[:lines] = {}
   end
 end

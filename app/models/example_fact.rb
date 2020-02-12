@@ -9,7 +9,6 @@ class ExampleFact < ApplicationRecord
   validates :example, presence: true
   validates :property, presence: true, uniqueness: { scope: :example }
   validates :satisfied, inclusion: { in: [true, false] }
-  validates_with EqualityTest, a: 'example.structure', b: 'property.structure'
   validates_with NoImmediateContradiction
 
   def violated?

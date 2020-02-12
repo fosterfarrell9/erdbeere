@@ -1,3 +1,4 @@
+# CachePopulator worker
 class CachePopulator
   include Sidekiq::Worker
 
@@ -10,6 +11,7 @@ class CachePopulator
   end
 end
 
+# ExampleSatisfier worker
 class ExampleSatisfier
   include Sidekiq::Worker
 
@@ -20,6 +22,7 @@ class ExampleSatisfier
   end
 end
 
+# ExampleViolator worker
 class ExampleViolator
   include Sidekiq::Worker
 
@@ -29,24 +32,3 @@ class ExampleViolator
     example.satisfied_atoms
   end
 end
-
-class PropertyPositiveFactsAndExamples
-  include Sidekiq::Worker
-
-  def perform(property_id)
-    property = Property.find(property_id)
-    property.positive_hardcoded_facts
-    property.positive_derived_examples
-  end
-end
-
-class PropertyNegativeFactsAndExamples
-  include Sidekiq::Worker
-
-  def perform(property_id)
-    property = Property.find(property_id)
-    property.negative_hardcoded_facts
-    property.negative_derived_examples
-  end
-end
-

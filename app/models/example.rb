@@ -47,6 +47,13 @@ class Example < ApplicationRecord
     result
   end
 
+  def self.find_match(structure, satisfies, violates)
+    Example.where(structure_id: structure.id).select do |e|
+      e.valid? && (satisfies - e.satisfied_deep_atoms).empty? &&
+        (violates - e.violated_deep_atoms).empty?
+    end
+  end
+
   def realization(atom)
     if atom.satisfies.is_a?(Property)
       return self if atom.stuff_w_props_type == 'Structure'
@@ -283,15 +290,12 @@ class Example < ApplicationRecord
     structure.defining_atoms.each do |a|
       next if a.stuff_w_props_type == 'Structure'
 
-      bb = a.stuff_w_props
-      bbr = building_block_realizations.find { |x| x.building_block == bb }
+      bbr = realization_for(a.stuff_w_props)
       if bbr.nil? || !bbr.valid?
         errors.add(:building_block_realizations, :incorrect)
         return false
       end
-      realization = bbr.realization
-      satisfies_atom = a.satisfies.to_atom
-      return true if satisfies_atom.in?(realization.satisfied_atoms)
+      return true if a.satisfies.to_atom.in?(bbr.realization.satisfied_atoms)
 
       errors.add(:base, :axioms_fail)
       return false
@@ -324,5 +328,9 @@ class Example < ApplicationRecord
       return false
     end
     true
+  end
+
+  def realization_for(building_block)
+    building_block_realizations.find { |x| x.building_block == building_block }
   end
 end

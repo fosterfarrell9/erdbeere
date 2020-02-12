@@ -74,19 +74,7 @@ class Implication < ApplicationRecord
                       end
       implies_for_bb = Atom.find_or_create_by(stuff_w_props: implies_stuff,
                                               satisfies: implies.satisfies)
-      premises_for_bb = []
-      premises.each do |p|
-        atoms_stuff = if p.atom.stuff_w_props == structure
-                        bb
-                      else
-                        p.atom.stuff_w_props
-                      end
-        atom_for_bb = Atom.find_or_create_by(stuff_w_props: atoms_stuff,
-                                             satisfies: p.atom.satisfies)
-        premise_for_bb = Premise.new(atom: atom_for_bb, value: p.value)
-        premises_for_bb.push(premise_for_bb)
-      end
-      Implication.create(premises: premises_for_bb,
+      Implication.create(premises: premises_for_bb(bb),
                          implies: implies_for_bb,
                          structure: bb.explained_structure,
                          parent_implication: self,
@@ -105,5 +93,21 @@ class Implication < ApplicationRecord
   def touch_examples
     Structure.update_all(updated_at: Time.now)
     Example.update_all(updated_at: Time.now)
+  end
+
+  def premises_for_bb(building_block)
+    result = []
+    premises.each do |p|
+      atoms_stuff = if p.atom.stuff_w_props == structure
+                      building_block
+                    else
+                      p.atom.stuff_w_props
+                    end
+      atom_for_bb = Atom.find_or_create_by(stuff_w_props: atoms_stuff,
+                                           satisfies: p.atom.satisfies)
+      premise_for_bb = Premise.new(atom: atom_for_bb, value: p.value)
+      result.push(premise_for_bb)
+    end
+    result
   end
 end
