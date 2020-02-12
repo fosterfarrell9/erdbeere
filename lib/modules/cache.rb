@@ -1,3 +1,4 @@
+# CacheIt module
 module CacheIt
   def self.included(base)
     base.extend TheActualCache
