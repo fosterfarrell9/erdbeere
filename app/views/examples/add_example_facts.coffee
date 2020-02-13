@@ -1,4 +1,4 @@
-$('#example-facts-modal-content').empty()
+$('#example_facts-modal-content').empty()
   .append('<%= j render partial: "example_facts/form",
                         locals: { example: @example,
                                   satisfied: @satisfied,
