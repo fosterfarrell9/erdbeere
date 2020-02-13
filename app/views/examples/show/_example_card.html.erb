@@ -1,0 +1,29 @@
+<div class="card propertiesCard mb-3">
+  <div class="card-header">
+    <h4>
+      <%= I18n.t("examples.show.description",
+                 default: "Description") %>
+    </h4>
+  </div>
+  <div class="card-body propertiesCardBody">
+    <%= example.description %>
+    <% unless example.building_block_realizations.empty? %>
+      <div class="row mt-3">
+        <div class="col-12">
+          <strong>
+            <%= I18n.t("examples.show.building_blocks",
+                       default: "Building Blocks") %>
+          </strong>
+        </div>
+      </div>
+      <ul>
+        <% example.building_block_realizations.each do |bbr| %>
+          <li>
+            <%= render partial: 'building_block_realizations/show',
+                       locals: { bbr: bbr } %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>

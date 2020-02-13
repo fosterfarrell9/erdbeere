@@ -1,13 +1,13 @@
-$('#example-facts-modal-content').empty()
+$('#example_facts-modal-content').empty()
   .append('<%= j render partial: "example_facts/properties_form",
                         locals: { property: @property,
                                   satisfied: @satisfied,
                                   available_examples: @available_examples,
                                   bbr_hash: @bbr_hash } %>')
-$('#exampleFactsModalLabel').empty()
+$('#example_factsModalLabel').empty()
   .append('<%= @satisfied ? t("property.add_example_facts.add_positive_examples") : t("property.add_example_facts.add_negative_examples") %>')
-$('#exampleFactsModal').modal('show')
-exampleFactsModalContent = document.getElementById('example-facts-modal-content')
+$('#example_factsModal').modal('show')
+exampleFactsModalContent = document.getElementById('example_facts-modal-content')
 renderMathInElement exampleFactsModalContent,
   delimiters: [
     {

@@ -1,127 +1,60 @@
 <div class="row p-2">
-<div class="col-6">
-<div class="card">
-	<div class="card-header">
-		<h4>
-			<%= @structure.name %>
-      <%= link_to '',
-                  edit_structure_path(@structure),
-                  class: 'far fa-edit fa-lg text-secondary',
-                  data: { toggle: 'tooltip',
-                          placement: 'bottom' },
-                  title: t('buttons.edit'),
-                  style: 'text-decoration: none;' %>
-    </h4>
-	</div>
-	<div class="card-body">
-		<% if @structure.original_building_blocks.any? %>
-			<h5>
-  			<%= t('examples.show.building_blocks') %>
-			</h5>
-			<ul>
-				<% @structure.original_building_blocks.each do |bb| %>
-					<li>
-						<%= bb.name %>: <%= bb.definition %>
-						(<%= link_to bb.structure.name,
-												 structure_path(bb.structure) %>)
-					</li>
-				<% end %>
-			</ul>
-		<% end %>
-		<% if @structure.derives_from.present? %>
-      <% if @structure.axioms.present? %>
-			<%= t('structure.show.definition_details_html',
-						name: @structure.name,
-						derives_from: link_to(@structure.derives_from.name,
-																	structure_path(@structure.derives_from))) %>
-			<ul>
-				<% @structure.axioms.each do |a| %>
-					<li>
-            <%= render partial: 'atoms/show',
-                       locals: { atom: a.atom,
-                       					 modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
-          </li>
-				<% end %>
-			</ul>
-      <% else %>
-        <%= t('structure.show.definition_no_axioms_html',
-              name: @structure.name,
-              derives_from: link_to(@structure.derives_from.name,
-                                  structure_path(@structure.derives_from))) %>
-      <% end %>
-		<% end %>
-    <% if @structure.axioms.present? %>
-      <h5>
-        <%= t('structure.show.axioms') %>
-      </h5>
-      <ul>
-        <% @structure.axioms.each do |a| %>
-          <li>
-            <%= render partial: "atoms/inline_atom",
-                       locals: { atom: a.atom,
-                                 modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
-		<% unless @structure.definition.blank? %>
-			<h5>
-				<%= t('structure.show.definition') %>
-			</h5>
-			<%= @structure.definition.html_safe %>
-		<% end %>
-		<% if @structure.related_structures != [@structure] %>
-			<h5 class="mt-2">
-  			<%= t('structure.show.related_structures') %>
-			</h5>
-			<ul>
-				<% (@structure.related_structures - [@structure]).each do |s| %>
-					<li>
-						<%= link_to s.name,
-												structure_path(s) %>
-					</li>
-				<% end %>
-			</ul>
-		<% end %>
-	</div>
-</div>
-</div>
-<div class="col-3">
-  <div class="card">
-    <div class="card-header">
-      <h4 class="title">
-      	<%= t('structure.show.properties') %>
-      </h4>
-    </div>
-    <div class="card-body">
-			<ul>
-				<% @structure.original_properties.each do |p| %>
-					<li>
-						<%= link_to p.name,
-												property_path(p) %>
-					</li>
-				<% end %>
-			</ul>
+  <div class="col-6">
+    <div class="card">
+	    <div class="card-header">
+		    <h4>
+			   <%= @structure.name %>
+          <%= link_to '',
+                      edit_structure_path(@structure),
+                      class: 'far fa-edit fa-lg text-secondary',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.edit'),
+                      style: 'text-decoration: none;' %>
+        </h4>
+	    </div>
+	    <div class="card-body">
+        <%= render partial: 'structures/show/basics_body',
+                   locals: { structure: @structure } %>
+	    </div>
     </div>
   </div>
-</div>
-<div class="col-3">
-  <div class="card">
-    <div class="card-header">
-      <h4 class="title">
-      	<%= t('structure.show.examples') %>
-      </h4>
-    </div>
-    <div class="card-body">
-      <ul>
-        <% @structure.examples.select {|e| e.valid? }.each do |e| %>
-          <li>
-            <%= link_to e.description[0..100],
-                        example_path(:id => e.id) %>
-          </li>
-        <% end %>
-      </ul>
+  <div class="col-3">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">
+      	 <%= t('structure.show.properties') %>
+        </h4>
+      </div>
+      <div class="card-body">
+			  <ul>
+				  <% @structure.original_properties.includes(:translations).each do |p| %>
+					  <li>
+						  <%= link_to p.name,
+							   					property_path(p) %>
+					  </li>
+				  <% end %>
+			  </ul>
+      </div>
     </div>
   </div>
-</div>
+  <div class="col-3">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">
+      	 <%= t('structure.show.examples') %>
+        </h4>
+      </div>
+      <div class="card-body">
+        <ul>
+          <% @structure.examples.select(&:valid?).each do |e| %>
+            <li>
+              <%= link_to e.description[0..100],
+                          example_path(:id => e.id) %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

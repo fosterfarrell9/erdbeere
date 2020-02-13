@@ -1,0 +1,98 @@
+<div class="card propertiesCard mb-3">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-4">
+        <h4>
+          <%= I18n.t("examples.show.description",
+                     default: "Description") %>
+        </h4>
+      </div>
+      <div class="col-8 text-right">
+        <div id="example-basics-warning">
+          <%= t('warnings.unsaved_changes') %>
+          <%= f.submit t('buttons.save'),
+                       class: 'btn btn-sm btn-primary' %>
+          <button type="button"
+                  class="btn btn-sm btn-secondary cancel-example-edit ml-2">
+            <%= t('buttons.discard') %>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body propertiesCardBody">
+    <div class="form-group">
+      <%= f.label :description,
+                  t('example.edit.description') %>
+      <%= f.text_field :description,
+                       class: 'form-control' %>
+      <div class="invalid-feedback"
+           id="example-description-error">
+      </div>
+    </div>
+
+    <% unless example.building_block_realizations.empty? %>
+      <div class="row mt-3">
+        <div class="col-12">
+          <strong>
+            <%= I18n.t("examples.show.building_blocks",
+                       default: "Building Blocks") %>
+          </strong>
+        </div>
+      </div>
+      <ul>
+        <% example.building_block_realizations.each do |bbr| %>
+          <li>
+            <div class="form-group">
+              <%= f.label "building_block_realizations[#{bbr.id}]",
+                          t('example.create.building_block_realization',
+                          building_block:
+                            "#{bbr.building_block.name}: #{bbr.building_block.definition}") %>
+              <%= f.select "building_block_realizations[#{bbr.id}]",
+                           options_for_select(bbr_hash[bbr.building_block.id]
+                                                .push(bbr.realization).compact.uniq
+                                                .map { |e| [e.description, e.id]},
+                                              bbr.realization&.id),
+                           { prompt: t('basics.select') },
+                           { class: 'form-control building_block_select',
+                           required: true } %>
+            </div>
+            <div class="invalid-feedback building-block-error">
+            </div>
+
+            <% if bbr.realization %>
+              <%= render partial: 'building_block_realizations/show',
+                           locals: { bbr: bbr } %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <div class="row mt-3">
+      <% if example.irrelevant? %>
+        <div class="col-12 mt-3 text-center">
+          <%= link_to t('example.edit.delete'),
+                      example_path(example),
+                      class: 'btn btn-danger',
+                      method: :delete,
+                      data: { confirm: t('confirmation.generic') } %>
+        </div>
+      <% else %>
+        <div class="col-12 mt-2">
+          <span class="redtext">
+            <%= t('basics.warning') %>
+          </span>
+          <%= t('example.edit.relevant_example') %>
+          <ul>
+            <% example.appearances_as_building_block_realizations.each do |bbr| %>
+              <li>
+                <%= link_to bbr.example.description,
+                            edit_example_path(bbr.example) %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

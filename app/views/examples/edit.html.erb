@@ -18,258 +18,43 @@
               title: t('buttons.show'),
               style: 'text-decoration: none;' %>
 </h4>
-  <div class="row p-2">
-    <div class="col-4">
-      <%= form_with model: @example,
-                    html: { id: 'example-form' } do |f| %>
-      <div class="card propertiesCard mb-3">
-        <div class="card-header">
-        <div class="row">
-        <div class="col-4">
-          <h4>
-            <%= I18n.t("examples.show.description",
-                       default: "Description") %>
-          </h4>
-        </div>
-        <div class="col-8 text-right">
-          <div id="example-basics-warning">
-            <%= t('warnings.unsaved_changes') %>
-            <%= f.submit t('buttons.save'),
-                         class: 'btn btn-sm btn-primary' %>
-            <button type="button"
-                    class="btn btn-sm btn-secondary cancel-example-edit ml-2">
-              <%= t('buttons.discard') %>
-            </button>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="card-body propertiesCardBody">
-            <div class="form-group">
-              <%= f.label :description,
-                          t('example.edit.description') %>
-              <%= f.text_field :description,
-                               class: 'form-control' %>
-              <div class="invalid-feedback"
-                   id="example-description-error">
-              </div>
-            </div>
-          <% unless @example.building_block_realizations.empty? %>
-          <div class="row mt-3">
-            <div class="col-12">
-              <strong>
-                <%= I18n.t("examples.show.building_blocks",
-                           default: "Building Blocks") %>
-              </strong>
-            </div>
-          </div>
-          <ul>
-          <% @example.building_block_realizations.each do |bbr| %>
-            <li>
-              <div class="form-group">
-              <%= f.label "building_block_realizations[#{bbr.id}]",
-                          t('example.create.building_block_realization',
-                            building_block:
-                              "#{bbr.building_block.name}: #{bbr.building_block.definition}") %>
-              <%= f.select "building_block_realizations[#{bbr.id}]",
-                           options_for_select(@bbr_hash[bbr.building_block.id]
-                                                .push(bbr.realization).compact.uniq
-                                                .map { |e| [e.description, e.id]},
-                                              bbr.realization&.id),
-                 { prompt: t('basics.select') },
-                 { class: 'form-control building_block_select',
-                   required: true } %>
-              </div>
-              <div class="invalid-feedback building-block-error">
-              </div>
-              <% if bbr.realization %>
-                <%= render partial: 'building_block_realizations/show',
-                           locals: { bbr: bbr } %>
-              <% end %>
-            </li>
-          <% end %>
-          </ul>
-          <% end %>
-          <div class="row mt-3">
-            <% if @example.irrelevant? %>
-              <div class="col-12 mt-3 text-center">
-                <%= link_to t('example.edit.delete'),
-                            example_path(@example),
-                            class: 'btn btn-danger',
-                            method: :delete,
-                            data: { confirm: t('confirmation.generic') } %>
-              </div>
-            <% else %>
-              <div class="col-12 mt-2">
-                <span class="redtext">
-                  <%= t('basics.warning') %>
-                </span>
-                <%= t('example.edit.relevant_example') %>
-                <ul>
-                  <% @example.appearances_as_building_block_realizations.each do |bbr| %>
-                    <li>
-                      <%= link_to bbr.example.description,
-                                  edit_example_path(bbr.example) %>
-                    </li>
-                  <% end %>
-                </ul>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    </div>
-    <% if @example.valid? %>
-    <div class="col-4">
-      <div class="card bg-truth propertiesCard mb-3">
-        <div class="card-header">
-          <h4>
-            <%= t('example.show.satisfied_properties') %>
-            <%= link_to '',
-                        add_example_facts_path(@example,
-                                               params: { sort: 'truth' }),
-                        class: 'fas fa-plus-circle text-dark',
-                        data: { toggle: 'tooltip',
-                                placement: 'bottom' },
-                        title: t('buttons.create'),
-                        style: 'text-decoration: none;',
-                        remote: true %>
-          </h4>
-        </div>
-        <div class="card-body propertiesCardBody">
-          <% unless @example.hardcoded_true_facts.empty? %>
-          <strong>
-          <%= I18n.t("example.show.hardcoded") %>:
-          </strong>
-          <div class="row">
-            <% @example.hardcoded_true_facts.each do |fact| %>
-              <div class="col-10">
-                <%= render partial: 'atoms/show',
-                           locals: { atom: fact.property.to_atom,
-                                     modifier: t('logic.is'),
-                                     example: @example,
-                                     explanations: [fact.explanation&.text] - ['', nil],
-                                     with_explanations: true,
-                                     success: 'truth',
-                                     edit: true } %>
-              </div>
-              <div class="col-2 text-right">
-                <%= link_to '',
-                            edit_example_fact_path(fact),
-                            class: 'far fa-edit text-dark',
-                            data: { toggle: 'tooltip',
-                                    placement: 'bottom' },
-                            title: t('buttons.edit'),
-                            style: 'text-decoration: none;',
-                            remote: true %>
-                <%= link_to '',
-                            example_fact_path(fact),
-                            class: 'fas fa-trash-alt text-dark ml-2',
-                            data: { toggle: 'tooltip',
-                                    placement: 'bottom',
-                                    confirm: t('confirmation.generic') },
-                            title: t('buttons.delete'),
-                            style: 'text-decoration: none;',
-                            remote: true,
-                            method: :delete %>
-              </div>
-            <% end %>
-          </div>
-          <% end %>
-          <% unless (@example.satisfied_atoms - @example.hardcoded_truths).empty? %>
-              <strong>
-              <%= I18n.t("example.show.derived") %>:
-              </strong>
-            <% @example.satisfied_atoms_with_proof.each_pair do |atom, proof| %>
-              <% unless @example.hardcoded_truths.include?(atom) || atom.stuff_w_props.is_a?(BuildingBlock) %>
-                  <%= render partial: 'atoms/show',
-                             locals: { atom: atom,
-                                       modifier: t('logic.is'),
-                                       proof: proof,
-                                       example: @example,
-                                       edit: true } %>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="card propertiesCard bg-falsehood mb-3">
-        <div class="card-header">
-          <h4>
-            <%= t('example.show.violated_properties') %>
-            <%= link_to '',
-                        add_example_facts_path(@example,
-                                               params: { sort: 'falsehood' }),
-                        class: 'fas fa-plus-circle text-dark',
-                        data: { toggle: 'tooltip',
-                                placement: 'bottom' },
-                        title: t('buttons.create'),
-                        style: 'text-decoration: none;',
-                        remote: true %>
-          </h4>
-        </div>
-        <div class="card-body propertiesCardBody">
-          <% unless @example.hardcoded_flat_falsehoods.empty? %>
-          <strong>
-          <%= I18n.t("example.show.hardcoded") %>:
-          </strong>
-          <div class="row">
-            <% @example.hardcoded_false_facts.each do |fact| %>
-            <div class="col-10">
-              <%= render partial: 'atoms/show',
-                         locals: { atom: fact.property.to_atom,
-                                   modifier: t('logic.is_not'),
-                                   example: @example,
-                                   explanations: [fact.explanation&.text] - ['', nil],
-                                   with_explanations: true,
-                                   success: 'falsehood',
-                                   edit: true } %>
-            </div>
-            <div class="col-2 text-right">
-              <%= link_to '',
-                          edit_example_fact_path(fact),
-                          class: 'far fa-edit text-dark',
-                          data: { toggle: 'tooltip',
-                                  placement: 'bottom' },
-                          title: t('buttons.edit'),
-                          style: 'text-decoration: none;',
-                          remote: true %>
-              <%= link_to '',
-                          example_fact_path(fact),
-                          class: 'fas fa-trash-alt text-dark ml-2',
-                          data: { toggle: 'tooltip',
-                                  placement: 'bottom',
-                                  confirm: t('confirmation.generic') },
-                          title: t('buttons.delete'),
-                          style: 'text-decoration: none;',
-                          remote: true,
-                          method: :delete %>
-            </div>
-            <% end %>
-          </div>
-          <% end %>
-          <% unless (@example.violated_atoms - @example.hardcoded_falsehoods).empty? %>
-            <strong>
-              <%= t("example.show.derived") %>:
-            </strong>
-            <%  @example.violated_atoms_with_proof.each_pair do |atom, proof| %>
-              <% unless @example.hardcoded_falsehoods.include?(atom) %>
-                <%= render partial: 'atoms/show',
-                           locals: { atom: atom,
-                                     modifier: t('logic.is_not'),
-                                     proof: proof,
-                                     success: 'falsehood',
-                                     example: @example,
-                                     edit: true } %>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+<div class="row p-2">
+  <div class="col-4">
+    <%= form_with model: @example,
+                  html: { id: 'example-form' } do |f| %>
+      <%= render partial: 'examples/edit/example_card',
+                 locals: { example: @example,
+                           bbr_hash: @bbr_hash,
+                           f: f } %>
     <% end %>
   </div>
-<%= render partial: 'example_facts/modal' %>
+  <% if @example.valid? %>
+    <div class="col-4">
+      <%= render partial: 'examples/edit/properties_card',
+                 locals: { example: @example,
+                           sort: 'truth',
+                           title: t('example.show.satisfied_properties'),
+                           modifier: t('logic.is'),
+                           hardcoded_facts: @example.hardcoded_true_facts,
+                           hardcoded_atoms: @example.hardcoded_truths,
+                           atoms_with_proof: @example.satisfied_atoms_with_proof,
+                           derived_facts: @example.satisfied_atoms -
+                                            @example.hardcoded_truths } %>
+    </div>
+    <div class="col-4">
+      <%= render partial: 'examples/edit/properties_card',
+                 locals: { example: @example,
+                           sort: 'falsehood',
+                           title: t('example.show.violated_properties'),
+                           modifier: t('logic.is_not'),
+                           hardcoded_facts: @example.hardcoded_false_facts,
+                           hardcoded_atoms: @example.hardcoded_falsehoods,
+                           atoms_with_proof: @example.violated_atoms_with_proof,
+                           derived_facts: @example.violated_atoms -
+                                            @example.hardcoded_falsehoods } %>
+    </div>
+  <% end %>
+</div>
+<%= render partial: 'shared/generic_modal',
+           locals: { sort: 'example_facts',
+                     title: '' } %>

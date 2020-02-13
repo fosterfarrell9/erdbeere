@@ -1,358 +1,73 @@
 <div class="row p-2">
-<div class="col-6">
-<%= form_with model: @structure,
-							html: { id: 'structure-form' } do |f| %>
-<div class="card">
-	<div class="card-header">
-		<div class="row">
-			<div class="col-6">
-				<h4>
- 					<%= @structure.name %>
-          <% if @locked %>
-            <i class="fas fa-lock redtext ml-2"
-               data-toggle="tooltip"
-               title="<%= t('structure.edit.locked') %>">
-            </i>
-          <% end %>
-    	  	<%= link_to '',
-      	  	          structure_path(@structure),
-        	  	        class: 'fas fa-eye text-dark mt-3',
-          	  	      data: { toggle: 'tooltip',
-            	  	            placement: 'bottom' },
-              	  	  title: t('buttons.show'),
-                	  	style: 'text-decoration: none;' %>
-				</h4>
-			</div>
-			<div class="col-6 text-right">
-				<div id="structure-basics-warning">
-  	      <%= t('warnings.unsaved_changes') %>
-    	    <%= f.submit t('buttons.save'),
-      	               class: 'btn btn-sm btn-primary' %>
-        	<button type="button"
-          	      class="btn btn-sm btn-secondary 	cancel-structure-edit ml-2">
-          	<%= t('buttons.discard') %>
-        	</button>
-        </div>
-			</div>
-		</div>
-	</div>
-	<div class="card-body">
-    <div class="form-group">
-      <%= f.label :name, t('structure.edit.name') %>
-      <%= f.text_field :name,
-                       class: 'form-control' %>
-      <div class="invalid-feedback"
-           id="structure-name-error">
-      </div>
-    </div>
-    <% unless @structure.derives_from.present? %>
-	    <div class="row my-2">
-  	    <div class="col-12">
-    	    <%= t('examples.show.building_blocks') %>
-          <% unless @locked %>
-       			<%= link_to '',
-             			      new_building_block_path(params: { structure_id: @structure.id }),
-                    		class: 'fas fa-plus-circle text-dark',
-                   			data: { toggle: 'tooltip',
-  		                          placement: 'bottom' },
-                   			title: t('buttons.create'),
-                   			style: 'text-decoration: none;',
-                   			remote: true %>
-          <% end %>
-      	</div>
-    	</div>
-      <% if @structure.original_building_blocks.present? %>
-    	<ul>
-				<% @structure.original_building_blocks.each do |bb| %>
-					<% if bb.persisted? %>
-					<li>
-						<%= bb.name %>: <%= bb.definition %>
-						(<%= link_to bb.structure.name,
-												 edit_structure_path(bb.structure) %>)
-      			<%= link_to '',
-            			      edit_building_block_path(bb),
-                  			class: 'far fa-edit text-dark',
-                  			data: { toggle: 'tooltip',
-                          placement: 'bottom' },
-                  			title: t('buttons.edit'),
-                  			style: 'text-decoration: none;',
-                  			remote: true %>
-            <% unless @structure.original_examples.present? %>
-      			<%= link_to '',
-            			      building_block_path(bb),
-                  			class: 'fas fa-trash-alt text-dark ml-2',
-                  			data: { toggle: 'tooltip',
-                          			placement: 'bottom',
-                          			confirm: t('confirmation.generic') },
-                  			title: t('buttons.delete'),
-                  			style: 'text-decoration: none;',
-                  			remote: true,
-                  			method: :delete %>
-            <% end %>
-					</li>
-					<% end %>
-        <% end %>
-			</ul>
-      <% if @structure.duplicate_building_blocks.any? %>
-        <span class="redtext">
-          <%= t('basics.warning') %>
-        </span>
-        <%= t('structure.edit.duplicate_building_blocks') %>
-        <ul>
-        <% @structure.duplicate_building_blocks.each do |bb| %>
-          <li>
-            <%= bb.name %>: <%= bb.definition %>
-          </li>
-        <% end %>
-        </ul>
-      <% end %>
-      <% else %>
-        <%= t('building_block.edit.none') %>
-		  <% end %>
-    <% end %>
-		<% if @structure.derives_from.present? %>
-      <div class="row my-2">
-        <div class="col-12">
-          <%= t('structure.create.derives_from') %>:
-          <%= link_to @structure.derives_from.name,
-                      edit_structure_path(@structure.derives_from) %>
-          <% if @structure.derives_from.building_blocks.present? %>
-            <%= t('structure.edit.parent_building_blocks') %>:
-            <%= @structure.derives_from.building_blocks.map(&:name).join(', ') %>
-          <% end %>
-        </div>
+  <div class="col-6">
+    <%= form_with model: @structure,
+							    html: { id: 'structure-form' } do |f| %>
+      <div class="card">
+	      <div class="card-header">
+		      <div class="row">
+			      <div class="col-6">
+				      <h4>
+ 					      <%= @structure.name %>
+                <% if @locked %>
+                  <i class="fas fa-lock redtext ml-2"
+                     data-toggle="tooltip"
+                     title="<%= t('structure.edit.locked') %>">
+                  </i>
+                <% end %>
+    	  	      <%= link_to '',
+      	  	                structure_path(@structure),
+        	                  class: 'fas fa-eye text-dark mt-3',
+          	                data: { toggle: 'tooltip',
+            		                    placement: 'bottom' },
+                	          title: t('buttons.show'),
+               	  	        style: 'text-decoration: none;' %>
+				      </h4>
+			     </div>
+			     <div class="col-6 text-right">
+				      <div id="structure-basics-warning">
+  	            <%= t('warnings.unsaved_changes') %>
+    	          <%= f.submit t('buttons.save'),
+      	                     class: 'btn btn-sm btn-primary' %>
+        	      <button type="button"
+          	            class="btn btn-sm btn-secondary cancel-structure-edit ml-2">
+          	      <%= t('buttons.discard') %>
+        	      </button>
+              </div>
+			      </div>
+		      </div>
+	      </div>
+	      <div class="card-body">
+          <%= render partial: 'structures/edit/basics_body',
+                     locals: { structure:@structure,
+                               locked: @locked,
+                               f: f } %>
+	      </div>
       </div>
     <% end %>
-      <% if @structure.original_building_blocks.present? || @structure.derives_from.present? %>
-        <div class="row my-2">
-          <div class="col-12">
-            <%= t('structure.edit.axioms') %>
-            <% unless @locked %>
-              <%= link_to '',
-                          new_axiom_path(params: { structure_id: @structure.id }),
-                          class: 'fas fa-plus-circle text-dark',
-                          data: { toggle: 'tooltip',
-                                  placement: 'bottom' },
-                          title: t('buttons.create'),
-                          style: 'text-decoration: none;',
-                          remote: true %>
-            <% end %>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <% if @structure.axioms.present? %>
-    			  <ul>
-		    	 	  <% @structure.axioms.each do |a| %>
-                <li>
-                  <%= render partial: "atoms/inline_atom",
-                             locals: { atom: a.atom,
-                                       modifier: a.value ? t('logic.is') : t('logic.is_not') } %>
-                  <% unless @locked %>
-                  <%= link_to '',
-                              axiom_path(a),
-                              class: 'fas fa-trash-alt text-dark ml-2',
-                              data: { toggle: 'tooltip',
-                                      placement: 'bottom',
-                                      confirm: t('confirmation.generic') },
-                              title: t('buttons.delete'),
-                              style: 'text-decoration: none;',
-                              remote: true,
-                              method: :delete %>
-                  <% end %>
-                </li>
-				      <% end %>
-			      </ul>
-            <% else %>
-              <%= t('structure.edit.no_axioms') %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    <div class="row my-2">
-      <div class="col-12">
-        <%= t('structure.show.definition') %>
+  </div>
+  <div class="col-6">
+    <div class="row">
+      <div class="col-6">
+        <%= render partial: 'structures/edit/properties_card',
+                   locals: { structure: @structure } %>
+      </div>
+      <div class="col-6">
+        <%= render partial: 'structures/edit/examples_card',
+                   locals: { structure: @structure } %>
+      </div>
+      <div class="col-12 mt-2">
+        <%= render partial: 'structures/edit/implications_card',
+                   locals: { structure: @structure } %>
       </div>
     </div>
-    <%= f.trix_editor :definition,
-                      class: 'bg-light',
-                      id: 'structure-definition-trix',
-                      data: { content: @structure.definition } %>
-    <div class="row my-2">
-      <div class="col-12">
-        <%= t('basics.preview') %>
-      </div>
-    </div>
-    <div class="alert alert-dark mt-2"
-         id="structure-definition-preview">
-        <%= raw(@structure.definition) %>
-    </div>
-		<% if @structure.related_structures != [@structure] %>
-			<h5 class="mt-2">
-  			<%= t('structure.show.related_structures') %>
-			</h5>
-			<ul>
-				<% (@structure.related_structures - [@structure]).each do |s| %>
-					<li>
-						<%= link_to s.name,
-												structure_path(s) %>
-					</li>
-				<% end %>
-			</ul>
-		<% end %>
-    <% unless @locked %>
-      <div class="row mt-3">
-        <div class="col-12 mt-3 text-center">
-          <%= link_to t('structure.edit.delete'),
-                        structure_path(@structure),
-                        class: 'btn btn-danger',
-                        method: :delete,
-                        data: { confirm: t('confirmation.generic') } %>
-        </div>
-      </div>
-    <% end %>
-	</div>
+  </div>
 </div>
+<% { 'building_block' => t('building_block.edit.title'),
+     'property' => t('property.create.title'),
+     'implication' => t('implication.create.title'),
+     'axiom' => t('axiom.create.title'),
+     'example' => t('example.create.title') }.each do |k,v| %>
+  <%= render partial: 'shared/generic_modal',
+             locals: { sort: k,
+                       title: v } %>
 <% end %>
-</div>
-<div class="col-6">
-<div class="row">
-<div class="col-6">
-  <div class="card" style="height: 40vh;">
-    <div class="card-header">
-      <h4 class="title">
-      	<%= t('structure.show.properties') %>
-          <%= link_to '',
-                      new_property_path(params: { structure_id: @structure.id }),
-                      class: 'fas fa-plus-circle fa-sm text-dark',
-                      data: { toggle: 'tooltip',
-                              placement: 'bottom' },
-                      title: t('buttons.create'),
-                      style: 'text-decoration: none;',
-                      remote: true %>
-      </h4>
-    </div>
-    <div class="card-body"
-         style="overflow-y: scroll;">
-			<ul>
-				<% @structure.original_properties.each do |p| %>
-					<li>
-						<%= link_to p.name,
-												edit_property_path(p) %>
-					</li>
-				<% end %>
-			</ul>
-    </div>
-  </div>
-</div>
-<div class="col-6">
-  <div class="card" style="height: 40vh;">
-    <div class="card-header">
-      <h4 class="title">
-      	<%= t('structure.show.examples') %>
-          <%= link_to '',
-                      new_example_path(params: { structure_id: @structure.id }),
-                      class: 'fas fa-plus-circle fa-sm text-dark',
-                      data: { toggle: 'tooltip',
-                              placement: 'bottom' },
-                      title: t('buttons.create'),
-                      style: 'text-decoration: none;',
-                      remote: true %>
-      </h4>
-    </div>
-    <div class="card-body"
-         style="overflow-y: scroll;">
-      <ul>
-        <% @structure.examples.each do |e| %>
-          <li>
-            <%= link_to e.description,
-                        edit_example_path(e) %>
-          <% if !e.valid? %>
-            <i class="fas fa-exclamation-triangle redtext ml-2"
-               data-toggle="tooltip"
-               title="<%= t('example.edit.invalid') %>">
-            </i>
-          <% end %>
-          </li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-</div>
-<div class="col-12 mt-2">
-  <div class="card" style="height: 40vh;">
-    <div class="card-header">
-      <h4 class="title">
-        <%= t('structure.edit.implications') %>
-        <%= link_to '',
-                    new_implication_path(params: { structure_id: @structure.id }),
-                    class: 'fas fa-plus-circle fa-sm text-dark',
-                    data: { toggle: 'tooltip',
-                            placement: 'bottom' },
-                    title: t('buttons.create'),
-                    style: 'text-decoration: none;',
-                    remote: true %>
-      </h4>
-    </div>
-    <div class="card-body"
-         style="overflow-y: scroll;">
-      <ul>
-        <% @structure.original_implications.each do |i| %>
-          <li>
-            <%= link_to '',
-                        implication_path(i, params: { structure_id: @structure.id }),
-                        class: 'fas fa-trash-alt fa-sm text-dark ml-2',
-                        data: { toggle: 'tooltip',
-                                placement: 'bottom',
-                                confirm: t('confirmation.generic') },
-                        title: t('buttons.delete'),
-                        style: 'text-decoration: none;',
-                        remote: true,
-                        method: :delete %>
-            <%= render partial: 'implications/show',
-                       locals: { implication: i,
-                                 edit: true } %>
-          </li>
-        <% end %>
-      </ul>
-      <% if @structure.inherited_implications.any? %>
-      <%= t('structure.edit.inherited_implications',
-            count: @structure.inherited_implications.size) %>
-      <i id="toggleImplications"
-         class="fas fa-eye ml-2"
-         data-toggle="tooltip"
-         title="<%= t('basics.show') %>"
-         data-hide="<%= t('basics.hide') %>"
-         data-show="<%= t('basics.show') %>">
-      </i>
-      <ul id="inheritedImplications">
-        <% @structure.inherited_implications.each do |i| %>
-          <li>
-            <%= link_to '',
-                        implication_path(i, params: { structure_id: @structure.id }),
-                        class: 'fas fa-trash-alt fa-sm text-dark ml-2',
-                        data: { toggle: 'tooltip',
-                                placement: 'bottom',
-                                confirm: t('confirmation.generic') },
-                        title: t('buttons.delete'),
-                        style: 'text-decoration: none;',
-                        remote: true,
-                        method: :delete %>
-            <%= render partial: 'implications/show',
-                       locals: { implication: i,
-                                 edit: true } %>
-          </li>
-        <% end %>
-      </ul>
-      <% end %>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-</div>
-<%= render partial: 'building_blocks/modal' %>
-<%= render partial: 'properties/modal' %>
-<%= render partial: 'implications/modal' %>
-<%= render partial: 'axioms/modal' %>
-<%= render partial: 'examples/modal' %>

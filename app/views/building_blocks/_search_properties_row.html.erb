@@ -1,41 +1,41 @@
-    <div class="row  mx-2 px-3">
-      <div class="col-12 p-2">
-        <h3>
-          <%= bb.name %>
-        </h3>
+<div class="row  mx-2 px-3">
+  <div class="col-12 p-2">
+    <h3>
+      <%= bb.name %>
+    </h3>
+  </div>
+  <div class="col-6">
+    <div class="card bg-truth">
+      <div class="card-header">
+        <h5>
+          <%= I18n.t("main.search.satisfies", default: 'Satisfies:') %>
+        </h5>
       </div>
-      <div class="col-6">
-        <div class="card bg-truth">
-          <div class="card-header">
-            <h5>
-              <%= I18n.t("main.search.satisfies", default: 'Satisfies:') %>
-            </h5>
-          </div>
-          <div class="card-body">
-            <%= f.select :satisfies,
-                         options_for_select(bb.structure.properties_select(bb)),
-                         {},
-                         { multiple: true,
-                           class: 'custom-select',
-                           size: bb.structure.properties.count } %>
-          </div>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="card bg-falsehood">
-          <div class="card-header">
-            <h5>
-              <%= I18n.t("main.search.violates") %>
-            </h5>
-          </div>
-          <div class="card-body">
-            <%= f.select :violates,
-                         options_for_select(bb.structure.properties_select(bb)),
-                         {},
-                         { multiple: true,
-                           class: 'custom-select',
-                           size: bb.structure.properties.count } %>
-          </div>
-        </div>
+      <div class="card-body">
+        <%= f.select :satisfies,
+                     options_for_select(bb.structure.properties_select(bb)),
+                     {},
+                     { multiple: true,
+                       class: 'custom-select',
+                       size: bb.structure.properties.count } %>
       </div>
     </div>
+  </div>
+  <div class="col-6">
+    <div class="card bg-falsehood">
+      <div class="card-header">
+        <h5>
+          <%= I18n.t("main.search.violates") %>
+        </h5>
+      </div>
+      <div class="card-body">
+        <%= f.select :violates,
+                     options_for_select(bb.structure.properties_select(bb)),
+                     {},
+                     { multiple: true,
+                       class: 'custom-select',
+                       size: bb.structure.properties.count } %>
+      </div>
+    </div>
+  </div>
+</div>

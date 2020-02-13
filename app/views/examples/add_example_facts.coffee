@@ -3,6 +3,6 @@ $('#example-facts-modal-content').empty()
                         locals: { example: @example,
                                   satisfied: @satisfied,
                                   available_properties: @available_properties } %>')
-$('#exampleFactsModalLabel').empty()
+$('#example_factsModalLabel').empty()
   .append('<%= @satisfied ? t("example.add_example_facts.add_truths") : t("example.add_example_facts.add_falsehoods") %>')
-$('#exampleFactsModal').modal('show')
+$('#example_factsModal').modal('show')

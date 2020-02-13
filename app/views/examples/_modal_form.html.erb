@@ -13,7 +13,7 @@
     <div class="form-group">
       <%= f.label "building_block_realizations[#{bb_id}]",
                   t('example.create.building_block_realization',
-                    building_block: "#{BuildingBlock.find_by_id(bb_id).name}: #{BuildingBlock.find_by_id(bb_id).definition}") %>
+                    building_block: building_block_description(bb_id)) %>
       <%= f.select "building_block_realizations[#{bb_id}]",
                    options_for_select(realizations.map { |e| [e.description, e.id]}),
                    { prompt: t('basics.select') },

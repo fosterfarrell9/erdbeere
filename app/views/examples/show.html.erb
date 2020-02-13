@@ -1,140 +1,46 @@
 <% cache @example do %>
-<h4>
-  <%= I18n.t('example.show.title',
-             example: @example.description) %>
-  <%= link_to @example.structure.name,
-              structure_path(@example.structure),
-              class: 'text-dark' %>
-  <%= link_to '',
-              edit_example_path(@example),
-              class: 'far fa-edit fa-lg text-secondary',
-              data: { toggle: 'tooltip',
-                      placement: 'bottom' },
-              title: t('buttons.edit'),
-              style: 'text-decoration: none;' %>
-</h4>
-<% cache @example do %>
+  <h4>
+    <%= I18n.t('example.show.title',
+               example: @example.description) %>
+    <%= link_to @example.structure.name,
+                structure_path(@example.structure),
+                class: 'text-dark' %>
+    <%= link_to '',
+                edit_example_path(@example),
+                class: 'far fa-edit fa-lg text-secondary',
+                data: { toggle: 'tooltip',
+                        placement: 'bottom' },
+                title: t('buttons.edit'),
+                style: 'text-decoration: none;' %>
+  </h4>
   <div class="row p-2">
     <div class="col-4">
-      <div class="card propertiesCard mb-3">
-        <div class="card-header">
-          <h4>
-            <%= I18n.t("examples.show.description",
-                       default: "Description") %>
-          </h4>
-        </div>
-        <div class="card-body propertiesCardBody">
-          <%= @example.description %>
-          <% unless @example.building_block_realizations.empty? %>
-          <div class="row mt-3">
-            <div class="col-12">
-              <strong>
-                <%= I18n.t("examples.show.building_blocks",
-                           default: "Building Blocks") %>
-              </strong>
-            </div>
-          </div>
-          <ul>
-          <% @example.building_block_realizations.each do |bbr| %>
-            <li>
-               <%= render partial: 'building_block_realizations/show',
-                          locals: { bbr: bbr } %>
-            </li>
-          <% end %>
-          </ul>
-          <% end %>
-        </div>
-      </div>
+      <%= render partial: 'examples/show/example_card',
+                 locals: { example: @example } %>
     </div>
     <div class="col-4">
-      <div class="card bg-truth propertiesCard mb-3">
-        <div class="card-header">
-          <h4>
-            <%= t('example.show.satisfied_properties') %>
-          </h4>
-        </div>
-        <div class="card-body propertiesCardBody">
-          <% unless @example.hardcoded_true_facts.empty? %>
-          <strong>
-          <%= I18n.t("example.show.hardcoded") %>:
-          </strong>
-          <div class="row">
-            <% @example.hardcoded_true_facts.each do |fact| %>
-              <div class="col-12">
-                <%= render partial: 'atoms/show',
-                           locals: { atom: fact.property.to_atom,
-                                     modifier: t('logic.is'),
-                                     example: @example,
-                                     explanations: [fact.explanation&.text] - ['', nil],
-                                     with_explanations: true,
-                                     success: 'truth' } %>
-              </div>
-            <% end %>
-          </div>
-          <% end %>
-          <% unless (@satisfied_atoms - @example.hardcoded_truths).empty? %>
-              <strong>
-              <%= I18n.t("example.show.derived") %>:
-              </strong>
-            <% @satisfied_atoms_with_proof.each_pair do |atom, proof| %>
-              <% if !@example.hardcoded_truths.include?(atom) &&
-                    !atom.stuff_w_props.is_a?(BuildingBlock) %>
-                  <%= render partial: 'atoms/show',
-                             locals: { atom: atom,
-                                       modifier: t('logic.is'),
-                                       proof: proof,
-                                       example: @example } %>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
+      <%= render partial: 'examples/show/properties_card',
+                 locals: { example: @example,
+                           sort: 'truth',
+                           title: t('example.show.satisfied_properties'),
+                           modifier: t('logic.is'),
+                           hardcoded_facts: @example.hardcoded_true_facts,
+                           hardcoded_atoms: @example.hardcoded_truths,
+                           atoms_with_proof: @example.satisfied_atoms_with_proof,
+                           derived_facts: @example.satisfied_atoms -
+                                            @example.hardcoded_truths } %>
     </div>
     <div class="col-4">
-      <div class="card propertiesCard bg-falsehood mb-3">
-        <div class="card-header">
-          <h4>
-            <%= t('example.show.violated_properties') %>
-          </h4>
-        </div>
-        <div class="card-body propertiesCardBody">
-          <% unless @example.hardcoded_flat_falsehoods.empty? %>
-          <strong>
-          <%= I18n.t("example.show.hardcoded") %>:
-          </strong>
-          <div class="row">
-            <% @example.hardcoded_false_facts.each do |fact| %>
-            <div class="col-12">
-              <%= render partial: 'atoms/show',
-                         locals: { atom: fact.property.to_atom,
-                                   modifier: t('logic.is_not'),
-                                   example: @example,
-                                   explanations: [fact.explanation&.text] - ['', nil],
-                                   with_explanations: true,
-                                   success: 'falsehood' } %>
-            </div>
-            <% end %>
-          </div>
-          <% end %>
-          <% unless (@violated_atoms - @example.hardcoded_falsehoods).empty? %>
-            <strong>
-              <%= t("example.show.derived") %>:
-            </strong>
-            <% @violated_atoms_with_proof.each_pair do |atom, proof| %>
-              <% if !@example.hardcoded_falsehoods.include?(atom) &&
-                    !atom.stuff_w_props.is_a?(BuildingBlock) %>
-                <%= render partial: 'atoms/show',
-                           locals: { atom: atom,
-                                     modifier: t('logic.is_not'),
-                                     proof: proof,
-                                     success: 'falsehood',
-                                     example: @example } %>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
+      <%= render partial: 'examples/show/properties_card',
+                 locals: { example: @example,
+                           sort: 'falsehood',
+                           title: t('example.show.violated_properties'),
+                           modifier: t('logic.is_not'),
+                           hardcoded_facts: @example.hardcoded_false_facts,
+                           hardcoded_atoms: @example.hardcoded_falsehoods,
+                           atoms_with_proof: @example.violated_atoms_with_proof,
+                           derived_facts: @example.violated_atoms -
+                                            @example.hardcoded_falsehoods } %>
     </div>
   </div>
-<% end %>
 <% end %>

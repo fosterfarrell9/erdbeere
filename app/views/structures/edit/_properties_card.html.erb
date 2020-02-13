@@ -1,0 +1,26 @@
+<div class="card" style="height: 40vh;">
+  <div class="card-header">
+    <h4 class="title">
+      <%= t('structure.show.properties') %>
+      <%= link_to '',
+                  new_property_path(params: { structure_id: structure.id }),
+                  class: 'fas fa-plus-circle fa-sm text-dark',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.create'),
+                  style: 'text-decoration: none;',
+                  remote: true %>
+    </h4>
+  </div>
+  <div class="card-body"
+       style="overflow-y: scroll;">
+    <ul>
+      <% structure.original_properties.each do |p| %>
+        <li>
+          <%= link_to p.name,
+                      edit_property_path(p) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

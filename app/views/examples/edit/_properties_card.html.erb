@@ -1,0 +1,74 @@
+<div class="card bg-<%= sort %> propertiesCard mb-3">
+  <div class="card-header">
+    <h4>
+      <%= title %>
+      <%= link_to '',
+                  add_example_facts_path(example,
+                                         params: { sort: sort }),
+                  class: 'fas fa-plus-circle text-dark',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.create'),
+                  style: 'text-decoration: none;',
+                  remote: true %>
+    </h4>
+  </div>
+  <div class="card-body propertiesCardBody">
+          <% unless hardcoded_facts.empty? %>
+          <strong>
+          <%= I18n.t("example.show.hardcoded") %>:
+          </strong>
+          <div class="row">
+            <% hardcoded_facts.each do |fact| %>
+              <div class="col-10">
+                <%= render partial: 'atoms/show',
+                           locals: { atom: fact.property.to_atom,
+                                     modifier: modifier,
+                                     example: example,
+                                     explanations: [fact.explanation&.text] - ['', nil],
+                                     with_explanations: true,
+                                     success: sort,
+                                     edit: true } %>
+              </div>
+              <div class="col-2 text-right">
+                <%= link_to '',
+                            edit_example_fact_path(fact),
+                            class: 'far fa-edit text-dark',
+                            data: { toggle: 'tooltip',
+                                    placement: 'bottom' },
+                            title: t('buttons.edit'),
+                            style: 'text-decoration: none;',
+                            remote: true %>
+                <%= link_to '',
+                            example_fact_path(fact),
+                            class: 'fas fa-trash-alt text-dark ml-2',
+                            data: { toggle: 'tooltip',
+                                    placement: 'bottom',
+                                    confirm: t('confirmation.generic') },
+                            title: t('buttons.delete'),
+                            style: 'text-decoration: none;',
+                            remote: true,
+                            method: :delete %>
+              </div>
+            <% end %>
+          </div>
+          <% end %>
+          <% unless derived_facts.empty? %>
+              <strong>
+              <%= I18n.t("example.show.derived") %>:
+              </strong>
+            <% atoms_with_proof.each_pair do |atom, proof| %>
+              <% unless hardcoded_atoms.include?(atom) ||
+                        atom.stuff_w_props.is_a?(BuildingBlock) %>
+                  <%= render partial: 'atoms/show',
+                             locals: { atom: atom,
+                                       modifier: t('logic.is'),
+                                       proof: proof,
+                                       example: example,
+                                       edit: true,
+                                       success: sort } %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>

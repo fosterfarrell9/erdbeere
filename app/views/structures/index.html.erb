@@ -42,4 +42,6 @@
     </div>
   <% end %>
 </div>
-<%= render partial: 'structures/modal' %>
+<%= render partial: 'shared/generic_modal',
+           locals: { sort: 'structure',
+                     title: t('structure.create.title') } %>

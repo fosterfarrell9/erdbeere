@@ -1,0 +1,44 @@
+<div class="card bg-<%= sort %> propertiesCard mb-3">
+  <div class="card-header">
+    <h4>
+      <%= title %>
+    </h4>
+  </div>
+  <div class="card-body propertiesCardBody">
+    <% unless hardcoded_facts.empty? %>
+      <strong>
+        <%= I18n.t("example.show.hardcoded") %>:
+      </strong>
+      <div class="row">
+        <% hardcoded_facts.each do |fact| %>
+          <div class="col-12">
+            <%= render partial: 'atoms/show',
+                       locals: { atom: fact.property.to_atom,
+                                 modifier: modifier,
+                                 example: example,
+                                 explanations: [fact.explanation&.text] - ['', nil],
+                                 with_explanations: true,
+                                 success: sort } %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% unless derived_facts.empty? %>
+      <strong>
+        <%= I18n.t("example.show.derived") %>:
+      </strong>
+      <% atoms_with_proof.each_pair do |atom, proof| %>
+        <% unless hardcoded_atoms.include?(atom) ||
+                  atom.stuff_w_props.is_a?(BuildingBlock) %>
+          <%= render partial: 'atoms/show',
+                     locals: { atom: atom,
+                               modifier: modifier,
+                               proof: proof,
+                               example: example,
+                               success: sort } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

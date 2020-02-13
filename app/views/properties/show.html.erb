@@ -1,131 +1,27 @@
 <% cache @property do %>
-<div class="row p-2">
-	<div class="col-4">
-		<div class="card propertiesCard">
-			<div class="card-header">
-				<h5>
-					<%= t('property.show.title',
-								property: @property.name) %>
-					<%= link_to @property.structure.name,
-											structure_path(@property.structure) %>
-          <%= link_to '',
-                      edit_property_path(@property),
-                      class: 'far fa-edit text-dark mt-3',
-                      data: { toggle: 'tooltip',
-                              placement: 'bottom' },
-                      title: t('buttons.show'),
-                      style: 'text-decoration: none;' %>
-				</h5>
-			</div>
-			<div class="card-body propertiesCardBody">
-				<h5>
-					<%= t('structure.show.definition') %>
-				</h5>
-				<% if @property.definition.present? %>
-					<%= @property.definition.html_safe %>
-				<% else %>
-					<%= t('structure.show.no_definition_yet') %>
-				<% end %>
-        <div class="row mt-2">
-          <div class="col-12">
-            <% if @property.stackstag.present? %>
-              <%= t('property.edit.stacks_tag') %>:
-              <%= @property.stackstag %>
-            <% end %>
-          </div>
-        </div>
-			</div>
-		</div>
-	</div>
-	<div class="col-4">
-		<div class="card bg-truth propertiesCard">
-    <div class="card-header">
-      <h5 class="title">
-      	<%= t('structure.show.examples') %>
-      	(<%= t('property.show.satisfied') %>)
-      </h5>
-    </div>
-    <div class="card-body propertiesCardBody">
-      <% unless @positive_hardcoded_facts.select { |f| f.example.valid?}.empty? %>
-        <strong>
-          <%= I18n.t("example.show.hardcoded") %>:
-        </strong>
-        <div class="row">
-          <% @positive_hardcoded_facts.select { |f| f.example.valid?}.each do |fact| %>
-            <div class="col-12">
-              <%= render partial: 'atoms/show',
-                         locals: { atom: fact.property.to_atom,
-                                   modifier: t('logic.is'),
-                                   example: fact.example,
-                                   explanations: [fact.explanation&.text] - ['', nil],
-                                   with_explanations: true,
-                                   success: 'truth',
-                                   only_example: true } %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-      <% unless @positive_derived_examples.select { |e| e.valid? }.empty? %>
-        <strong>
-          <%= I18n.t("example.show.derived") %>:
-        </strong>
-        <% @positive_derived_examples.select { |e| e.valid? }.each do |e| %>
-            <%= render partial: 'atoms/show',
-                       locals: { atom: @property.to_atom,
-                                 modifier: t('logic.is'),
-                                 proof: e.satisfied_atoms_with_proof[@property.to_atom],
-                                 example: e,
-                                 success: 'truth',
-                                 only_example: true } %>
-        <% end %>
-      <% end %>
-    </div>
+  <div class="row p-2">
+	  <div class="col-4">
+      <%= render partial: 'properties/show/property_card',
+                 locals: { property: @property } %>
+	  </div>
+	  <div class="col-4">
+      <%= render partial: 'properties/show/examples_card',
+                 locals: { sort: 'truth',
+                           title: t('property.show.satisfied'),
+                           property: @property,
+                           hardcoded_facts: @positive_hardcoded_facts,
+                           derived_examples: @positive_derived_examples,
+                           modifier: t('logic.is') } %>
+	  </div>
+	  <div class="col-4">
+      <%= render partial: 'properties/show/examples_card',
+                 locals: { sort: 'falsehood',
+                           title: t('property.show.satisfied'),
+                           property: @property,
+                           hardcoded_facts: @negative_hardcoded_facts,
+                           derived_examples: @negative_derived_examples,
+                           modifier: t('logic.is_not') } %>
+
+	  </div>
   </div>
-	</div>
-	<div class="col-4">
-		<div class="card bg-falsehood propertiesCard">
-    <div class="card-header">
-      <h5 class="title">
-      	<%= t('structure.show.examples') %>
-				(<%= t('property.show.violated') %>)
-      </h5>
-    </div>
-    <div class="card-body propertiesCardBody">
-      <% unless @negative_hardcoded_facts.select { |f| f.example.valid?}.empty? %>
-        <strong>
-          <%= I18n.t("example.show.hardcoded") %>:
-        </strong>
-        <div class="row">
-          <% @negative_hardcoded_facts.select { |f| f.example.valid?}.each do |fact| %>
-            <div class="col-12">
-              <%= render partial: 'atoms/show',
-                         locals: { atom: fact.property.to_atom,
-                                   modifier: t('logic.is_not'),
-                                   example: fact.example,
-                                   explanations: [fact.explanation&.text] - ['', nil],
-                                   with_explanations: true,
-                                   success: 'falsehood',
-                                   only_example: true } %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-      <% unless @negative_derived_examples.select { |e| e.valid? }.empty? %>
-        <strong>
-          <%= I18n.t("example.show.derived") %>:
-        </strong>
-        <% @negative_derived_examples.select { |e| e.valid? }.each do |e| %>
-            <%= render partial: 'atoms/show',
-                       locals: { atom: @property.to_atom(e.structure),
-                                 modifier: t('logic.is_not'),
-                                 proof: e.violated_atoms_with_proof[@property.to_atom(e.structure)],
-                                 example: e,
-                                 success: 'falsehood',
-                                 only_example: true } %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
-	</div>
-</div>
 <% end %>

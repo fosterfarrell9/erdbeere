@@ -1,0 +1,68 @@
+<div class="card" style="height: 40vh;">
+  <div class="card-header">
+    <h4 class="title">
+      <%= t('structure.edit.implications') %>
+      <%= link_to '',
+                  new_implication_path(params: { structure_id: structure.id }),
+                  class: 'fas fa-plus-circle fa-sm text-dark',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.create'),
+                  style: 'text-decoration: none;',
+                  remote: true %>
+    </h4>
+  </div>
+  <div class="card-body"
+       style="overflow-y: scroll;">
+    <ul>
+      <% structure.original_implications.each do |i| %>
+        <li>
+          <%= link_to '',
+                      implication_path(i, params: { structure_id: structure.id }),
+                      class: 'fas fa-trash-alt fa-sm text-dark ml-2',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom',
+                              confirm: t('confirmation.generic') },
+                      title: t('buttons.delete'),
+                      style: 'text-decoration: none;',
+                      remote: true,
+                      method: :delete %>
+          <%= render partial: 'implications/show',
+                     locals: { implication: i,
+                               edit: true } %>
+        </li>
+      <% end %>
+    </ul>
+
+    <% if structure.inherited_implications.any? %>
+      <%= t('structure.edit.inherited_implications',
+            count: structure.inherited_implications.size) %>
+      <i id="toggleImplications"
+         class="fas fa-eye ml-2"
+         data-toggle="tooltip"
+         title="<%= t('basics.show') %>"
+         data-hide="<%= t('basics.hide') %>"
+         data-show="<%= t('basics.show') %>">
+      </i>
+      <ul id="inheritedImplications">
+        <% structure.inherited_implications.each do |i| %>
+          <li>
+            <%= link_to '',
+                        implication_path(i, params: { structure_id: structure.id }),
+                        class: 'fas fa-trash-alt fa-sm text-dark ml-2',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom',
+                                confirm: t('confirmation.generic') },
+                        title: t('buttons.delete'),
+                        style: 'text-decoration: none;',
+                        remote: true,
+                        method: :delete %>
+            <%= render partial: 'implications/show',
+                       locals: { implication: i,
+                                 edit: true } %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>

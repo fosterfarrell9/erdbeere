@@ -1,0 +1,32 @@
+<div class="card" style="height: 40vh;">
+  <div class="card-header">
+    <h4 class="title">
+      <%= t('structure.show.examples') %>
+      <%= link_to '',
+                  new_example_path(params: { structure_id: structure.id }),
+                  class: 'fas fa-plus-circle fa-sm text-dark',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.create'),
+                  style: 'text-decoration: none;',
+                  remote: true %>
+    </h4>
+  </div>
+  <div class="card-body"
+       style="overflow-y: scroll;">
+    <ul>
+      <% structure.examples.each do |e| %>
+        <li>
+          <%= link_to e.description,
+                      edit_example_path(e) %>
+          <% if !e.valid? %>
+            <i class="fas fa-exclamation-triangle redtext ml-2"
+               data-toggle="tooltip"
+               title="<%= t('example.edit.invalid') %>">
+            </i>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

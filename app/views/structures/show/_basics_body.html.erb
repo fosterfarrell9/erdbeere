@@ -1,0 +1,73 @@
+<% if structure.original_building_blocks.any? %>
+  <h5>
+    <%= t('examples.show.building_blocks') %>
+  </h5>
+  <ul>
+    <% structure.original_building_blocks.each do |bb| %>
+      <li>
+        <%= bb.name %>: <%= bb.definition %>
+        (<%= link_to bb.structure.name,
+                     structure_path(bb.structure) %>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if structure.derives_from.present? %>
+  <% if structure.axioms.present? %>
+    <%= t('structure.show.definition_details_html',
+          name: structure.name,
+          derives_from: link_to(structure.derives_from.name,
+                        structure_path(structure.derives_from))) %>
+    <ul>
+      <% structure.axioms.each do |a| %>
+        <li>
+          <%= render partial: 'atoms/show',
+                     locals: { atom: a.atom,
+                               modifier: a.modifier } %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <%= t('structure.show.definition_no_axioms_html',
+          name: structure.name,
+          derives_from: link_to(structure.derives_from.name,
+                        structure_path(structure.derives_from))) %>
+  <% end %>
+<% end %>
+
+<% if structure.axioms.present? %>
+  <h5>
+    <%= t('structure.show.axioms') %>
+  </h5>
+  <ul>
+    <% structure.axioms.each do |a| %>
+      <li>
+        <%= render partial: "atoms/inline_atom",
+                   locals: { atom: a.atom,
+                             modifier: a.logic_modifier } %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if structure.definition.present? %>
+  <h5>
+    <%= t('structure.show.definition') %>
+  </h5>
+    <%= structure.definition.html_safe %>
+<% end %>
+
+<% if structure.related_structures != [structure] %>
+  <h5 class="mt-2">
+    <%= t('structure.show.related_structures') %>
+  </h5>
+  <ul>
+    <% (structure.related_structures - [structure]).each do |s| %>
+      <li>
+        <%= link_to s.name,
+                    structure_path(s) %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

@@ -1,0 +1,80 @@
+<div class="card bg-<%= sort %> propertiesCard">
+  <div class="card-header">
+    <h5 class="title">
+      <%= t('structure.show.examples') %>
+      (<%= title %>)
+      <%= link_to '',
+                  add_example_facts_to_property_path(property,
+                                                     params: { sort: sort }),
+                  class: 'fas fa-plus-circle text-dark',
+                  data: { toggle: 'tooltip',
+                          placement: 'bottom' },
+                  title: t('buttons.create'),
+                  style: 'text-decoration: none;',
+                  remote: true %>
+    </h5>
+  </div>
+  <div class="card-body propertiesCardBody">
+    <% unless hardcoded_facts.empty? %>
+      <strong>
+        <%= I18n.t("example.show.hardcoded") %>:
+      </strong>
+      <div class="row">
+        <% hardcoded_facts.each do |fact| %>
+          <div class="col-10">
+            <%= render partial: 'atoms/show',
+                       locals: { atom: fact.property.to_atom,
+                                 modifier: modifier,
+                                 example: fact.example,
+                                 explanations: [fact.explanation&.text] - ['', nil],
+                                 with_explanations: true,
+                                 success: sort,
+                                 only_example: true,
+                                 edit: true } %>
+          </div>
+          <div class="col-2 text-right">
+            <%= link_to '',
+                        edit_example_fact_path(fact,
+                                               params: { from: 'Property' }),
+                        class: 'far fa-edit text-dark',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom' },
+                        title: t('buttons.edit'),
+                        style: 'text-decoration: none;',
+                        remote: true %>
+            <%= link_to '',
+                        example_fact_path(fact,
+                                          params: { from: 'Property' }),
+                        class: 'fas fa-trash-alt text-dark ml-2',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom',
+                                confirm: t('confirmation.example_fact') },
+                        title: t('buttons.delete'),
+                        style: 'text-decoration: none;',
+                        remote: true,
+                        method: :delete %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <% unless derived_examples.empty? %>
+      <strong>
+        <%= I18n.t("example.show.derived") %>:
+      </strong>
+      <% derived_examples.each do |e| %>
+        <%= render partial: 'atoms/show',
+                   locals: { atom: property.to_atom,
+                             modifier: modifier,
+                             proof: if sort == 'truth'
+                                      e.satisfied_atoms_with_proof[property.to_atom]
+                                    else
+                                      e.violated_atoms_with_proof[@property.to_atom]
+                                    end,
+                             example: e,
+                             only_example: true,
+                             edit: true,
+                             success: sort } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

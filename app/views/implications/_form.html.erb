@@ -8,30 +8,30 @@
 		</div>
 	</div>
 	<% 1.upto(5) do |i| %>
-	<div class="form-row mb-2">
-		<div class="col-5">
-			<%= f.select "premises#{[i]}[stuff_w_props]",
-									 options_for_select(structure.eligible_for_premise_select, nil),
-								   { prompt: t('basics.select') },
-	    						 { class: 'form-control atomStuffWProps',
-	    						 	 data: { id: "p-#{i}"},
-	    						 	 required: i == 1 } %>
-		</div>
-		<div class="col-2">
-			<%= f.select "premises#{[i]}[value]",
-									 options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 0]]),
-								   {},
-	    						 { class: 'form-control' } %>
-		</div>
-		<div class="col-5">
-			<%= f.select "premises#{[i]}[satisfies]",
-									 [[]],
-								   { prompt: t('basics.select') },
-	    						 { class: 'form-control atomSatisfies',
-	    						 	 data: { id: "p-#{i}"},
-	    						 	 required: i == 1 } %>
-		</div>
-	</div>
+	  <div class="form-row mb-2">
+		  <div class="col-5">
+			  <%= f.select "premises#{[i]}[stuff_w_props]",
+			     				   options_for_select(structure.eligible_for_premise_select, nil),
+								     { prompt: t('basics.select') },
+	    						   { class: 'form-control atomStuffWProps',
+	    						 	   data: { id: "p-#{i}"},
+	    						 	   required: i == 1 } %>
+		  </div>
+		  <div class="col-2">
+			 <%= f.select "premises#{[i]}[value]",
+			  						options_for_select([[t('logic.is'), 1],[t('logic.is_not'), 0]]),
+								    {},
+	    						  { class: 'form-control' } %>
+		  </div>
+		  <div class="col-5">
+			  <%= f.select "premises#{[i]}[satisfies]",
+			      				 [[]],
+								     { prompt: t('basics.select') },
+	    						   { class: 'form-control atomSatisfies',
+	    						 	   data: { id: "p-#{i}"},
+	    						 	   required: i == 1 } %>
+		  </div>
+	  </div>
 	<% end %>
   <div class="invalid-feedback"
        id="implication-premises-error">

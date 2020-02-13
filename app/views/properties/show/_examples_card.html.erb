@@ -1,0 +1,47 @@
+<div class="card bg-<%= sort %> propertiesCard">
+  <div class="card-header">
+    <h5 class="title">
+      <%= t('structure.show.examples') %>
+      (<%= title %>)
+    </h5>
+  </div>
+  <div class="card-body propertiesCardBody">
+    <% unless hardcoded_facts.select { |f| f.example.valid?}.empty? %>
+      <strong>
+        <%= I18n.t("example.show.hardcoded") %>:
+      </strong>
+      <div class="row">
+        <% hardcoded_facts.select { |f| f.example.valid?}.each do |fact| %>
+          <div class="col-12">
+            <%= render partial: 'atoms/show',
+                       locals: { atom: fact.property.to_atom,
+                                 modifier: modifier,
+                                 example: fact.example,
+                                 explanations: [fact.explanation&.text] - ['', nil],
+                                 with_explanations: true,
+                                 success: sort,
+                                 only_example: true } %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <% unless derived_examples.select { |e| e.valid? }.empty? %>
+      <strong>
+        <%= I18n.t("example.show.derived") %>:
+      </strong>
+      <% derived_examples.select { |e| e.valid? }.each do |e| %>
+          <%= render partial: 'atoms/show',
+                     locals: { atom: @property.to_atom,
+                               modifier: modifier,
+                               proof: if sort == 'truth'
+                                        e.satisfied_atoms_with_proof[@property.to_atom]
+                                      else
+                                        e.violated_atoms_with_proof[@property.to_atom(e.structure)]
+                                      end,
+                               example: e,
+                               success: sort,
+                               only_example: true } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

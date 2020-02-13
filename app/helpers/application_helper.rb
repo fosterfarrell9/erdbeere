@@ -5,4 +5,9 @@ module ApplicationHelper
 
     grouped_options_for_select(opts.second)
   end
+
+  def building_block_description(bb_id)
+    building_block = BuildingBlock.find_by_id(bb_id)
+    "#{building_block.name}: #{building_block.definition}"
+  end
 end
