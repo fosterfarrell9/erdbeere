@@ -241,7 +241,7 @@ class Structure < ApplicationRecord
   def axioms_for_building_block_with_value(building_block)
     axioms.select { |axiom| axiom.atom.stuff_w_props == building_block }
           .map do |axiom|
-      [Atom.find_or_create_by(stuff_w_props: bb.structure,
+      [Atom.find_or_create_by(stuff_w_props: building_block.structure,
                               satisfies: axiom.atom.satisfies),
        axiom.value]
     end
