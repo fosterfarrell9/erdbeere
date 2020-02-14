@@ -1,7 +1,7 @@
 Sidekiq.configure_client do |config|
-  Rails.application.config.after_initialize do
-    CachePopulator.perform_async
-  end
+  # Rails.application.config.after_initialize do
+  #   CachePopulator.perform_async
+  # end
 
   Sidekiq::Status.configure_client_middleware config, expiration: 30.minutes
 end
