@@ -1,6 +1,7 @@
 # CachePopulator worker
 class CachePopulator
   include Sidekiq::Worker
+  include Sidekiq::Status::Worker
 
   def perform
     examples = Example.all
@@ -14,6 +15,7 @@ end
 # ExampleSatisfier worker
 class ExampleSatisfier
   include Sidekiq::Worker
+  include Sidekiq::Status::Worker
 
   def perform(example_id)
     example = Example.find(example_id)
@@ -25,6 +27,7 @@ end
 # ExampleViolator worker
 class ExampleViolator
   include Sidekiq::Worker
+  include Sidekiq::Status::Worker
 
   def perform(example_id)
     example = Example.find(example_id)
