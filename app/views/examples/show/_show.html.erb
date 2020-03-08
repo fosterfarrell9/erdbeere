@@ -2,7 +2,7 @@
   <h4>
     <%= I18n.t('example.show.title',
                example: example.description) %>
-    <%= link_to @example.structure.name,
+    <%= link_to example.structure.name,
                 structure_path(example.structure),
                 class: 'text-dark' %>
     <%= link_to '',
@@ -32,7 +32,7 @@
     </div>
     <div class="col-4">
       <%= render partial: 'examples/show/properties_card',
-                 locals: { example: @example,
+                 locals: { example: example,
                            sort: 'falsehood',
                            title: t('example.show.violated_properties'),
                            modifier: t('logic.is_not'),
