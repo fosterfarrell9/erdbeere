@@ -27,6 +27,13 @@ Rails.application.routes.draw do
     resources :implications
     resources :axioms
     resources :example_facts
+
+    namespace :api do
+      namespace :v1 do
+        get 'examples/:id', to: 'examples#show'
+      end
+    end
+
     get '/' => 'structures#index'
   end
 end
