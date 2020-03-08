@@ -1,0 +1,27 @@
+<% cache property do %>
+  <div class="row p-2">
+	  <div class="col-4">
+      <%= render partial: 'properties/show/property_card',
+                 locals: { property: property } %>
+	  </div>
+	  <div class="col-4">
+      <%= render partial: 'properties/show/examples_card',
+                 locals: { sort: 'truth',
+                           title: t('property.show.satisfied'),
+                           property: property,
+                           hardcoded_facts: positive_hardcoded_facts,
+                           derived_examples: positive_derived_examples,
+                           modifier: t('logic.is') } %>
+	  </div>
+	  <div class="col-4">
+      <%= render partial: 'properties/show/examples_card',
+                 locals: { sort: 'falsehood',
+                           title: t('property.show.satisfied'),
+                           property: property,
+                           hardcoded_facts: negative_hardcoded_facts,
+                           derived_examples: negative_derived_examples,
+                           modifier: t('logic.is_not') } %>
+
+	  </div>
+  </div>
+<% end %>

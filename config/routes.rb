@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get 'examples/:id', to: 'examples#show'
+      get 'properties/:id', to: 'properties#show'
+      get 'structures/:id', to: 'structures#show'
     end
   end
 

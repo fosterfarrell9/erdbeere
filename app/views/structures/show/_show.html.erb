@@ -1,0 +1,60 @@
+<div class="row p-2">
+  <div class="col-6">
+    <div class="card">
+	    <div class="card-header">
+		    <h4>
+			   <%= structure.name %>
+          <%= link_to '',
+                      edit_structure_path(structure),
+                      class: 'far fa-edit fa-lg text-secondary',
+                      data: { toggle: 'tooltip',
+                              placement: 'bottom' },
+                      title: t('buttons.edit'),
+                      style: 'text-decoration: none;' %>
+        </h4>
+	    </div>
+	    <div class="card-body">
+        <%= render partial: 'structures/show/basics_body',
+                   locals: { structure: structure } %>
+	    </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">
+      	 <%= t('structure.show.properties') %>
+        </h4>
+      </div>
+      <div class="card-body">
+			  <ul>
+				  <% structure.original_properties.includes(:translations).each do |p| %>
+					  <li>
+						  <%= link_to p.name,
+							   					property_path(p) %>
+					  </li>
+				  <% end %>
+			  </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="title">
+      	 <%= t('structure.show.examples') %>
+        </h4>
+      </div>
+      <div class="card-body">
+        <ul>
+          <% structure.examples.select(&:valid?).each do |e| %>
+            <li>
+              <%= link_to e.description[0..100],
+                          example_path(:id => e.id) %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
