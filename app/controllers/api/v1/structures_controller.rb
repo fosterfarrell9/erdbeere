@@ -25,6 +25,6 @@ class Api::V1::StructuresController < ApplicationController
     render json: { structures: Structure.all.map { |s| [s.id,
                                                         s.name,
                                                         s.original_properties
-                                                         .map(&:name)] } }
+                                                         .pluck(:id,:name)] } }
   end
 end
