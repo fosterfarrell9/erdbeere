@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       get 'examples/:id', to: 'examples#show'
       get 'properties/:id', to: 'properties#show'
       get 'structures/:id', to: 'structures#show'
+      get 'structures', to: 'structures#index'
     end
   end
 
