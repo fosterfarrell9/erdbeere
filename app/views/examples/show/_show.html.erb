@@ -1,24 +1,9 @@
-<h4>
-  <%= I18n.t('example.show.title',
-             example: example.description) %>
-  <%= link_to example.structure.name,
-              structure_path(example.structure),
-              class: 'text-dark' %>
-  <% unless api %>
-    <%= link_to '',
-                edit_example_path(example),
-                class: 'far fa-edit fa-lg text-secondary',
-                data: { toggle: 'tooltip',
-                        placement: 'bottom' },
-                title: t('buttons.edit'),
-                style: 'text-decoration: none;' %>
-  <% end %>
-</h4>
-<% cache example do %>
+<% cache [example, api] do %>
   <div class="row p-2">
     <div class="col-4">
       <%= render partial: 'examples/show/example_card',
-                 locals: { example: example } %>
+                 locals: { example: example,
+                           api: api } %>
     </div>
     <div class="col-4">
       <%= render partial: 'examples/show/properties_card',

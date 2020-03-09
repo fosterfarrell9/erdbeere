@@ -1,8 +1,20 @@
 <div class="card propertiesCard mb-3">
   <div class="card-header">
     <h4>
-      <%= I18n.t("examples.show.description",
-                 default: "Description") %>
+      <%= I18n.t('example.show.title',
+                 example: example.description) %>
+      <%= link_to example.structure.name,
+                  structure_path(example.structure),
+                  class: 'text-dark' %>
+      <% unless api %>
+        <%= link_to '',
+                    edit_example_path(example),
+                    class: 'far fa-edit fa-lg text-secondary',
+                    data: { toggle: 'tooltip',
+                            placement: 'bottom' },
+                    title: t('buttons.edit'),
+                    style: 'text-decoration: none;' %>
+      <% end %>
     </h4>
   </div>
   <div class="card-body propertiesCardBody">
