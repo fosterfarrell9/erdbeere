@@ -22,9 +22,8 @@ class Api::V1::StructuresController < ApplicationController
   end
 
   def index
-    render json: { structures: Structure.all.map { |s| [s.id,
-                                                        s.name,
-                                                        s.original_properties
-                                                         .pluck(:id,:name)] } }
+    render json: StructureSerializer.new(Structure.all,
+                                         { include: [:original_properties] })
+                                    .serialized_json
   end
 end

@@ -48,6 +48,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'trix-rails', require: 'trix'
 gem 'sidekiq'
 gem 'sidekiq-status'
+gem 'fast_jsonapi'
 
 
 group :development, :test do
