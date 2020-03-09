@@ -3,14 +3,16 @@
     <div class="card">
 	    <div class="card-header">
 		    <h4>
-			   <%= structure.name %>
-          <%= link_to '',
-                      edit_structure_path(structure),
-                      class: 'far fa-edit fa-lg text-secondary',
-                      data: { toggle: 'tooltip',
-                              placement: 'bottom' },
-                      title: t('buttons.edit'),
-                      style: 'text-decoration: none;' %>
+    		  <%= structure.name %>
+          <% unless api %>
+            <%= link_to '',
+                        edit_structure_path(structure),
+                        class: 'far fa-edit fa-lg text-secondary',
+                        data: { toggle: 'tooltip',
+                                placement: 'bottom' },
+                        title: t('buttons.edit'),
+                        style: 'text-decoration: none;' %>
+          <% end %>
         </h4>
 	    </div>
 	    <div class="card-body">

@@ -1,5 +1,6 @@
 <%= render partial: 'properties/show/show',
            locals: { property: @property,
+                     api: false,
                      positive_hardcoded_facts: @positive_hardcoded_facts,
                      positive_derived_examples: @positive_derived_examples,
                      negative_hardcoded_facts: @negative_hardcoded_facts,

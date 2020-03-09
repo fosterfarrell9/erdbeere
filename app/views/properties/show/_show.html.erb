@@ -1,8 +1,9 @@
-<% cache property do %>
+<% cache [property, api] do %>
   <div class="row p-2">
 	  <div class="col-4">
       <%= render partial: 'properties/show/property_card',
-                 locals: { property: property } %>
+                 locals: { property: property,
+                           api: api } %>
 	  </div>
 	  <div class="col-4">
       <%= render partial: 'properties/show/examples_card',

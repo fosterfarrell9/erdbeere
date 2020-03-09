@@ -12,18 +12,19 @@ class Api::V1::ExamplesController < ApplicationController
     end
 
     embedded_html = render_to_string(partial: 'examples/show/show',
-                             				 formats: :html,
-                             				 layout: false,
-                             				 locals:
-                               				 { example: example,
-                                 				 satisfied_atoms_with_proof:
-                                 				 	 example.satisfied_atoms_with_proof,
-                                 				 satisfied_atoms:
-                                 				 	 example.satisfied_atoms,
-                                 				 violated_atoms_with_proof:
-                                 				 	 example.violated_atoms_with_proof,
-                                 				 violated_atoms:
-                                 				 	 example.violated_atoms })
+                             		 formats: :html,
+                             		 layout: false,
+                             		 locals:
+                               		   { example: example,
+                                         api: true,
+                                		 satisfied_atoms_with_proof:
+                                 		   example.satisfied_atoms_with_proof,
+                                 		 satisfied_atoms:
+                                 		   example.satisfied_atoms,
+                                 		 violated_atoms_with_proof:
+                                 		   example.violated_atoms_with_proof,
+                                 		 violated_atoms:
+                                 		   example.violated_atoms })
 
   	render json: { embedded_html: embedded_html }
   end

@@ -1,6 +1,7 @@
 <%= render partial: 'examples/show/show',
            locals:
              { example: @example,
+               api: false,
                satisfied_atoms_with_proof: @satisfied_atoms_with_proof,
                satisfied_atoms: @satisfied_atoms,
                violated_atoms_with_proof: @violated_atoms_with_proof,

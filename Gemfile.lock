@@ -313,7 +313,6 @@ DEPENDENCIES
   sqlite3
   trix-rails
   turbolinks
-  tzinfo-data
   uglifier
   web-console (>= 3.3.0)
 

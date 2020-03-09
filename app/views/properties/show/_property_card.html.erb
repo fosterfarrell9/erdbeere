@@ -5,13 +5,15 @@
             property: property.name) %>
       <%= link_to property.structure.name,
                   structure_path(property.structure) %>
-      <%= link_to '',
-                  edit_property_path(property),
-                  class: 'far fa-edit text-dark mt-3',
-                  data: { toggle: 'tooltip',
-                          placement: 'bottom' },
-                  title: t('buttons.show'),
-                  style: 'text-decoration: none;' %>
+      <% unless api %>
+        <%= link_to '',
+                    edit_property_path(property),
+                    class: 'far fa-edit text-dark mt-3',
+                    data: { toggle: 'tooltip',
+                            placement: 'bottom' },
+                    title: t('buttons.show'),
+                    style: 'text-decoration: none;' %>
+      <% end %>
     </h5>
   </div>
   <div class="card-body propertiesCardBody">

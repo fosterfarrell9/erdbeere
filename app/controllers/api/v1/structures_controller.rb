@@ -15,7 +15,8 @@ class Api::V1::StructuresController < ApplicationController
                               	     formats: :html,
                                  		 layout: false,
                                  		 locals:
-                                 		   { structure: structure })
+                                 		   { structure: structure,
+                                         api: true })
 
   	render json: { embedded_html: embedded_html }
   end
