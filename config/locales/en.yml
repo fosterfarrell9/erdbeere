@@ -106,5 +106,6 @@ en:
   basics:
     preview: 'Preview'
     select: 'auswählen'
+    related_tags: Related Tags
   warnings:
     unsaved_changes: 'Ungespeicherte Änderungen'

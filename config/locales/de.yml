@@ -221,6 +221,7 @@ de:
     show: 'Anzeigen'
     hide: 'Verbergen'
     warning: 'Achtung:'
+    related_tags: 'Verknüpfte Begriffe'
   warnings:
     unsaved_changes: 'Ungespeicherte Änderungen'
   confirmation:
