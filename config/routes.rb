@@ -30,8 +30,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       get 'examples/:id', to: 'examples#show'
       get 'properties/:id', to: 'properties#show'
+      get 'properties/:id/view_info', to: 'properties#view_info'
       get 'structures/:id', to: 'structures#show'
       get 'structures', to: 'structures#index'
+      get 'structures/:id/view_info', to: 'structures#view_info'
     end
   end
 

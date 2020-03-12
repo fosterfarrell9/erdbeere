@@ -26,4 +26,9 @@ class Api::V1::StructuresController < ApplicationController
                                          { include: [:original_properties] })
                                     .serialized_json
   end
+
+  def view_info
+    render json: StructureSerializer.new(Structure.find_by_id(params[:id]))
+                                    .serialized_json
+  end
 end
