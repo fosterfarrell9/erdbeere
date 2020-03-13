@@ -30,7 +30,8 @@ class Api::V1::PropertiesController < ApplicationController
   end
 
   def view_info
-    render json: PropertySerializer.new(Property.find_by_id(params[:id]))
+    render json: PropertySerializer.new(Property.find_by_id(params[:id]),
+                                        { include: [:structure] })
                                    .serialized_json
   end
 end
