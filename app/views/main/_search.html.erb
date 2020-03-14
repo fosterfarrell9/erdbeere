@@ -26,11 +26,7 @@
           <%= form_with url: examples_find_path,
                         method: :post,
                         local: true,
-                        authenticity_token: !api,
                         scope: 'find' do  |f| %>
-            <% if api %>
-              token_placeholder
-            <% end %>
             <%= f.hidden_field :structure_id, value: s.id %>
             <div class="row mx-2 px-3">
               <div class="col-12 p-2">

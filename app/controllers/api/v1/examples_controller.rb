@@ -32,8 +32,7 @@ class Api::V1::ExamplesController < ApplicationController
   def search
 		embedded_html = render_to_string(partial: 'main/search',
                              		 		 formats: :html,
-                             		 		 layout: false,
-                             		 		 locals: { api: false })
+                             		 		 layout: false)
   	render json: { embedded_html: embedded_html }
   end
 end
