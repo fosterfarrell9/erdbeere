@@ -28,4 +28,11 @@ class Api::V1::ExamplesController < ApplicationController
 
   	render json: { embedded_html: embedded_html }
   end
+
+  def search
+		embedded_html = render_to_string(partial: 'main/search',
+                             		 		 formats: :html,
+                             		 		 layout: false)
+  	render json: { embedded_html: embedded_html }
+  end
 end
