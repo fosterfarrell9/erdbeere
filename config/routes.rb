@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get 'examples/:id', to: 'examples#show'
+      get 'find', to: 'examples#find'
       get 'search', to: 'examples#search'
       get 'properties/:id', to: 'properties#show'
       get 'properties/:id/view_info', to: 'properties#view_info'

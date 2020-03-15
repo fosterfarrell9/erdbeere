@@ -1,0 +1,113 @@
+<div class="row mx-2">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-header">
+        <h4>
+          <%= t('examples.find.search_params') %>
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-12">
+            <%= t('examples.find.structure') %>: <%= structure.name %>
+          </div>
+        </div>
+        <div class="row">
+          <% if satisfies.any? %>
+            <div class="col-6">
+              <div class="card bg-truth">
+                <div class="card-header">
+                  <h5>
+                    <%= t('examples.find.satisfies') %>
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <ul>
+                    <% satisfies.each do |atom| %>
+                      <li>
+                        <%= render partial: 'atoms/show',
+                                   locals: { atom: atom,
+                                             modifier: t('logic.is') } %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          <% if violates.any? %>
+            <div class="col-6">
+              <div class="card bg-falsehood">
+                <div class="card-header">
+                  <h5>
+                    <%= t('examples.find.violates') %>
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <ul>
+                    <% violates.each do |atom| %>
+                      <li>
+                        <%= render partial: 'atoms/show',
+                                   locals: { atom: atom,
+                                             modifier: t('logic.is_not') } %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <% if proof %>
+      <div class="card bg-falsehood">
+        <div class="card-header">
+          <h4>
+            <%= t('examples.find.contradiction') %>
+          </h4>
+        </div>
+        <div class="card-body">
+          <%= render partial: 'proofs/show',
+                     locals: { proof: proof,
+                               success: 'falsehood',
+                               example: nil } %>
+        </div>
+      </div>
+    <% else %>
+      <% if hits.present? %>
+        <div class="card bg-truth">
+          <div class="card-header">
+            <h4>
+              <%= I18n.t("examples.find.direct_hits",
+                         default: "Direct hits") %>
+            </h4>
+          </div>
+          <div class="card-body">
+            <ul>
+              <% hits.each do |hit| %>
+                <li>
+                  <%= link_to hit.description,
+                              example_path(hit) %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      <% else %>
+        <div class="card bg-nohit">
+          <div class="card-header">
+            <h4>
+              <%= t('examples.find.no_hit') %>
+            </h4>
+          </div>
+          <div class="card-body">
+            <%= I18n.t('examples.find.nothing_found') %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
