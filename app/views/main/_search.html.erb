@@ -4,7 +4,9 @@
         id="myTab"
         role="tablist">
       <% Structure.find_each do |s| %>
-        <li class="nav-item">
+        <li class="nav-item"
+            id="structure-item-<%= s.id.to_s %>"
+            style="<%= api ? 'display: none;' : '' %>">
           <a class="nav-link <%= s == Structure.first ? 'active' : '' %>"
              id="structure-<%= s.id.to_s %>-pill"
              data-toggle="pill"
