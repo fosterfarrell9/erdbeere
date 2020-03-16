@@ -12,13 +12,13 @@ class Api::V1::ExamplesController < ApplicationController
     end
 
     embedded_html = render_to_string(partial: 'examples/show/show',
-                           		  		 formats: :html,
-                             				 layout: false,
-                             		 		 locals:
-                             		   		 { example: example,
-                                     		 api: true,
-	                               		 		 satisfied_atoms_with_proof:
-                                 		   		 example.satisfied_atoms_with_proof,
+                           		  	   formats: :html,
+                             		     layout: false,
+                             		     locals:
+                             		       { example: example,
+                                         api: true,
+	                       		 		         satisfied_atoms_with_proof:
+                            		   		     example.satisfied_atoms_with_proof,
                                  		 		 satisfied_atoms:
                                  		   		 example.satisfied_atoms,
                                  		 		 violated_atoms_with_proof:
@@ -32,7 +32,8 @@ class Api::V1::ExamplesController < ApplicationController
   def search
 		embedded_html = render_to_string(partial: 'main/search',
                              		 		 formats: :html,
-                             		 		 layout: false)
+                             		 		 layout: false,
+                                     locals: { api: true })
   	render json: { embedded_html: embedded_html }
   end
 
