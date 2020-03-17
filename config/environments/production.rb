@@ -60,6 +60,19 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "erdbeere_production"
 
+  config.action_mailer.default_url_options = { protocol: 'https', host: ENV["URL_HOST"] }
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default :charset => "utf-8"
+
+  config.action_mailer.smtp_settings = {
+    address: ENV["MAILSERVER"],
+    port: 25,
+    domain: ENV["MAILSERVER"],
+  }
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.

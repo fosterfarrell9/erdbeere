@@ -1,8 +1,7 @@
 # PropertiesController for API
 class Api::V1::PropertiesController < ApplicationController
-#	respond_to :json
+  skip_before_action :authenticate_user!
 
-	# example call: /api/v1/properties/show/1
   def show
     property = Property.find_by_id(params[:id])
 

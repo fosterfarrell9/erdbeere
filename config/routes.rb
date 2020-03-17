@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   require 'sidekiq/web'
   require 'sidekiq-status/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -40,4 +41,5 @@ Rails.application.routes.draw do
   end
 
   get '/' => 'structures#index'
+  root to: 'structures#index'
 end

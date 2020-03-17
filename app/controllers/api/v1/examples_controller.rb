@@ -1,8 +1,7 @@
 # ExamplesController for API
 class Api::V1::ExamplesController < ApplicationController
-#	respond_to :json
+  skip_before_action :authenticate_user!
 
-	# example call: /api/v1/examples/show/1
   def show
     example = Example.find_by_id(params[:id])
 

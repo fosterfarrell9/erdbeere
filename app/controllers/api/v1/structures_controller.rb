@@ -1,8 +1,7 @@
 # StructuresController for API
 class Api::V1::StructuresController < ApplicationController
-#	respond_to :json
+  skip_before_action :authenticate_user!
 
-	# example call: /api/v1/properties/show/1
   def show
     structure = Structure.find_by_id(params[:id])
 
