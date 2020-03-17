@@ -98,6 +98,8 @@ en:
       search_button: Search!
       title: Search for an object
       violates: Violates
+      start: Start Search
+      global: global search
   controllers:
     no_structure: 'There is no structure with this id.'
     no_property: 'There is no property with this id.'

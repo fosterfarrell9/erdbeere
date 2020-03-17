@@ -199,6 +199,8 @@ de:
       search_button: Suchen!
       title: Nach einem Objekt suchen
       violates: Verletzt
+      start: Suche starten
+      global: globale Suche
   controllers:
     no_structure: 'Eine Struktur mit dieser id gibt es nicht.'
     no_property: 'Eine Eigenschaft mit dieser id gibt es nicht.'

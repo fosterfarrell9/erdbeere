@@ -35,13 +35,26 @@
             <% end %>
             <%= f.hidden_field :structure_id, value: s.id %>
             <div class="row mx-2 px-3">
-              <div class="col-12 p-2">
+              <div class="col-<%= api ? 10 : 12 %> p-2">
                 <h2>
                   <%= s.name %>
-                  <%= f.submit I18n.t('main.search.search_button'),
+                  <%= f.submit I18n.t('main.search.start'),
                                class: 'btn btn-secondary' %>
                 </h2>
               </div>
+              <% if api %>
+                <div class="col-2 text-right p-3">
+                  <div class="custom-control custom-switch">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="switchGlobalStructureSearch">
+                    <label class="custom-control-label"
+                           for="switchGlobalStructureSearch">
+                      <%= t('main.search.global') %>
+                    </label>
+                  </div>
+                </div>
+              <% end %>
               <div class="col-6">
                 <div class="card bg-truth">
                   <div class="card-header">
