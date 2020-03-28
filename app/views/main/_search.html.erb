@@ -35,7 +35,7 @@
             <% end %>
             <%= f.hidden_field :structure_id, value: s.id %>
             <div class="row mx-2 px-3">
-              <div class="col-<%= api ? 10 : 12 %> p-2">
+              <div class="col-12 col-md-<%= api ? 9 : 12 %> p-2">
                 <h2>
                   <%= s.name %>
                   <%= f.submit I18n.t('main.search.start'),
@@ -43,7 +43,7 @@
                 </h2>
               </div>
               <% if api %>
-                <div class="col-2 text-right p-3">
+                <div class="col-12 col-md-3 text-right p-3">
                   <div class="custom-control custom-switch">
                     <input type="checkbox"
                            class="custom-control-input"
