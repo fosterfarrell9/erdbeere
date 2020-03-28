@@ -1,5 +1,5 @@
 <div class="row ml-2">
-  <div class="col-2">
+  <div class="col-4 col-md-2">
     <ul class="nav flex-column nav-pills"
         id="myTab"
         role="tablist">
@@ -18,7 +18,7 @@
       <% end %>
     </ul>
   </div>
-  <div class="col-10">
+  <div class="col-8 col-md-10">
     <div class="tab-content">
       <% Structure.find_each do |s| %>
         <div class="tab-pane <%= s == Structure.first ? 'active' : '' %>"
@@ -55,7 +55,7 @@
                   </div>
                 </div>
               <% end %>
-              <div class="col-6">
+              <div class="col-12 col-md-6">
                 <div class="card bg-truth">
                   <div class="card-header">
                     <h5>
@@ -65,7 +65,8 @@
                   <div class="card-body">
                     <%= f.select :satisfies,
                                  options_for_select(s.properties_as_atoms
-                                                     .map { |a| [a.satisfies.name, a.id] }),
+                                                     .map { |a| [a.satisfies.name, a.id] }
+                                                     .natural_sort_by(&:first)),
                                  {},
                                  { class: 'form-control',
                                    size: s.properties.count,
@@ -73,7 +74,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-6">
+              <div class="col-12 col-md-6">
                 <div class="card bg-falsehood">
                   <div class="card-header">
                     <h5>
@@ -83,7 +84,8 @@
                   <div class="card-body">
                     <%= f.select :violates,
                                  options_for_select(s.properties_as_atoms
-                                                     .map { |a| [a.satisfies.name, a.id] }),
+                                                     .map { |a| [a.satisfies.name, a.id] }
+                                                     .natural_sort_by(&:first)),
                                  {},
                                  { class: 'form-control',
                                    size: s.properties.count,

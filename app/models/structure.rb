@@ -63,6 +63,7 @@ class Structure < ApplicationRecord
   def properties_select(building_block)
     descendants.map(&:original_properties).flatten.uniq
                .map { |p| [p.name, p.to_atom(building_block).id] }
+               .natural_sort_by(&:first)
     # ONLY original_properties:
     # properties.map { |p| [p.name, p.to_atom(bb).id] }
     # GROUPED:
